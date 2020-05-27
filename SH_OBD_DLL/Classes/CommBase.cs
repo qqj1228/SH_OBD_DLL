@@ -129,7 +129,7 @@ namespace SH_OBD {
         }
 
         private void OnRecvedMsg(object sender, RecvMsgEventArgs e) {
-            foreach (byte item in e.RecvBuf) {
+            foreach (byte item in e.RecvBytes) {
                 OnRxChar(item);
             }
         }

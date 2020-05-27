@@ -14,7 +14,6 @@ namespace SH_OBD_DLL {
         private NetworkStream m_clientStream;
         private byte[] m_recvBuf;
         public event EventHandler<RecvMsgEventArgs> RecvedMsg;
-        private Task m_taskRecv;
 
         public TCPClientImp(string strHostName, int iPort) {
             m_strHostName = strHostName;
@@ -30,7 +29,8 @@ namespace SH_OBD_DLL {
                 m_client = new TcpClient(m_strHostName, m_iPort);
                 m_clientStream = m_client.GetStream();
                 m_recvBuf = new byte[BUF_SIZE];
-                //m_taskRecv = Task.Factory.StartNew(RecvMsg);
+                RecvMsgEventArgs args = new RecvMsgEventArgs();
+                m_clientStream.BeginRead(m_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
             } catch (Exception) {
                 Close();
                 throw;
@@ -47,48 +47,50 @@ namespace SH_OBD_DLL {
         }
 
         public void SendData(byte[] data, int offset, int count) {
-            m_taskRecv = Task.Factory.StartNew(RecvMsg);
             m_clientStream.Write(data, offset, count);
             m_clientStream.Flush();
         }
 
         public void SendData(string strMsg) {
-            m_taskRecv = Task.Factory.StartNew(RecvMsg);
             byte[] sendMessage = Encoding.UTF8.GetBytes(strMsg);
             m_clientStream.Write(sendMessage, 0, sendMessage.Length);
             m_clientStream.Flush();
         }
 
-        private void RecvMsg() {
-            RecvMsgEventArgs args = new RecvMsgEventArgs(BUF_SIZE);
-            int iStart = 0;
-            int bytesRead;
+        private void AsyncRecvMsg(IAsyncResult ar) {
+            RecvMsgEventArgs args = (RecvMsgEventArgs)ar.AsyncState;
+            args.RecvBytes.Clear();
             args.Message = "";
-            args.RecvBuf = new byte[BUF_SIZE];
             try {
-                do {
-                    bytesRead = m_clientStream.Read(m_recvBuf, 0, BUF_SIZE);
-                    for (int i = iStart; i < iStart + bytesRead; i++) {
-                        args.RecvBuf[i] = m_recvBuf[i];
+                if (m_clientStream.CanRead) {
+                    // CanRead为false，说明m_clientStream流不可读，可能是m_clientStream流已关闭或发生错误，退出本次读取处理
+                    // 为true，则说明m_clientStream流可读，可继续执行后续代码
+                    int bytesRead = m_clientStream.EndRead(ar);
+                    // 读取缓冲区大小为256字节，用于OBD诊断命令已足够，无需使用NetworkStream.DataAvailable属性
+                    // 来判断是否还有数据没有读取完，需要分段多次读取
+                    for (int i = 0; i < bytesRead; i++) {
+                        args.RecvBytes.Add(m_recvBuf[i]);
                     }
-                    iStart += bytesRead;
                     args.Message += Encoding.UTF8.GetString(m_recvBuf, 0, bytesRead);
-                } while (m_clientStream.DataAvailable);
+                    // 继续准备读取可能会传进来的数据
+                    m_clientStream.BeginRead(m_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
+                }
             } catch (Exception) {
-                RecvedMsg?.Invoke(this, args);
                 throw;
+            } finally {
+                RecvedMsg?.Invoke(this, args);
             }
-            RecvedMsg?.Invoke(this, args);
         }
 
     }
 
     public class RecvMsgEventArgs : EventArgs {
-        public byte[] RecvBuf;
+        public List<byte> RecvBytes;
         public string Message;
 
-        public RecvMsgEventArgs(int iSize) {
-            RecvBuf = new byte[iSize];
+        public RecvMsgEventArgs() {
+            RecvBytes = new List<byte>();
+            Message = "";
         }
     }
 
