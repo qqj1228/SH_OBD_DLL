@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SH_OBD;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -10,14 +11,16 @@ namespace SH_OBD_DLL {
         private const int BUF_SIZE = 256;
         private readonly string m_strHostName;
         private readonly int m_iPort;
+        private readonly Logger m_log;
         private TcpClient m_client;
         private NetworkStream m_clientStream;
         private byte[] m_recvBuf;
         public event EventHandler<RecvMsgEventArgs> RecvedMsg;
 
-        public TCPClientImp(string strHostName, int iPort) {
+        public TCPClientImp(string strHostName, int iPort, Logger log) {
             m_strHostName = strHostName;
             m_iPort = iPort;
+            m_log = log;
         }
 
         ~TCPClientImp() {
@@ -75,8 +78,9 @@ namespace SH_OBD_DLL {
                     // 继续准备读取可能会传进来的数据
                     m_clientStream.BeginRead(m_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
                 }
-            } catch (Exception) {
-                throw;
+            } catch (Exception ex) {
+                m_log.TraceError(ex.Message);
+                Close();
             } finally {
                 RecvedMsg?.Invoke(this, args);
             }

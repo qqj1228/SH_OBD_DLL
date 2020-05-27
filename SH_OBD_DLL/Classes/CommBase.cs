@@ -103,7 +103,7 @@ namespace SH_OBD {
                 return false;
             }
             CommBase.CommBaseSettings commBaseSettings = CommSettings();
-            m_TCP = new TCPClientImp(m_mainSettings.RemoteIP, m_mainSettings.RemotePort);
+            m_TCP = new TCPClientImp(m_mainSettings.RemoteIP, m_mainSettings.RemotePort, m_log);
             m_auto = false;
             m_TCP.RecvedMsg += OnRecvedMsg;
             try {
