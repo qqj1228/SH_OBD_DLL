@@ -109,7 +109,7 @@ namespace SH_OBD {
             try {
                 m_TCP.ConnectServer();
             } catch (Exception ex) {
-                m_log.TraceFatal(string.Format("Can't open {0}:{1}! Reason: {1}", m_mainSettings.RemoteIP, m_mainSettings.RemotePort, ex.Message));
+                m_log.TraceFatal(string.Format("Can't open {0}:{1}! Reason: {2}", m_mainSettings.RemoteIP, m_mainSettings.RemotePort, ex.Message));
                 return false;
             }
             m_online = true;
