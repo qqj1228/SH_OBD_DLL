@@ -8,12 +8,10 @@ namespace SH_OBD {
         private StandardType m_iStandard;
         private int m_iBaudRateIndex;
         private int m_iComPortIndex;
-        private bool m_bConnected;
 
         public OBDDeviceELM327(Settings settings, Logger log, int[] xattr) : base(settings, log, xattr) {
             m_iProtocol = ProtocolType.Unknown;
             m_iStandard = StandardType.Automatic;
-            m_bConnected = false;
         }
 
         private bool InternalInitialize() {
@@ -314,14 +312,6 @@ namespace SH_OBD {
             if (m_CommELM.Online) {
                 m_CommELM.Close();
             }
-        }
-
-        public override bool GetConnected() {
-            return m_bConnected;
-        }
-
-        public override void SetConnected(bool status) {
-            m_bConnected = status;
         }
 
         public void SetProtocol(ProtocolType iProtocol) {

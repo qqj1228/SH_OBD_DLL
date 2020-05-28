@@ -230,5 +230,8 @@ namespace SH_OBD_DLL {
             return true;
         }
 
+        public bool TestTCP() {
+            return Utility.TcpTest(OBDif.CommSettings.RemoteIP, OBDif.CommSettings.RemotePort);
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace SH_OBD {
         }
 
         public bool ConnectedStatus {
-            get { return m_obdDevice.GetConnected(); }
+            get { return m_obdDevice.Online; }
         }
 
         public HardwareType GetDevice() {
@@ -60,11 +60,11 @@ namespace SH_OBD {
         }
 
         public string GetDeviceDesString() {
-            return m_obdDevice.DeviceDesString();
+            return m_obdDevice.DeviceDesString;
         }
 
         public string GetDeviceIDString() {
-            return m_obdDevice.DeviceIDString();
+            return m_obdDevice.DeviceIDString;
         }
 
         public ProtocolType GetProtocol() {
@@ -89,12 +89,10 @@ namespace SH_OBD {
             }
             STDType = m_obdDevice.GetStandardType();
             if (flag) {
-                m_obdDevice.SetConnected(true);
                 OnConnect?.Invoke();
                 Log.TraceInfo("Connection Established!");
                 return true;
             } else {
-                m_obdDevice.SetConnected(false);
                 Log.TraceWarning("Failed to find a compatible OBD-II interface.");
                 return false;
             }
@@ -123,11 +121,9 @@ namespace SH_OBD {
                 CommSettings.ProtocolIndex = m_obdDevice.GetProtocolType();
                 CommSettings.ComPort = m_obdDevice.GetComPortIndex();
                 SaveCommSettings(CommSettings);
-                m_obdDevice.SetConnected(true);
                 OnConnect?.Invoke();
                 return true;
             }
-            m_obdDevice.SetConnected(false);
             return false;
         }
 
@@ -359,7 +355,6 @@ namespace SH_OBD {
 
         public void Disconnect() {
             m_obdDevice.Disconnect();
-            m_obdDevice.SetConnected(false);
             STDType = StandardType.Automatic;
             OnDisconnect?.Invoke();
         }

@@ -203,15 +203,19 @@ namespace SH_OBD {
         }
 
         private bool CheckOnline() {
-            if (m_online) {
-                return true;
-            } else {
-                if (m_auto && Open()) {
+            if (m_mainSettings.ComPort > 0) {
+                if (m_online) {
                     return true;
+                } else {
+                    if (m_auto && Open()) {
+                        return true;
+                    }
+                    m_log.TraceError("CheckOnline: Offline");
+                    //ThrowException("CheckOnline: Offline");
+                    return false;
                 }
-                m_log.TraceError("CheckOnline: Offline");
-                ThrowException("CheckOnline: Offline");
-                return false;
+            } else {
+                return m_TCP.TestConnect();
             }
         }
 

@@ -10,6 +10,10 @@ namespace Test {
         static void Main(string[] args) {
             SH_OBD_Main obd = new SH_OBD_Main();
             while (true) {
+                if (obd.OBDif.CommSettings.ComPort <= 0 && !obd.TestTCP()) {
+                    Console.WriteLine("Connect remote TCP server error!");
+                    continue;
+                }
                 if (!obd.ConnectOBD()) {
                     Console.WriteLine("ConnectOBD() failed");
                     Console.Read();
@@ -28,7 +32,6 @@ namespace Test {
                 foreach (string key in CVN.Keys) {
                     Console.WriteLine(string.Format("CVN: {0}/{1}", key, CVN[key]));
                 }
-
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }

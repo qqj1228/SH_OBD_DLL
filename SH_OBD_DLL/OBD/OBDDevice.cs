@@ -10,6 +10,21 @@ namespace SH_OBD {
         protected OBDParser m_Parser;
         protected OBDCommELM m_CommELM;
         protected int[] m_xattr;
+        public bool Online {
+            get {
+                return m_CommELM.Online;
+            }
+        }
+        public string DeviceDesString {
+            get {
+                return m_DeviceDes;
+            }
+        }
+        public string DeviceIDString {
+            get {
+                return m_DeviceID;
+            }
+        }
 
         protected OBDDevice(Settings settings, Logger log, int[] xattr) {
             m_log = log;
@@ -17,21 +32,11 @@ namespace SH_OBD {
             m_xattr = xattr;
         }
 
-        public string DeviceDesString() {
-            return m_DeviceDes;
-        }
-
-        public string DeviceIDString() {
-            return m_DeviceID;
-        }
-
         public abstract bool Initialize(Settings settings);
         public abstract bool InitializeAuto(Settings settings);
         public abstract bool Initialize(int iPort, int iBaud);
         public abstract bool Initialize(string strRemoteIP, int iRemotePort);
         public abstract void Disconnect();
-        public abstract bool GetConnected();
-        public abstract void SetConnected(bool status);
         public abstract OBDResponseList Query(OBDParameter param);
         public abstract string Query(string cmd);
         public abstract ProtocolType GetProtocolType();

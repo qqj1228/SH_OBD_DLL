@@ -171,6 +171,17 @@ namespace SH_OBD {
             }
             return strRet.TrimEnd();
         }
+
+        public static bool TcpTest(string strHostName, int iPort) {
+            try {
+                System.Net.Sockets.TcpClient client = new System.Net.Sockets.TcpClient(strHostName, iPort);
+                client.Close();
+                return true;
+            } catch (Exception) {
+                return false;
+            }
+        }
+
     }
 
     // 获取文件版本类

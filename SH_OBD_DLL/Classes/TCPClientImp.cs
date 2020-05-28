@@ -86,6 +86,31 @@ namespace SH_OBD_DLL {
             }
         }
 
+        public bool TestConnect() {
+            Socket cltSocket = m_client.Client;
+            bool bRet = false;
+            // This is how you can determine whether a socket is still connected.
+            bool blockingState = cltSocket.Blocking;
+            try {
+                byte[] tmp = new byte[1];
+                cltSocket.Blocking = false;
+                cltSocket.Send(tmp, 0, 0);
+                bRet = true;
+            } catch (SocketException ex) {
+                // 10035 == WSAEWOULDBLOCK
+                if (ex.NativeErrorCode.Equals(10035)) {
+                    bRet = true;
+                    m_log.TraceWarning(string.Format("Still Connected, but the Send would block[{0}]", ex.NativeErrorCode));
+                } else {
+                    bRet = false;
+                    m_log.TraceError(string.Format("Disconnected: {0}[{1}]", ex.Message, ex.NativeErrorCode));
+                }
+            } finally {
+                cltSocket.Blocking = blockingState;
+            }
+            return bRet;
+        }
+
     }
 
     public class RecvMsgEventArgs : EventArgs {
