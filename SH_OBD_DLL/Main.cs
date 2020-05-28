@@ -231,7 +231,11 @@ namespace SH_OBD_DLL {
         }
 
         public bool TestTCP() {
-            return Utility.TcpTest(OBDif.CommSettings.RemoteIP, OBDif.CommSettings.RemotePort);
+            bool bRet = Utility.TcpTest(OBDif.CommSettings.RemoteIP, OBDif.CommSettings.RemotePort);
+            if (!bRet) {
+                OBDif.Log.TraceError("Can't connect to TCP server of OBD VCI device!");
+            }
+            return bRet;
         }
     }
 }
