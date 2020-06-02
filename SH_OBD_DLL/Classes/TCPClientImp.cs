@@ -51,13 +51,11 @@ namespace SH_OBD_DLL {
 
         public void SendData(byte[] data, int offset, int count) {
             m_clientStream.Write(data, offset, count);
-            m_clientStream.Flush();
         }
 
         public void SendData(string strMsg) {
             byte[] sendMessage = Encoding.UTF8.GetBytes(strMsg);
             m_clientStream.Write(sendMessage, 0, sendMessage.Length);
-            m_clientStream.Flush();
         }
 
         private void AsyncRecvMsg(IAsyncResult ar) {
