@@ -12,6 +12,8 @@ namespace SH_OBD {
         public bool DoInitialization { get; set; }
         public string CN6_OBD_SUP { get; set; }
         public string AutoProtocolOrder { get; set; }
+        [XmlIgnore]
+        public bool FirstRun { get; set; }
 
 
         public Settings() {
@@ -24,6 +26,7 @@ namespace SH_OBD {
             ProtocolIndex = ProtocolType.Automatic;
             StandardIndex = StandardType.Automatic;
             DoInitialization = true;
+            FirstRun = true;
             CN6_OBD_SUP = "29,2B";
             AutoProtocolOrder = "6,7,8,9,10,5,4,3,2,1";
         }

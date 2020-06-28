@@ -3,7 +3,7 @@
   <!-- 是否自动扫描可用端口、OBD协议等 -->
   <AutoDetect>false</AutoDetect>
   <!-- 与ELM327连接的串口号，若为0则使用TCP连接 -->
-  <ComPort>4</ComPort>
+  <ComPort>0</ComPort>
   <!-- 使用TCP方式与远端ELM327连接的IP地址 -->
   <RemoteIP>127.0.0.1</RemoteIP>
   <!-- 使用TCP方式与远端ELM327连接的端口号 -->

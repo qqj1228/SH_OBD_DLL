@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace SH_OBD {
     public abstract class OBDParserCAN : OBDParser {
-        public OBDResponseList Parse(OBDParameter param, string response, int headLen) {
+        public OBDResponseList Parse(OBDParameter param, string response, int headLenRaw) {
+            int headLen = Math.Abs(headLenRaw);
             if (string.IsNullOrEmpty(response)) {
                 response = "";
             }
 
             OBDResponseList responseList = new OBDResponseList(response);
             response = Strip(response);
+            response = ErrorFilter(response);
             if (ErrorCheck(response)) {
                 responseList.ErrorDetected = true;
                 return responseList;
             }
 
-            List<string> tempLines = SplitByCR(response);
+            List<string> legalLines = SplitByCR(response);
+            legalLines = GetLegalLines(param, legalLines, headLen);
             List<string> lines = new List<string>();
-            foreach (string item in tempLines) {
+            foreach (string item in legalLines) {
                 if (item.Length > 0 && item.Length < headLen) {
                     // 需要过滤数据帧总长小于帧头长度的数据，这种数据帧有两种可能：
                     // 1、J1939多帧消息的第一条，因为目前使用的盗版ELM327的版本为v1.3a，
@@ -145,6 +148,150 @@ namespace SH_OBD {
             return bIsMultiline ? iRet + 2 : iRet;
         }
 
+        protected override List<string> GetLegalLines(OBDParameter param, List<string> tempLines, int headLenRaw) {
+            if (headLenRaw < 0) {
+                return InternalGetLegalLinesJ1939(param, tempLines, -headLenRaw);
+            } else {
+                return InternalGetLegalLinesCAN(param, tempLines, headLenRaw);
+            }
+        }
+
+        /// <summary>
+        /// 返回符合标准协议规定的CAN帧
+        /// </summary>
+        /// <param name="tempLines"></param>
+        /// <returns></returns>
+        private List<string> InternalGetLegalLinesCAN(OBDParameter param, List<string> tempLines, int headLen) {
+            List<string> lines = new List<string>();
+            // dicFrameType表示找到的正响应的PDU帧类型，key: ECU ID，value: 帧类型
+            // value值，-1：未确认类型，0：单帧SF，1：首帧FF，2：连续帧CF，3：流控帧FC（ELM327不会返回FC帧）
+            Dictionary<string, int> dicFrameType = new Dictionary<string, int>();
+
+            string positiveResponse = (param.Service + 0x40).ToString("X2") + param.OBDRequest.Substring(2);
+            string negativeResponse = "7F" + param.OBDRequest.Substring(0, 2);
+
+            for (int i = 0; i < tempLines.Count; i++) {
+                if (tempLines[i].Length < headLen) {
+                    continue;
+                }
+                string ECU_ID = tempLines[i].Substring(0, headLen);
+                if (!dicFrameType.Keys.Contains(ECU_ID)) {
+                    dicFrameType.Add(ECU_ID, -1);
+                }
+
+                if (tempLines[i].Contains(negativeResponse)) {
+                    // 响应本命令的负反馈，可能有多个
+                    lines.Add(tempLines[i]);
+                } else if (tempLines[i].Contains(positiveResponse) && dicFrameType[ECU_ID] < 0) {
+                    // 响应本命令的正反馈，每个ECU只会有一个
+                    int pos = tempLines[i].IndexOf(positiveResponse);
+                    if (pos >= 2) {
+                        string strPCI = tempLines[i].Substring(pos - 2, 2);
+                        try {
+                            int iPCI = Convert.ToInt32(strPCI, 16);
+                            if (iPCI <= 7) {
+                                // 找到单帧
+                                dicFrameType[ECU_ID] = 0;
+                                // 处理单帧
+                                lines.Add(tempLines[i]);
+                            } else {
+                                dicFrameType[ECU_ID] = -1;
+                            }
+                        } catch (Exception) {
+                            dicFrameType[ECU_ID] = -1;
+                        }
+                        if (dicFrameType[ECU_ID] < 0 && pos >= 4) {
+                            strPCI = tempLines[i].Substring(pos - 4, 4);
+                            if (strPCI[0] == '1') {
+                                // 找到首帧
+                                dicFrameType[ECU_ID] = 1;
+                                int iDataLen = 0;
+                                int iCF = 0;
+                                try {
+                                    iDataLen = Convert.ToInt32(strPCI.Substring(1), 16);
+                                } catch (Exception) {
+                                    dicFrameType[ECU_ID] = -1;
+                                }
+                                if (iDataLen > 7) {
+                                    // 找到连续帧
+                                    iCF = (int)Math.Ceiling((iDataLen - 6) / 7.0);
+                                    dicFrameType[ECU_ID] = 2;
+                                }
+                                if (dicFrameType[ECU_ID] > 0) {
+                                    // 处理首帧
+                                    lines.Add(tempLines[i]);
+                                    if (dicFrameType[ECU_ID] > 1) {
+                                        // 处理连续帧
+                                        for (int j = 1; j <= iCF; j++) {
+                                            if (tempLines.Count > i + j) {
+                                                lines.Add(tempLines[i + j]);
+                                            }
+                                        }
+                                        i += iCF;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return lines;
+        }
+
+        /// <summary>
+        /// 返回符合标准协议规定的J1939帧
+        /// </summary>
+        /// <param name="tempLines"></param>
+        /// <returns></returns>
+        private List<string> InternalGetLegalLinesJ1939(OBDParameter param, List<string> tempLines, int headLen) {
+            List<string> lines = new List<string>();
+            // dicFrameType表示找到的正响应的PDU帧类型，key: ECU ID，value: 帧类型
+            // value值，-1：未确认类型，0：单帧，1~255：多帧计数
+            Dictionary<string, int> dicFrameType = new Dictionary<string, int>();
+
+            string PGN = param.OBDRequest.Substring(2);
+
+            for (int i = 0; i < tempLines.Count; i++) {
+                if (tempLines[i].Length < headLen) {
+                    try {
+                    } catch (Exception) { }
+                    continue;
+                }
+                string ECU_ID = tempLines[i].Substring(headLen - 2, 2);
+                if (!dicFrameType.Keys.Contains(ECU_ID)) {
+                    dicFrameType.Add(ECU_ID, -1);
+                }
+                if (tempLines[i].Contains(PGN) && dicFrameType[ECU_ID] < 0) {
+                    int pos = tempLines[i].IndexOf(PGN);
+                    if (pos == 2) {
+                        // 单帧
+                        dicFrameType[ECU_ID] = 0;
+                        lines.Add(tempLines[i]);
+                    }
+                } else if (tempLines[i].Substring(2, 4) == "EBFF" && dicFrameType[ECU_ID] < 0) {
+                    int iNum_M;
+                    string ECU_ID_M;
+                    for (int j = 0; i + j < tempLines.Count; j++) {
+                        try {
+                            if (tempLines.Count - 1 >= i + j) {
+                                iNum_M = Convert.ToInt32(tempLines[i + j].Substring(headLen, 2), 16);
+                                ECU_ID_M = tempLines[i + j].Substring(headLen - 2, 2);
+                                if (ECU_ID != ECU_ID_M) {
+                                    continue;
+                                }
+                                if (iNum_M == dicFrameType[ECU_ID] + 1 || (j == 0 && iNum_M == 1)) {
+                                    // 多帧
+                                    dicFrameType[ECU_ID] = iNum_M;
+                                    lines.Add(tempLines[i + j]);
+                                }
+                            }
+                        } catch (Exception) { }
+                    }
+                }
+            }
+            return lines;
+        }
+
         private bool IsTesterPresentResponse(string strData, int headLen) {
             if (strData.Length > 0) {
                 string strActual = strData.Substring(headLen + 2);
@@ -172,7 +319,7 @@ namespace SH_OBD {
     }
 
     public class OBDParser_SAE_J1939_CAN29 : OBDParserCAN {
-        protected const int HEADER_LENGTH = 8;
+        protected const int HEADER_LENGTH = -8;
 
         public override OBDResponseList Parse(OBDParameter param, string response) {
             return Parse(param, response, HEADER_LENGTH);
