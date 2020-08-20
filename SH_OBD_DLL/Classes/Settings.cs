@@ -19,7 +19,7 @@ namespace SH_OBD {
         public Settings() {
             AutoDetect = true;
             ComPort = 0;
-            BaudRateIndex = 0;
+            BaudRateIndex = 1;
             RemoteIP = "127.0.0.1";
             RemotePort = 60001;
             HardwareIndex = HardwareType.Automatic;

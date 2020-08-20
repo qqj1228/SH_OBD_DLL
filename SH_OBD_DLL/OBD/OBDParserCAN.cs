@@ -20,9 +20,13 @@ namespace SH_OBD {
             }
 
             List<string> legalLines = SplitByCR(response);
-            legalLines = GetLegalLines(param, legalLines, headLen);
+            legalLines = GetLegalLines(param, legalLines, headLenRaw);
             List<string> lines = new List<string>();
             foreach (string item in legalLines) {
+                if (item.Length == 0) {
+                    // 过滤空行
+                    continue;
+                }
                 if (item.Length > 0 && item.Length < headLen) {
                     // 需要过滤数据帧总长小于帧头长度的数据，这种数据帧有两种可能：
                     // 1、J1939多帧消息的第一条，因为目前使用的盗版ELM327的版本为v1.3a，
@@ -59,7 +63,7 @@ namespace SH_OBD {
             string header = lines[0].Substring(0, headLen);
             for (int i = 1; i < lines.Count; i++) {
                 if (lines[i].Length >= headLen) {
-                    if (lines[i].Substring(0, headLen).CompareTo(header) == 0) {
+                    if (lines[i].Substring(0, headLen) == header) {
                         group.Add(lines[i]);
                     } else {
                         group = new List<string> { lines[i] };
@@ -124,7 +128,11 @@ namespace SH_OBD {
                 iRet = headLen + 8;
                 break;
             case 9:
-                iRet = param.Parameter % 2 == 0 && param.Parameter % 0x20 != 0 ? headLen + 8 : headLen + 6;
+                if (param.Parameter < 0x0B) {
+                    iRet = param.Parameter % 2 == 0 && param.Parameter % 0x20 != 0 ? headLen + 8 : headLen + 6;
+                } else {
+                    iRet = param.Parameter % 2 != 0 && param.Parameter % 0x20 != 0 ? headLen + 8 : headLen + 6;
+                }
                 break;
             case 0x19:
                 // ISO 27145 ReadDTCInformation
@@ -167,6 +175,9 @@ namespace SH_OBD {
             // value值，-1：未确认类型，0：单帧SF，1：首帧FF，2：连续帧CF，3：流控帧FC（ELM327不会返回FC帧）
             Dictionary<string, int> dicFrameType = new Dictionary<string, int>();
 
+            if (param.OBDRequest.Length < 2) {
+                return lines;
+            }
             string positiveResponse = (param.Service + 0x40).ToString("X2") + param.OBDRequest.Substring(2);
             string negativeResponse = "7F" + param.OBDRequest.Substring(0, 2);
 
@@ -249,6 +260,9 @@ namespace SH_OBD {
             // value值，-1：未确认类型，0：单帧，1~255：多帧计数
             Dictionary<string, int> dicFrameType = new Dictionary<string, int>();
 
+            if (param.OBDRequest.Length < 2) {
+                return lines;
+            }
             string PGN = param.OBDRequest.Substring(2);
 
             for (int i = 0; i < tempLines.Count; i++) {

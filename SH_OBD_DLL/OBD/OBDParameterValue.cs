@@ -22,11 +22,13 @@ namespace SH_OBD {
             DoubleValue = dValue;
             StringValue = strValue;
             ShortStringValue = shortValue;
+            ListStringValue = new List<string>();
         }
 
         public OBDParameterValue() {
             StringValue = "";
             ShortStringValue = "";
+            ListStringValue = new List<string>();
             m_bBitFlags = new bool[32];
         }
 
@@ -68,53 +70,53 @@ namespace SH_OBD {
         }
 
         public void SetBitFlagBAT(int num0) {
-            SetBitFlag(0, ((num0 >> 7) & 1) == 1 ? true : false);
-            SetBitFlag(1, ((num0 >> 6) & 1) == 1 ? true : false);
-            SetBitFlag(2, ((num0 >> 5) & 1) == 1 ? true : false);
-            SetBitFlag(3, ((num0 >> 4) & 1) == 1 ? true : false);
-            SetBitFlag(4, ((num0 >> 3) & 1) == 1 ? true : false);
-            SetBitFlag(5, ((num0 >> 2) & 1) == 1 ? true : false);
-            SetBitFlag(6, ((num0 >> 1) & 1) == 1 ? true : false);
-            SetBitFlag(7, (num0 & 1) == 1 ? true : false);
+            SetBitFlag(0, ((num0 >> 7) & 1) == 1);
+            SetBitFlag(1, ((num0 >> 6) & 1) == 1);
+            SetBitFlag(2, ((num0 >> 5) & 1) == 1);
+            SetBitFlag(3, ((num0 >> 4) & 1) == 1);
+            SetBitFlag(4, ((num0 >> 3) & 1) == 1);
+            SetBitFlag(5, ((num0 >> 2) & 1) == 1);
+            SetBitFlag(6, ((num0 >> 1) & 1) == 1);
+            SetBitFlag(7, (num0 & 1) == 1);
         }
 
         public void SetBitFlagBAT(int num0, int num1) {
             SetBitFlagBAT(num0);
 
-            SetBitFlag(8, ((num1 >> 7) & 1) == 1 ? true : false);
-            SetBitFlag(9, ((num1 >> 6) & 1) == 1 ? true : false);
-            SetBitFlag(10, ((num1 >> 5) & 1) == 1 ? true : false);
-            SetBitFlag(11, ((num1 >> 4) & 1) == 1 ? true : false);
-            SetBitFlag(12, ((num1 >> 3) & 1) == 1 ? true : false);
-            SetBitFlag(13, ((num1 >> 2) & 1) == 1 ? true : false);
-            SetBitFlag(14, ((num1 >> 1) & 1) == 1 ? true : false);
-            SetBitFlag(15, (num1 & 1) == 1 ? true : false);
+            SetBitFlag(8, ((num1 >> 7) & 1) == 1);
+            SetBitFlag(9, ((num1 >> 6) & 1) == 1);
+            SetBitFlag(10, ((num1 >> 5) & 1) == 1);
+            SetBitFlag(11, ((num1 >> 4) & 1) == 1);
+            SetBitFlag(12, ((num1 >> 3) & 1) == 1);
+            SetBitFlag(13, ((num1 >> 2) & 1) == 1);
+            SetBitFlag(14, ((num1 >> 1) & 1) == 1);
+            SetBitFlag(15, (num1 & 1) == 1);
         }
 
         public void SetBitFlagBAT(int num0, int num1, int num2) {
             SetBitFlagBAT(num0, num1);
 
-            SetBitFlag(16, ((num2 >> 7) & 1) == 1 ? true : false);
-            SetBitFlag(17, ((num2 >> 6) & 1) == 1 ? true : false);
-            SetBitFlag(18, ((num2 >> 5) & 1) == 1 ? true : false);
-            SetBitFlag(19, ((num2 >> 4) & 1) == 1 ? true : false);
-            SetBitFlag(20, ((num2 >> 3) & 1) == 1 ? true : false);
-            SetBitFlag(21, ((num2 >> 2) & 1) == 1 ? true : false);
-            SetBitFlag(22, ((num2 >> 1) & 1) == 1 ? true : false);
-            SetBitFlag(23, (num2 & 1) == 1 ? true : false);
+            SetBitFlag(16, ((num2 >> 7) & 1) == 1);
+            SetBitFlag(17, ((num2 >> 6) & 1) == 1);
+            SetBitFlag(18, ((num2 >> 5) & 1) == 1);
+            SetBitFlag(19, ((num2 >> 4) & 1) == 1);
+            SetBitFlag(20, ((num2 >> 3) & 1) == 1);
+            SetBitFlag(21, ((num2 >> 2) & 1) == 1);
+            SetBitFlag(22, ((num2 >> 1) & 1) == 1);
+            SetBitFlag(23, (num2 & 1) == 1);
         }
 
         public void SetBitFlagBAT(int num0, int num1, int num2, int num3) {
             SetBitFlagBAT(num0, num1, num2);
 
-            SetBitFlag(24, ((num3 >> 7) & 1) == 1 ? true : false);
-            SetBitFlag(25, ((num3 >> 6) & 1) == 1 ? true : false);
-            SetBitFlag(26, ((num3 >> 5) & 1) == 1 ? true : false);
-            SetBitFlag(27, ((num3 >> 4) & 1) == 1 ? true : false);
-            SetBitFlag(28, ((num3 >> 3) & 1) == 1 ? true : false);
-            SetBitFlag(29, ((num3 >> 2) & 1) == 1 ? true : false);
-            SetBitFlag(30, ((num3 >> 1) & 1) == 1 ? true : false);
-            SetBitFlag(31, (num3 & 1) == 1 ? true : false);
+            SetBitFlag(24, ((num3 >> 7) & 1) == 1);
+            SetBitFlag(25, ((num3 >> 6) & 1) == 1);
+            SetBitFlag(26, ((num3 >> 5) & 1) == 1);
+            SetBitFlag(27, ((num3 >> 4) & 1) == 1);
+            SetBitFlag(28, ((num3 >> 3) & 1) == 1);
+            SetBitFlag(29, ((num3 >> 2) & 1) == 1);
+            SetBitFlag(30, ((num3 >> 1) & 1) == 1);
+            SetBitFlag(31, (num3 & 1) == 1);
         }
 
     }

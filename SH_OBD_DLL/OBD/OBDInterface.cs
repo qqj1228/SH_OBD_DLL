@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DBCParser;
+using DBCParser.DBCObj;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -20,8 +22,12 @@ namespace SH_OBD {
         public event __Delegate_OnConnect OnConnect;
 
         private OBDDevice m_obdDevice;
+        private readonly Parser m_dbc;
+        private readonly NetWork m_netWork;
         private readonly OBDInterpreter m_obdInterpreter;
-        private List<DTC> m_listDTC;
+        private readonly List<DTC> m_listDTC;
+        private readonly List<SignalDisplay> m_sigDisplays;
+        private readonly List<ValueDisplay> m_valDispalys;
         private readonly List<OBDParameter> m_listAllParameters;
         private readonly List<OBDParameter> m_listSupportedParameters;
         private readonly int[] m_xattr;
@@ -33,14 +39,20 @@ namespace SH_OBD {
 
         public OBDInterface() {
             Log = new Logger("./log/OBD", EnumLogLevel.LogLevelAll, true, 100);
-            Log.TraceInfo("==================================================================");
+            Log.TraceInfo("=======================================================================");
             Log.TraceInfo("==================== START DllVersion: " + DllVersion<OBDInterface>.AssemblyVersion + " ====================");
             m_listAllParameters = new List<OBDParameter>();
             m_listSupportedParameters = new List<OBDParameter>();
-            m_obdInterpreter = new OBDInterpreter();
+            m_sigDisplays = LoadDisplayFile<SignalDisplay>(".\\Configs\\signal.xml");
+            m_valDispalys = LoadDisplayFile<ValueDisplay>(".\\Configs\\value.xml");
+            m_dbc = new Parser();
+            m_netWork = m_dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
+            m_obdInterpreter = new OBDInterpreter(m_netWork, m_sigDisplays, m_valDispalys);
             ConfigResult = LoadConfigResult.Success;
             CommSettings = LoadCommSettings();
-            LoadDTCDefinitions(".\\Configs\\dtc.xml");
+            m_listDTC = LoadDisplayFile<DTC>(".\\Configs\\dtc.xml");
+            m_sigDisplays = LoadDisplayFile<SignalDisplay>(".\\Configs\\signal.xml");
+            m_valDispalys = LoadDisplayFile<ValueDisplay>(".\\Configs\\value.xml");
             string[] strAttr = CommSettings.AutoProtocolOrder.Split(',');
             m_xattr = new int[strAttr.Length];
             for (int i = 0; i < strAttr.Length; i++) {
@@ -234,7 +246,7 @@ namespace SH_OBD {
             }
             strItem = strItem.TrimEnd();
             Log.TraceInfo(strItem);
-            OBDParameterValue obdValue = m_obdInterpreter.GetValue(param, responses, bEnglishUnits);
+            OBDParameterValue obdValue = m_obdInterpreter.GetValue(param, responses);
             if (obdValue.ErrorDetected) {
                 Log.TraceError("Error Detected in OBDParameterValue!");
             } else {
@@ -272,7 +284,7 @@ namespace SH_OBD {
             }
 
             for (int i = 0; i < responses.ResponseCount; i++) {
-                OBDParameterValue obdValue = m_obdInterpreter.GetValue(param, responses.GetOBDResponse(i), bEnglishUnits);
+                OBDParameterValue obdValue = m_obdInterpreter.GetValue(param, responses.GetOBDResponse(i));
                 if (obdValue.ErrorDetected) {
                     Log.TraceError("Error Detected in OBDParameterValue!");
                 } else {
@@ -296,10 +308,12 @@ namespace SH_OBD {
             }
             if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) == (int)OBDParameter.EnumValueTypes.ListString) {
                 strRet += "[ListString: ";
-                foreach (string strx in obdValue.ListStringValue) {
-                    strRet = string.Concat(strRet, strx + ", ");
+                if (obdValue.ListStringValue != null && obdValue.ListStringValue.Count > 0) {
+                    foreach (string strx in obdValue.ListStringValue) {
+                        strRet = string.Concat(strRet, strx + ", ");
+                    }
+                    strRet = strRet.Substring(0, strRet.Length - 2);
                 }
-                strRet = strRet.Substring(0, strRet.Length - 2);
                 strRet += "]";
             }
             if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ShortString) == (int)OBDParameter.EnumValueTypes.ShortString) {
@@ -401,19 +415,20 @@ namespace SH_OBD {
             }
         }
 
-        public int LoadDTCDefinitions(string fileName) {
+        public List<T> LoadDisplayFile<T>(string fileName) {
+            List<T> displays = null;
             try {
                 if (File.Exists(fileName)) {
-                    Type[] extraTypes = new Type[] { typeof(DTC) };
-                    m_listDTC = new XmlSerializer(typeof(List<DTC>), extraTypes).Deserialize(new FileStream(fileName, FileMode.Open)) as List<DTC>;
-                    return m_listDTC.Count;
+                    Type[] extraTypes = new Type[] { typeof(T) };
+                    displays = new XmlSerializer(typeof(List<T>), extraTypes).Deserialize(new FileStream(fileName, FileMode.Open)) as List<T>;
+                    return displays;
                 } else {
-                    Log.TraceError("Failed to locate DTC definitions file: " + fileName + "because it doesn't exist.");
-                    return 0;
+                    Console.WriteLine("Failed to locate the file: " + fileName + ", because it doesn't exist.");
+                    return displays;
                 }
             } catch (Exception ex) {
-                Log.TraceError("Failed to load parameters from: " + fileName + ", reason: " + ex.Message);
-                return -1;
+                Console.WriteLine("Failed to load parameters from: " + fileName + ", reason: " + ex.Message);
+                return displays;
             }
         }
 

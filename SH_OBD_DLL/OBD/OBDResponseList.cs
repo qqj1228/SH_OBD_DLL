@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 namespace SH_OBD {
     public class OBDResponse {
-        public DateTime Timestamp { get; set; }
         public string Data { get; set; }
         public string Header { get; set; }
-        public bool IsValid { get; set; }
 
         public OBDResponse() {
             Data = "";
