@@ -4,7 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public class SerialPortClass {
         readonly SerialPort _serialPort = null;
 

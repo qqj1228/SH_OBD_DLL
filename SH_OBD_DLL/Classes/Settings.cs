@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     [Serializable]
     public class Settings {
         public bool AutoDetect { get; set; }

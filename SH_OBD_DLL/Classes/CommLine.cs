@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public abstract class CommLine : CommBase {
         private const int BUFF_SIZE = 512;
         private static readonly object locker = new object();

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public enum EnumLogLevel {
         LogLevelAll,    //所有信息都写日志
         LogLevelMid,    //写错误、警告信息

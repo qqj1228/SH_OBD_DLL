@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public abstract class OBDParser {
         public abstract OBDResponseList Parse(OBDParameter param, string response);
         protected abstract List<string> GetLegalLines(OBDParameter param, List<string> tempLines, int headLen);

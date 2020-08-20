@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public abstract class OBDDevice {
         protected string m_DeviceDes;
         protected string m_DeviceID;

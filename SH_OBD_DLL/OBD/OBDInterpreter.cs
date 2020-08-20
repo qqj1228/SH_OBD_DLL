@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public partial class OBDInterpreter {
         private readonly NetWork m_netWork;
         private readonly List<SignalDisplay> m_sigDisplays;
@@ -208,23 +208,23 @@ namespace SH_OBD {
                 value2 = GetPIDValue(0x11C, response.Data);
                 break;
             case 1:
-                // 激活的故障代码
+                // 激活的故障代码，未实现解析功能
                 response.Data = response.GetDataByte(0);
                 break;
             case 2:
-                // 先前激活的诊断故障代码
+                // 先前激活的诊断故障代码，未实现解析功能
                 response.Data = response.GetDataByte(1);
                 break;
             case 3:
-                // 持续监视系统支持／状态
+                // 持续监视系统支持／状态，未实现解析功能
                 response.Data = response.GetDataByte(3);
                 break;
             case 4:
-                // 非持续监视系统支持
+                // 非持续监视系统支持，未实现解析功能
                 response.Data = response.GetDataByte(4) + response.GetDataByte(5);
                 break;
             case 5:
-                // 非持续监视系统状态
+                // 非持续监视系统状态，未实现解析功能
                 response.Data = response.GetDataByte(6) + response.GetDataByte(7);
                 break;
             default:

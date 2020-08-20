@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public class OBDCommELM : CommLine {
         protected string m_Port = "COM1";
         public int Port {

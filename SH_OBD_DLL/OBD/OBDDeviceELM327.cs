@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using System.Threading;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public class OBDDeviceELM327 : OBDDevice {
         private ProtocolType m_iProtocol;
         private StandardType m_iStandard;

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public abstract class CommBase {
         private SerialPortClass m_serial = null;
         private TCPClientImp m_TCP = null;

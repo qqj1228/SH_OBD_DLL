@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using SH_OBD;
+using SH_OBD_DLL;
 
 namespace SH_OBD_DLL {
     public class SH_OBD_Main {

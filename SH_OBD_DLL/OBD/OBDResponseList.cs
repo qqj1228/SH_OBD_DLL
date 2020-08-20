@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public class OBDResponse {
         public string Data { get; set; }
         public string Header { get; set; }

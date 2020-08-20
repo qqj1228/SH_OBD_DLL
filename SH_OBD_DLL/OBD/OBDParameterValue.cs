@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     /// <summary>
     /// 用于接收OBD的返回值
     /// </summary>

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Management;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public static class Utility {
         public static double Text2Double(string text) {
             if (double.TryParse(text, out double value)) {

@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public class OBDInterface {
         private const string m_settings_xml = ".\\Configs\\dllsetting.xml";
 
@@ -51,8 +51,6 @@ namespace SH_OBD {
             ConfigResult = LoadConfigResult.Success;
             CommSettings = LoadCommSettings();
             m_listDTC = LoadDisplayFile<DTC>(".\\Configs\\dtc.xml");
-            m_sigDisplays = LoadDisplayFile<SignalDisplay>(".\\Configs\\signal.xml");
-            m_valDispalys = LoadDisplayFile<ValueDisplay>(".\\Configs\\value.xml");
             string[] strAttr = CommSettings.AutoProtocolOrder.Split(',');
             m_xattr = new int[strAttr.Length];
             for (int i = 0; i < strAttr.Length; i++) {

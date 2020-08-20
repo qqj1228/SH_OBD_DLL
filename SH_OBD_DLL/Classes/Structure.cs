@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     internal class DataList {
         private DataNode pHead;
         private DataNode pTail;

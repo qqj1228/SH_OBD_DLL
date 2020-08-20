@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     public abstract class OBDParserNotCAN : OBDParser {
         public OBDResponseList Parse(OBDParameter param, string response, int headLen) {
             if (string.IsNullOrEmpty(response)) {

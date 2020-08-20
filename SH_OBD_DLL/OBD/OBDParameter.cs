@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SH_OBD {
+namespace SH_OBD_DLL {
     /// <summary>
     /// 用于发送命令的OBD参数
     /// </summary>
