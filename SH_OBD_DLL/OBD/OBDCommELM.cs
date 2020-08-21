@@ -57,7 +57,7 @@ namespace SH_OBD_DLL {
         protected byte[] m_RxFilterWithSpace;
         protected byte[] m_RxFilterNoSpace;
 
-        public OBDCommELM(Settings settings, Logger log) : base(settings, log) {
+        public OBDCommELM(DllSettings settings, Logger log) : base(settings, log) {
             m_RxFilterWithSpace = new byte[] { 0x0A, 0x20, 0 };
             m_RxFilterNoSpace = new byte[] { 0x0A, 0 };
         }

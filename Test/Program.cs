@@ -8,9 +8,9 @@ using System.Text;
 namespace Test {
     class Program {
         static void Main(string[] args) {
-            SH_OBD_Main obd = new SH_OBD_Main();
+            SH_OBD_Dll obd = new SH_OBD_Dll();
             while (true) {
-                if (obd.OBDif.CommSettings.ComPort <= 0 && !obd.TestTCP()) {
+                if (obd.OBDif.DllSettings.ComPort <= 0 && !obd.TestTCP()) {
                     Console.WriteLine("Connect remote TCP server error!");
                     continue;
                 }
@@ -41,7 +41,7 @@ namespace Test {
             }
         }
 
-        static Dictionary<string, string> GetPID0C(SH_OBD_Main obd) {
+        static Dictionary<string, string> GetPID0C(SH_OBD_Dll obd) {
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
             if (obd.OBDif.STDType == StandardType.ISO_27145) {
@@ -85,7 +85,7 @@ namespace Test {
             return dicRet;
         }
 
-        static Dictionary<string, string> GetVIN(SH_OBD_Main obd) {
+        static Dictionary<string, string> GetVIN(SH_OBD_Dll obd) {
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
             if (obd.OBDif.STDType == StandardType.ISO_27145) {
@@ -132,7 +132,7 @@ namespace Test {
             return dicRet;
         }
 
-        static Dictionary<string, string> GetCVN(SH_OBD_Main obd) {
+        static Dictionary<string, string> GetCVN(SH_OBD_Dll obd) {
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
             if (obd.OBDif.STDType == StandardType.ISO_27145) {

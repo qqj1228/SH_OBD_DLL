@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace SH_OBD_DLL {
     [Serializable]
-    public class Settings {
+    public class DllSettings {
         public bool AutoDetect { get; set; }
         public int ComPort { get; set; }
         public string RemoteIP { get; set; }
@@ -16,7 +16,7 @@ namespace SH_OBD_DLL {
         public bool FirstRun { get; set; }
 
 
-        public Settings() {
+        public DllSettings() {
             AutoDetect = true;
             ComPort = 0;
             BaudRateIndex = 1;
@@ -146,12 +146,6 @@ namespace SH_OBD_DLL {
         ELM322 = 3,
         ELM323 = 4,
         CANtact = 5
-    }
-
-    [Flags]
-    public enum LoadConfigResult : int {
-        Success = 0,
-        CommSettings = 1
     }
 
     public enum ConnectionType : int {

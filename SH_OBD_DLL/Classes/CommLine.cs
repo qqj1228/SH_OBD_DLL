@@ -19,7 +19,7 @@ namespace SH_OBD_DLL {
         private bool m_bRxEnd = false; // 表示已把串口返回的一包数据处理完毕
         protected int TransTimeout { get; set; }
 
-        protected CommLine(Settings settings, Logger log) : base(settings, log) { }
+        protected CommLine(DllSettings settings, Logger log) : base(settings, log) { }
 
         protected void SetRxFilter(byte[] RxFilter) {
             m_RxFilter = RxFilter;

@@ -26,14 +26,14 @@ namespace SH_OBD_DLL {
             }
         }
 
-        protected OBDDevice(Settings settings, Logger log, int[] xattr) {
+        protected OBDDevice(DllSettings settings, Logger log, int[] xattr) {
             m_log = log;
             m_CommELM = new OBDCommELM(settings, log);
             m_xattr = xattr;
         }
 
-        public abstract bool Initialize(Settings settings);
-        public abstract bool InitializeAuto(Settings settings);
+        public abstract bool Initialize(DllSettings settings);
+        public abstract bool InitializeAuto(DllSettings settings);
         public abstract bool Initialize(int iPort, int iBaud);
         public abstract bool Initialize(string strRemoteIP, int iRemotePort);
         public abstract void Disconnect();

@@ -8,7 +8,7 @@ namespace SH_OBD_DLL {
         private StandardType m_iStandard;
         private int m_iBaudRateIndex;
 
-        public OBDDeviceELM327(Settings settings, Logger log, int[] xattr) : base(settings, log, xattr) {
+        public OBDDeviceELM327(DllSettings settings, Logger log, int[] xattr) : base(settings, log, xattr) {
             m_iProtocol = ProtocolType.Unknown;
             m_iStandard = StandardType.Automatic;
         }
@@ -116,7 +116,7 @@ namespace SH_OBD_DLL {
             return false;
         }
 
-        public override bool Initialize(Settings settings) {
+        public override bool Initialize(DllSettings settings) {
             SetProtocol(settings.ProtocolIndex);
             m_iStandard = settings.StandardIndex;
             if (settings.ComPort > 0) {
@@ -130,7 +130,7 @@ namespace SH_OBD_DLL {
             }
         }
 
-        public override bool InitializeAuto(Settings settings) {
+        public override bool InitializeAuto(DllSettings settings) {
             try {
                 if (m_CommELM.Online) {
                     return true;
@@ -357,7 +357,7 @@ namespace SH_OBD_DLL {
 
         public void SetProtocol(ProtocolType iProtocol) {
             m_iProtocol = iProtocol;
-            m_log.TraceInfo(string.Format("Protocol switched to: {0}", Settings.ProtocolNames[(int)iProtocol]));
+            m_log.TraceInfo(string.Format("Protocol switched to: {0}", DllSettings.ProtocolNames[(int)iProtocol]));
             switch (iProtocol) {
             case ProtocolType.J1850_PWM:
                 m_Parser = new OBDParser_J1850_PWM();

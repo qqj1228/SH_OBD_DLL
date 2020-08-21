@@ -12,13 +12,13 @@ namespace SH_OBD_DLL {
     public abstract class CommBase {
         private SerialPortClass m_serial = null;
         private TCPClientImp m_TCP = null;
-        private readonly Settings m_mainSettings; // 传入的主配置
+        private readonly DllSettings m_mainSettings; // 传入的主配置
         protected readonly Logger m_log;
         private bool m_online = false;
         private bool m_auto = false;
         private int m_writeCount = 0;
 
-        protected CommBase(Settings settings, Logger log) {
+        protected CommBase(DllSettings settings, Logger log) {
             m_mainSettings = settings;
             m_log = log;
         }

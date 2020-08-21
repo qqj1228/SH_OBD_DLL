@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace SH_OBD_DLL {
     public class OBDInterface {
-        private const string m_settings_xml = ".\\Configs\\dllsetting.xml";
+        private const string m_dllSettings_xml = ".\\Configs\\dllsetting.xml";
 
         public delegate void __Delegate_OnConnect();
         public delegate void __Delegate_OnDisconnect();
@@ -25,7 +25,6 @@ namespace SH_OBD_DLL {
         private readonly Parser m_dbc;
         private readonly NetWork m_netWork;
         private readonly OBDInterpreter m_obdInterpreter;
-        private readonly List<DTC> m_listDTC;
         private readonly List<SignalDisplay> m_sigDisplays;
         private readonly List<ValueDisplay> m_valDispalys;
         private readonly List<OBDParameter> m_listAllParameters;
@@ -33,8 +32,8 @@ namespace SH_OBD_DLL {
         private readonly int[] m_xattr;
 
         public Logger Log { get; }
-        public LoadConfigResult ConfigResult { get; private set; }
-        public Settings CommSettings { get; private set; }
+        public bool DllSettingsResult { get; private set; }
+        public DllSettings DllSettings { get; private set; }
         public StandardType STDType { get; set; }
 
         public OBDInterface() {
@@ -48,10 +47,9 @@ namespace SH_OBD_DLL {
             m_dbc = new Parser();
             m_netWork = m_dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
             m_obdInterpreter = new OBDInterpreter(m_netWork, m_sigDisplays, m_valDispalys);
-            ConfigResult = LoadConfigResult.Success;
-            CommSettings = LoadCommSettings();
-            m_listDTC = LoadDisplayFile<DTC>(".\\Configs\\dtc.xml");
-            string[] strAttr = CommSettings.AutoProtocolOrder.Split(',');
+            DllSettingsResult = true;
+            DllSettings = LoadDllSettings();
+            string[] strAttr = DllSettings.AutoProtocolOrder.Split(',');
             m_xattr = new int[strAttr.Length];
             for (int i = 0; i < strAttr.Length; i++) {
                 int.TryParse(strAttr[i], out m_xattr[i]);
@@ -66,7 +64,7 @@ namespace SH_OBD_DLL {
         }
 
         public HardwareType GetDevice() {
-            return CommSettings.HardwareIndex;
+            return DllSettings.HardwareIndex;
         }
 
         public string GetDeviceDesString() {
@@ -78,11 +76,11 @@ namespace SH_OBD_DLL {
         }
 
         public ProtocolType GetProtocol() {
-            return CommSettings.ProtocolIndex;
+            return DllSettings.ProtocolIndex;
         }
 
         public StandardType GetStandard() {
-            return CommSettings.StandardIndex;
+            return DllSettings.StandardIndex;
         }
 
         public void SetTimeout(int iTimeout = 500) {
@@ -91,11 +89,11 @@ namespace SH_OBD_DLL {
 
         public bool InitDevice(bool bGetPIDStatus = true) {
             bool flag;
-            SetDevice(CommSettings.HardwareIndex);
+            SetDevice(DllSettings.HardwareIndex);
             if (bGetPIDStatus) {
-                flag = m_obdDevice.Initialize(CommSettings) && InitOBD();
+                flag = m_obdDevice.Initialize(DllSettings) && InitOBD();
             } else {
-                flag = m_obdDevice.Initialize(CommSettings);
+                flag = m_obdDevice.Initialize(DllSettings);
             }
             STDType = m_obdDevice.GetStandardType();
             if (flag) {
@@ -120,17 +118,17 @@ namespace SH_OBD_DLL {
 
             SetDevice(HardwareType.ELM327);
             bool flag;
-            CommSettings.StandardIndex = STDType;
+            DllSettings.StandardIndex = STDType;
             if (bGetPIDStatus) {
-                flag = m_obdDevice.InitializeAuto(CommSettings) && InitOBD();
+                flag = m_obdDevice.InitializeAuto(DllSettings) && InitOBD();
             } else {
-                flag = m_obdDevice.InitializeAuto(CommSettings);
+                flag = m_obdDevice.InitializeAuto(DllSettings);
             }
             STDType = m_obdDevice.GetStandardType();
             if (flag) {
-                CommSettings.ProtocolIndex = m_obdDevice.GetProtocolType();
-                CommSettings.ComPort = m_obdDevice.GetComPortIndex();
-                SaveCommSettings(CommSettings);
+                DllSettings.ProtocolIndex = m_obdDevice.GetProtocolType();
+                DllSettings.ComPort = m_obdDevice.GetComPortIndex();
+                SaveDllSettings(DllSettings);
                 OnConnect?.Invoke();
                 return true;
             }
@@ -371,15 +369,6 @@ namespace SH_OBD_DLL {
             OnDisconnect?.Invoke();
         }
 
-        public DTC GetDTC(string code) {
-            foreach (DTC dtc in m_listDTC) {
-                if (dtc.Name.CompareTo(code) == 0) {
-                    return dtc;
-                }
-            }
-            return new DTC(code, "", "");
-        }
-
         public OBDParameter LookupParameter(string pid) {
             foreach (OBDParameter param in m_listAllParameters) {
                 if (param.PID.CompareTo(pid) == 0) {
@@ -400,15 +389,15 @@ namespace SH_OBD_DLL {
         }
 
         private void SetDevice(HardwareType device) {
-            CommSettings.HardwareIndex = device;
+            DllSettings.HardwareIndex = device;
             switch (device) {
             case HardwareType.ELM327:
                 Log.TraceInfo("Set device to ELM327");
-                m_obdDevice = new OBDDeviceELM327(CommSettings, Log, m_xattr);
+                m_obdDevice = new OBDDeviceELM327(DllSettings, Log, m_xattr);
                 break;
             default:
                 Log.TraceInfo("Set device to ELM327");
-                m_obdDevice = new OBDDeviceELM327(CommSettings, Log, m_xattr);
+                m_obdDevice = new OBDDeviceELM327(DllSettings, Log, m_xattr);
                 break;
             }
         }
@@ -430,28 +419,28 @@ namespace SH_OBD_DLL {
             }
         }
 
-        public void SaveCommSettings(Settings settings) {
-            CommSettings = settings;
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Settings));
-            using (TextWriter writer = new StreamWriter(m_settings_xml)) {
-                xmlSerializer.Serialize(writer, CommSettings);
+        public void SaveDllSettings(DllSettings settings) {
+            DllSettings = settings;
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(DllSettings));
+            using (TextWriter writer = new StreamWriter(m_dllSettings_xml)) {
+                xmlSerializer.Serialize(writer, DllSettings);
                 writer.Close();
             }
         }
 
-        public Settings LoadCommSettings() {
+        public DllSettings LoadDllSettings() {
             try {
-                XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                using (FileStream reader = new FileStream(m_settings_xml, FileMode.Open)) {
-                    CommSettings = (Settings)serializer.Deserialize(reader);
+                XmlSerializer serializer = new XmlSerializer(typeof(DllSettings));
+                using (FileStream reader = new FileStream(m_dllSettings_xml, FileMode.Open)) {
+                    DllSettings = (DllSettings)serializer.Deserialize(reader);
                     reader.Close();
                 }
             } catch (Exception ex) {
-                Log.TraceError("Using default communication settings because of failed to load them, reason: " + ex.Message);
-                CommSettings = new Settings();
-                ConfigResult |= LoadConfigResult.CommSettings;
+                Log.TraceError("Using default dll settings because of failed to load them, reason: " + ex.Message);
+                DllSettings = new DllSettings();
+                DllSettingsResult = false;
             }
-            return CommSettings;
+            return DllSettings;
         }
 
     }

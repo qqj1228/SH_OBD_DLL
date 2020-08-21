@@ -6,33 +6,33 @@ using System.Text;
 using SH_OBD_DLL;
 
 namespace SH_OBD_DLL {
-    public class SH_OBD_Main {
+    public class SH_OBD_Dll {
         private const int MAX_PID = 0x100;
 
         public OBDInterface OBDif { get; }
         public Dictionary<string, bool[]> Mode01Support { get; }
         public Dictionary<string, bool[]> Mode09Support { get; }
 
-        public SH_OBD_Main() {
+        public SH_OBD_Dll() {
             OBDif = new OBDInterface();
             Mode01Support = new Dictionary<string, bool[]>();
             Mode09Support = new Dictionary<string, bool[]>();
         }
 
         private void LogCommSettingInfo() {
-            OBDif.Log.TraceInfo(">>>>> Start to connect OBD. DllVersion: " + DllVersion<SH_OBD_Main>.AssemblyVersion + " <<<<<");
+            OBDif.Log.TraceInfo(">>>>> Start to connect OBD. DllVersion: " + DllVersion<SH_OBD_Dll>.AssemblyVersion + " <<<<<");
             OBDif.Log.TraceInfo("Connection Procedure Initiated");
 
-            if (OBDif.CommSettings.AutoDetect) {
+            if (OBDif.DllSettings.AutoDetect) {
                 OBDif.Log.TraceInfo("   Automatic Hardware Detection: ON");
             } else {
                 OBDif.Log.TraceInfo("   Automatic Hardware Detection: OFF");
             }
 
-            OBDif.Log.TraceInfo(string.Format("   Baud Rate: {0}", OBDif.CommSettings.BaudRate));
-            OBDif.Log.TraceInfo(string.Format("   Default Port: {0}", OBDif.CommSettings.ComPortName));
+            OBDif.Log.TraceInfo(string.Format("   Baud Rate: {0}", OBDif.DllSettings.BaudRate));
+            OBDif.Log.TraceInfo(string.Format("   Default Port: {0}", OBDif.DllSettings.ComPortName));
 
-            switch (OBDif.CommSettings.HardwareIndex) {
+            switch (OBDif.DllSettings.HardwareIndex) {
             case HardwareType.Automatic:
                 OBDif.Log.TraceInfo("   Interface: Auto-Detect");
                 break;
@@ -56,10 +56,10 @@ namespace SH_OBD_DLL {
                 throw new Exception("Bad hardware type.");
             }
 
-            OBDif.Log.TraceInfo(string.Format("   Protocol: {0}", OBDif.CommSettings.ProtocolName));
-            OBDif.Log.TraceInfo(string.Format("   Application Layer Protocol: {0}", OBDif.CommSettings.StandardName));
+            OBDif.Log.TraceInfo(string.Format("   Protocol: {0}", OBDif.DllSettings.ProtocolName));
+            OBDif.Log.TraceInfo(string.Format("   Application Layer Protocol: {0}", OBDif.DllSettings.StandardName));
 
-            if (OBDif.CommSettings.DoInitialization) {
+            if (OBDif.DllSettings.DoInitialization) {
                 OBDif.Log.TraceInfo("   Initialize: YES");
             } else {
                 OBDif.Log.TraceInfo("   Initialize: NO");
@@ -69,7 +69,7 @@ namespace SH_OBD_DLL {
         public bool ConnectOBD() {
             OBDif.Disconnect();
             LogCommSettingInfo();
-            if (OBDif.CommSettings.AutoDetect) {
+            if (OBDif.DllSettings.AutoDetect) {
                 if (OBDif.InitDeviceAuto(false)) {
                     OBDif.Log.TraceInfo("Connection Established!");
                 } else {
@@ -231,7 +231,7 @@ namespace SH_OBD_DLL {
         }
 
         public bool TestTCP() {
-            bool bRet = Utility.TcpTest(OBDif.CommSettings.RemoteIP, OBDif.CommSettings.RemotePort);
+            bool bRet = Utility.TcpTest(OBDif.DllSettings.RemoteIP, OBDif.DllSettings.RemotePort);
             if (!bRet) {
                 OBDif.Log.TraceError("Can't connect to TCP server of OBD VCI device!");
             }
