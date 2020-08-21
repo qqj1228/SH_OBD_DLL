@@ -1,34 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <!-- 是否自动扫描可用端口、OBD协议等 -->
-  <AutoDetect>false</AutoDetect>
-  <!-- 与ELM327连接的串口号，若为0则使用TCP连接 -->
-  <ComPort>0</ComPort>
-  <!-- 使用TCP方式与远端ELM327连接的IP地址 -->
+<DllSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AutoDetect>true</AutoDetect>
+  <ComPort>4</ComPort>
   <RemoteIP>127.0.0.1</RemoteIP>
-  <!-- 使用TCP方式与远端ELM327连接的端口号 -->
   <RemotePort>60001</RemotePort>
-  <!-- 与ELM327连接的波特率类型 -->
   <BaudRateIndex>1</BaudRateIndex>
-  <!-- VCI设备类型 -->
-  <HardwareIndex>1</HardwareIndex>
-  <!-- OBD协议类型 -->
-  <ProtocolIndex>6</ProtocolIndex>
-  <!-- K线协议是否要初始化 -->
   <DoInitialization>true</DoInitialization>
-  <!-- 国六车型的OBD型式列表 -->
   <CN6_OBD_SUP>29,2B</CN6_OBD_SUP>
-  <!-- 自定义自动连接OBD协议和顺序，数字代表协议号，多个数字之间使用“,”分隔，协议号如下：
-        1 - SAE J1850 PWM 41.6k波特率
-        2 - SAE J1850 VPW 10.4k波特率
-        3 - ISO 9141-2 5波特率初始化
-        4 - ISO 14230-4 KWP 5波特率初始化
-        5 - ISO 14230-4 KWP 快速初始化
-        6 - ISO 15765-4 CAN 11位ID 500k波特率
-        7 - ISO 15765-4 CAN 29位ID 500k波特率
-        8 - ISO 15765-4 CAN 11位ID 250k波特率
-        9 - ISO 15765-4 CAN 29位ID 250k波特率
-        10 - SAE J1939 CAN 29位ID 250k波特率
-  -->
   <AutoProtocolOrder>6,7,10,5,8,9,4,3</AutoProtocolOrder>
-</Settings>
+  <ProtocolIndex>10</ProtocolIndex>
+  <HardwareIndex>1</HardwareIndex>
+  <StandardIndex>0</StandardIndex>
+</DllSettings>

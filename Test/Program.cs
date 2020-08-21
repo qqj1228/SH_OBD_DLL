@@ -1,5 +1,4 @@
 ﻿using SH_OBD_DLL;
-using SH_OBD_DLL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,9 @@ namespace Test {
         static void Main(string[] args) {
             SH_OBD_Dll obd = new SH_OBD_Dll();
             OBDInterface OBDIf = obd.GetOBDInterface();
+            if (!OBDIf.DllSettingsResult) {
+                OBDIf.SaveDllSettings(OBDIf.DllSettings);
+            }
             while (true) {
                 if (OBDIf.DllSettings.ComPort <= 0 && !obd.TestTCP()) {
                     Console.WriteLine("Connect remote TCP server error!");
