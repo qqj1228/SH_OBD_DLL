@@ -9,8 +9,9 @@ namespace Test {
     class Program {
         static void Main(string[] args) {
             SH_OBD_Dll obd = new SH_OBD_Dll();
+            OBDInterface OBDIf = obd.GetOBDInterface();
             while (true) {
-                if (obd.OBDif.DllSettings.ComPort <= 0 && !obd.TestTCP()) {
+                if (OBDIf.DllSettings.ComPort <= 0 && !obd.TestTCP()) {
                     Console.WriteLine("Connect remote TCP server error!");
                     continue;
                 }
@@ -42,25 +43,26 @@ namespace Test {
         }
 
         static Dictionary<string, string> GetPID0C(SH_OBD_Dll obd) {
+            OBDInterface OBDIf = obd.GetOBDInterface();
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
-            if (obd.OBDif.STDType == StandardType.ISO_27145) {
+            if (OBDIf.STDType == StandardType.ISO_27145) {
                 param.OBDRequest = "22F40C";
                 param.Service = 0x22;
                 param.Parameter = 0xF40C;
                 param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
-            } else if (obd.OBDif.STDType == StandardType.ISO_15031) {
+            } else if (OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "010C";
                 param.Service = 1;
                 param.Parameter = 0x0C;
                 param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
-            } else if (obd.OBDif.STDType == StandardType.SAE_J1939) {
+            } else if (OBDIf.STDType == StandardType.SAE_J1939) {
                 return dicRet;
             }
 
-            List<OBDParameterValue> valueList = obd.OBDif.GetValueList(param);
+            List<OBDParameterValue> valueList = OBDIf.GetValueList(param);
             foreach (OBDParameterValue value in valueList) {
                 if (value.ErrorDetected) {
                     continue;
@@ -86,34 +88,35 @@ namespace Test {
         }
 
         static Dictionary<string, string> GetVIN(SH_OBD_Dll obd) {
+            OBDInterface OBDIf = obd.GetOBDInterface();
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
-            if (obd.OBDif.STDType == StandardType.ISO_27145) {
+            if (OBDIf.STDType == StandardType.ISO_27145) {
                 param.OBDRequest = "22F802";
                 param.Service = 0x22;
                 param.Parameter = 0xF802;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (obd.OBDif.STDType == StandardType.ISO_15031) {
+            } else if (OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "0902";
                 param.Service = 9;
                 param.Parameter = 2;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (obd.OBDif.STDType == StandardType.SAE_J1939) {
+            } else if (OBDIf.STDType == StandardType.SAE_J1939) {
                 param.OBDRequest = "00FEEC";
                 param.Service = 0;
                 param.Parameter = 0xFEEC;
                 param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-                obd.OBDif.SetTimeout(1000);
+                OBDIf.SetTimeout(1000);
             }
 
-            List<OBDParameterValue> valueList = obd.OBDif.GetValueList(param);
+            List<OBDParameterValue> valueList = OBDIf.GetValueList(param);
             foreach (OBDParameterValue value in valueList) {
                 if (value.ErrorDetected) {
                     continue;
                 }
                 bool flag = obd.Mode09Support.ContainsKey(value.ECUResponseID) && obd.Mode09Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1];
-                flag = flag || obd.OBDif.STDType == StandardType.SAE_J1939;
+                flag = flag || OBDIf.STDType == StandardType.SAE_J1939;
                 if (flag) {
                     if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) != 0) {
                         if (value.ListStringValue.Count == 0 || value.ListStringValue[0].Length == 0) {
@@ -133,34 +136,35 @@ namespace Test {
         }
 
         static Dictionary<string, string> GetCVN(SH_OBD_Dll obd) {
+            OBDInterface OBDIf = obd.GetOBDInterface();
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
-            if (obd.OBDif.STDType == StandardType.ISO_27145) {
+            if (OBDIf.STDType == StandardType.ISO_27145) {
                 param.OBDRequest = "22F806";
                 param.Service = 0x22;
                 param.Parameter = 0xF806;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (obd.OBDif.STDType == StandardType.ISO_15031) {
+            } else if (OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "0906";
                 param.Service = 9;
                 param.Parameter = 6;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (obd.OBDif.STDType == StandardType.SAE_J1939) {
+            } else if (OBDIf.STDType == StandardType.SAE_J1939) {
                 param.OBDRequest = "00D300";
                 param.Service = 0;
                 param.Parameter = 0xD300;
                 param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-                obd.OBDif.SetTimeout(1000);
+                OBDIf.SetTimeout(1000);
             }
 
-            List<OBDParameterValue> valueList = obd.OBDif.GetValueList(param);
+            List<OBDParameterValue> valueList = OBDIf.GetValueList(param);
             foreach (OBDParameterValue value in valueList) {
                 if (value.ErrorDetected) {
                     continue;
                 }
                 bool flag = obd.Mode09Support.ContainsKey(value.ECUResponseID) && obd.Mode09Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1];
-                flag = flag || obd.OBDif.STDType == StandardType.SAE_J1939;
+                flag = flag || OBDIf.STDType == StandardType.SAE_J1939;
                 if (flag) {
                     if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) != 0) {
                         if (value.ListStringValue.Count == 0 || value.ListStringValue[0].Length == 0) {
