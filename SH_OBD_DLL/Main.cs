@@ -92,15 +92,11 @@ namespace SH_OBD_DLL {
             int HByte = 0;
             if (m_OBDIf.STDType == StandardType.ISO_27145) {
                 HByte = (mode << 8) & 0xFF00;
-                param = new OBDParameter(0x22, HByte, 0) {
-                    ValueTypes = 32
-                };
+                param = new OBDParameter(0x22, HByte, 0, 32);
             } else if (m_OBDIf.STDType == StandardType.ISO_15031) {
-                param = new OBDParameter(mode, 0, 0) {
-                    ValueTypes = 32
-                };
+                param = new OBDParameter(mode, 0, 0, 32);
             } else if (m_OBDIf.STDType == StandardType.SAE_J1939) {
-                param = new OBDParameter(0, mode, 0);
+                param = new OBDParameter(0, mode, 0, 0);
             }
             List<OBDParameterValue> valueList = m_OBDIf.GetValueList(param);
             foreach (OBDParameterValue value in valueList) {
@@ -184,7 +180,8 @@ namespace SH_OBD_DLL {
             return true;
         }
 
-        public bool SetSupportStatus() {
+        public bool SetSupportStatus(out string errorMsg) {
+            errorMsg = string.Empty;
             int mode01 = 1;
             int mode09 = 9;
             if (m_OBDIf.STDType == StandardType.ISO_27145) {
@@ -197,10 +194,13 @@ namespace SH_OBD_DLL {
 
             if (!GetSupportStatus(mode01, Mode01Support)) {
                 if (m_OBDIf.STDType == StandardType.ISO_27145) {
+                    errorMsg = "获取 DID F4 支持状态出错！";
                     m_OBDIf.Log.TraceError("Get DID F4 Support Status Error!");
                 } else if (m_OBDIf.STDType == StandardType.SAE_J1939) {
+                    errorMsg = "获取 DM5 支持状态出错！";
                     m_OBDIf.Log.TraceError("Get DM5 Support Status Error!");
                 } else {
+                    errorMsg = "获取 Mode01 支持状态出错！";
                     m_OBDIf.Log.TraceError("Get Mode01 Support Status Error!");
                 }
                 return false;
@@ -210,8 +210,10 @@ namespace SH_OBD_DLL {
                 // J1939只取一个支持状态就够了
                 if (!GetSupportStatus(mode09, Mode09Support)) {
                     if (m_OBDIf.STDType == StandardType.ISO_27145) {
+                        errorMsg = "获取 DID F8 支持状态出错！";
                         m_OBDIf.Log.TraceError("Get DID F8 Support Status Error!");
                     } else {
+                        errorMsg = "获取 Mode09 支持状态出错！";
                         m_OBDIf.Log.TraceError("Get Mode09 Support Status Error!");
                     }
                     return false;

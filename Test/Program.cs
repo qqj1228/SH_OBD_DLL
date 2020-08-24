@@ -22,8 +22,8 @@ namespace Test {
                     Console.Read();
                     return;
                 }
-                if (!obd.SetSupportStatus()) {
-                    Console.WriteLine("SetSupportStatus() failed");
+                if (!obd.SetSupportStatus(out string errMsg)) {
+                    Console.WriteLine("SetSupportStatus() failed, " + errMsg);
                     Console.Read();
                     return;
                 }
@@ -52,13 +52,11 @@ namespace Test {
                 param.OBDRequest = "22F40C";
                 param.Service = 0x22;
                 param.Parameter = 0xF40C;
-                param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             } else if (OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "010C";
                 param.Service = 1;
                 param.Parameter = 0x0C;
-                param.SubParameter = 0;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             } else if (OBDIf.STDType == StandardType.SAE_J1939) {
                 return dicRet;

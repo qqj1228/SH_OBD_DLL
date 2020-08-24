@@ -126,11 +126,7 @@ namespace SH_OBD_DLL {
         public List<OBDParameterValue> GetValueList(OBDParameter param) {
             List<OBDParameterValue> ValueList = new List<OBDParameterValue>();
 
-            if (param.PID.Length > 0) {
-                Log.TraceInfo("Requesting: " + param.PID);
-            } else {
-                Log.TraceInfo("Requesting: " + param.OBDRequest);
-            }
+            Log.TraceInfo("Requesting: " + param.OBDRequest);
             OBDResponseList responses = m_obdDevice.Query(param);
             string strItem = "Responses: ";
             if (responses.ErrorDetected) {
