@@ -141,11 +141,7 @@ namespace SH_OBD_DLL {
 
     public enum HardwareType : int {
         Automatic = 0,
-        ELM327 = 1,
-        ELM320 = 2,
-        ELM322 = 3,
-        ELM323 = 4,
-        CANtact = 5
+        ELM327 = 1
     }
 
     public enum ConnectionType : int {
