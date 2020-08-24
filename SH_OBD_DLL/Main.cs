@@ -12,8 +12,8 @@ namespace SH_OBD_DLL {
         public Dictionary<string, bool[]> Mode01Support { get; }
         public Dictionary<string, bool[]> Mode09Support { get; }
 
-        public SH_OBD_Dll() {
-            m_OBDIf = new OBDInterface();
+        public SH_OBD_Dll(string logPath) {
+            m_OBDIf = new OBDInterface(logPath);
             Mode01Support = new Dictionary<string, bool[]>();
             Mode09Support = new Dictionary<string, bool[]>();
         }
@@ -22,7 +22,7 @@ namespace SH_OBD_DLL {
             return m_OBDIf;
         }
 
-        private void LogCommSettingInfo() {
+        public void LogCommSettingInfo() {
             m_OBDIf.Log.TraceInfo(">>>>> Start to connect OBD. DllVersion: " + DllVersion<SH_OBD_Dll>.AssemblyVersion + " <<<<<");
             m_OBDIf.Log.TraceInfo("Connection Procedure Initiated");
 
@@ -61,7 +61,7 @@ namespace SH_OBD_DLL {
             m_OBDIf.Disconnect();
             LogCommSettingInfo();
             if (m_OBDIf.DllSettings.AutoDetect) {
-                if (m_OBDIf.InitDeviceAuto(false)) {
+                if (m_OBDIf.InitDeviceAuto()) {
                     m_OBDIf.Log.TraceInfo("Connection Established!");
                 } else {
                     m_OBDIf.Log.TraceWarning("Failed to find a compatible OBD-II interface.");
@@ -69,7 +69,7 @@ namespace SH_OBD_DLL {
                     return false;
                 }
             } else {
-                if (m_OBDIf.InitDevice(false)) {
+                if (m_OBDIf.InitDevice()) {
                     m_OBDIf.Log.TraceInfo("Connection Established!");
                 } else {
                     m_OBDIf.Log.TraceWarning("Failed to find a compatible OBD-II interface.");

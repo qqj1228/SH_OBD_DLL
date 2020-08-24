@@ -83,84 +83,6 @@ namespace SH_OBD_DLL {
             return value2;
         }
 
-        public OBDParameterValue GetMode05Value(OBDParameter param, OBDResponse response) {
-            OBDParameterValue value2 = new OBDParameterValue();
-            switch (param.Parameter) {
-            case 0x00:
-                value2 = GetPIDSupport(response);
-                break;
-            case 0x01:
-            case 0x02:
-            case 0x03:
-            case 0x04:
-                if (response.GetDataByteCount() < 1) {
-                    value2.ErrorDetected = true;
-                    break;
-                }
-                value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(0)) * 0.005;
-                value2.DoubleValue = Math.Round(value2.DoubleValue, 2);
-                break;
-            case 0x05:
-            case 0x06:
-                if (response.GetDataByteCount() < 3) {
-                    value2.ErrorDetected = true;
-                    break;
-                }
-                if (param.SubParameter == 0) {
-                    // 取计算值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(0)) * 0.004;
-                } else if (param.SubParameter == 1) {
-                    // 取最小值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(1)) * 0.004;
-                } else if (param.SubParameter == 2) {
-                    // 取最大值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(2)) * 0.004;
-                }
-                value2.DoubleValue = Math.Round(value2.DoubleValue, 2);
-                break;
-            case 0x07:
-            case 0x08:
-                if (response.GetDataByteCount() < 3) {
-                    value2.ErrorDetected = true;
-                    break;
-                }
-                if (param.SubParameter == 0) {
-                    // 取计算值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(0)) * 0.005;
-                } else if (param.SubParameter == 1) {
-                    // 取最小值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(1)) * 0.005;
-                } else if (param.SubParameter == 2) {
-                    // 取最大值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(2)) * 0.005;
-                }
-                value2.DoubleValue = Math.Round(value2.DoubleValue, 2);
-                break;
-            case 0x09:
-            case 0x0A:
-                if (response.GetDataByteCount() < 3) {
-                    value2.ErrorDetected = true;
-                    break;
-                }
-                if (param.SubParameter == 0) {
-                    // 取计算值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(0)) * 0.04;
-                } else if (param.SubParameter == 1) {
-                    // 取最小值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(1)) * 0.04;
-                } else if (param.SubParameter == 2) {
-                    // 取最大值
-                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(2)) * 0.04;
-                }
-                value2.DoubleValue = Math.Round(value2.DoubleValue, 2);
-                break;
-            default:
-                value2.ErrorDetected = true;
-                break;
-            }
-            return value2;
-        }
-
         private List<string> SetMode09ASCII(int DataOffset, OBDResponse response) {
             List<string> strings = new List<string>();
             int num = response.Data.Length / DataOffset;
@@ -320,9 +242,6 @@ namespace SH_OBD_DLL {
             case 0x0A:
                 value2 = GetMode03070AValue(response);
                 break;
-            case 5:
-                value2 = GetMode05Value(param, response);
-                break;
             case 9:
                 value2 = GetMode010209Value(param, response);
                 break;
@@ -365,77 +284,6 @@ namespace SH_OBD_DLL {
                 value2.ECUResponseID = value2.ECUResponseID.Substring(6);
             }
             return value2;
-        }
-
-        public OBDParameterValue GetValue(OBDParameter param, OBDResponseList responses) {
-            if (responses.ResponseCount == 1) {
-                return GetValue(param, responses.GetOBDResponse(0));
-            }
-            if ((param.Service == 1) || (param.Service == 2)) {
-                if (((param.Parameter == 0) || (param.Parameter == 0x20)) || ((param.Parameter == 0x40) || (param.Parameter == 0x60))) {
-                    OBDParameterValue value7 = new OBDParameterValue();
-                    for (int i = 0; i < responses.ResponseCount; i++) {
-                        OBDParameterValue value4 = GetValue(param, responses.GetOBDResponse(i));
-                        if (value4.ErrorDetected) {
-                            return value4;
-                        }
-                        for (int j = 0; j < 0x20; j++) {
-                            value7.SetBitFlag(j, value4.GetBitFlag(j));
-                        }
-                    }
-                    return value7;
-                }
-                if ((param.Parameter == 1) && (param.SubParameter == 0)) {
-                    OBDParameterValue value2 = new OBDParameterValue {
-                        BoolValue = false
-                    };
-                    for (int i = 0; i < responses.ResponseCount; i++) {
-                        OBDParameterValue value6 = GetValue(param, responses.GetOBDResponse(i));
-                        if (value6.ErrorDetected) {
-                            return value6;
-                        }
-                        if (value6.BoolValue) {
-                            value2.BoolValue = true;
-                        }
-                    }
-                    if (value2.BoolValue) {
-                        value2.DoubleValue = 1.0;
-                        value2.StringValue = "ON";
-                        value2.ShortStringValue = "ON";
-                        return value2;
-                    } else {
-                        value2.DoubleValue = 0.0;
-                        value2.StringValue = "OFF";
-                        value2.ShortStringValue = "OFF";
-                        return value2;
-                    }
-                }
-                if ((param.Parameter == 1) && (param.SubParameter == 1)) {
-                    OBDParameterValue value3 = new OBDParameterValue {
-                        DoubleValue = 0.0
-                    };
-                    for (int i = 0; i < responses.ResponseCount; i++) {
-                        OBDParameterValue value5 = GetValue(param, responses.GetOBDResponse(i));
-                        if (value5.ErrorDetected) {
-                            return value5;
-                        }
-                        value3.DoubleValue = value5.DoubleValue + value3.DoubleValue;
-                    }
-                    return value3;
-                }
-            }
-            if ((param.Service != 3) && (param.Service != 7)) {
-                return GetValue(param, responses.GetOBDResponse(0));
-            }
-            OBDParameterValue value8 = new OBDParameterValue();
-            List<string> strings = new List<string>();
-            for (int i = 0; i < responses.ResponseCount; i++) {
-                foreach (string str in GetValue(param, responses.GetOBDResponse(i)).ListStringValue) {
-                    strings.Add(str);
-                }
-            }
-            value8.ListStringValue = strings;
-            return value8;
         }
 
         public string GetDTCName(string strHexDTC) {

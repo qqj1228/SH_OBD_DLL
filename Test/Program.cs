@@ -7,7 +7,7 @@ using System.Text;
 namespace Test {
     class Program {
         static void Main(string[] args) {
-            SH_OBD_Dll obd = new SH_OBD_Dll();
+            SH_OBD_Dll obd = new SH_OBD_Dll(".\\log\\OBD");
             OBDInterface OBDIf = obd.GetOBDInterface();
             if (!OBDIf.DllSettingsResult) {
                 OBDIf.SaveDllSettings(OBDIf.DllSettings);

@@ -51,18 +51,7 @@ namespace SH_OBD_DLL {
         }
         public int Service { get; set; }
         public int SubParameter { get; set; }
-        public double MetricMaxValue { get; set; }
-        public double MetricMinValue { get; set; }
-        public double EnglishMaxValue { get; set; }
-        public double EnglishMinValue { get; set; }
         public int ValueTypes { get; set; }
-        public int Priority { get; set; }
-        public int Manufacturer { get; set; }
-        public int Type { get; set; }
-        public int Category { get; set; }
-        public string MetricUnitLabel { get; set; } = "";
-        public string EnglishUnitLabel { get; set; } = "";
-        public string Name { get; set; } = "";
         public string PID { get; set; } = "";
 
         public OBDParameter(int service, int parameter, int subParameter, int frame) {
@@ -93,23 +82,12 @@ namespace SH_OBD_DLL {
 
         public OBDParameter GetCopy() {
             OBDParameter p = new OBDParameter {
-                Category = Category,
                 ValueTypes = ValueTypes,
-                EnglishMaxValue = EnglishMaxValue,
-                EnglishMinValue = EnglishMinValue,
-                EnglishUnitLabel = EnglishUnitLabel,
-                Manufacturer = Manufacturer,
-                MetricMaxValue = MetricMaxValue,
-                MetricMinValue = MetricMinValue,
-                MetricUnitLabel = MetricUnitLabel,
-                Name = Name,
                 m_OBDRequest = OBDRequest,
                 m_parameter = Parameter,
                 PID = PID,
-                Priority = Priority,
                 Service = Service,
                 SubParameter = SubParameter,
-                Type = Type
             };
             return p;
         }
@@ -119,10 +97,6 @@ namespace SH_OBD_DLL {
             copy.Service = 2;
             copy.OBDRequest = "02" + copy.OBDRequest.Substring(2, 2) + iFrame.ToString("D2");
             return copy;
-        }
-
-        public override string ToString() {
-            return Name;
         }
 
         public enum EnumValueTypes {
