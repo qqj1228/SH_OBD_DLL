@@ -40,19 +40,7 @@ namespace SH_OBD_DLL {
                 m_OBDIf.Log.TraceInfo("   Interface: Auto-Detect");
                 break;
             case HardwareType.ELM327:
-                m_OBDIf.Log.TraceInfo("   Interface: ELM327");
-                break;
-            case HardwareType.ELM320:
-                m_OBDIf.Log.TraceInfo("   Interface: ELM320");
-                break;
-            case HardwareType.ELM322:
-                m_OBDIf.Log.TraceInfo("   Interface: ELM322");
-                break;
-            case HardwareType.ELM323:
-                m_OBDIf.Log.TraceInfo("   Interface: ELM323");
-                break;
-            case HardwareType.CANtact:
-                m_OBDIf.Log.TraceInfo("   Interface: CANtact");
+                m_OBDIf.Log.TraceInfo("   Interface: ELM327/SH-VCI-302U");
                 break;
             default:
                 m_OBDIf.Log.TraceInfo("Bad hardware type.");
