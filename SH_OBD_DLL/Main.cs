@@ -86,8 +86,6 @@ namespace SH_OBD_DLL {
         }
 
         private bool GetSupportStatus(int mode, Dictionary<string, bool[]> supportStatus) {
-            List<List<OBDParameterValue>> ECUSupportList = new List<List<OBDParameterValue>>();
-            List<bool> ECUSupportNext = new List<bool>();
             OBDParameter param = new OBDParameter();
             int HByte = 0;
             if (m_OBDIf.STDType == StandardType.ISO_27145) {
@@ -97,69 +95,43 @@ namespace SH_OBD_DLL {
                 param = new OBDParameter(mode, 0, 0, 32);
             } else if (m_OBDIf.STDType == StandardType.SAE_J1939) {
                 param = new OBDParameter(0, mode, 0, 0);
-            }
-            List<OBDParameterValue> valueList = m_OBDIf.GetValueList(param);
-            foreach (OBDParameterValue value in valueList) {
-                List<OBDParameterValue> ECUValueList = new List<OBDParameterValue>();
-                if (value.ErrorDetected) {
-                    return false;
-                }
-                if (m_OBDIf.STDType == StandardType.SAE_J1939) {
+                List<OBDParameterValue> valueList = m_OBDIf.GetValueList(param);
+                foreach (OBDParameterValue value in valueList) {
+                    if (value.ErrorDetected) {
+                        return false;
+                    }
                     supportStatus.Add(value.ECUResponseID, null);
-                } else {
-                    ECUValueList.Add(value);
-                    ECUSupportList.Add(ECUValueList);
-                    ECUSupportNext.Add(value.GetBitFlag(31));
                 }
-            }
-            if (m_OBDIf.STDType == StandardType.SAE_J1939) {
                 return true;
             }
-            bool next = false;
-            foreach (bool item in ECUSupportNext) {
-                next = next || item;
-            }
-            if (next) {
-                for (int i = 1; (i * 0x20) < MAX_PID; i++) {
-                    param.Parameter = HByte + i * 0x20;
-                    List<OBDParameterValue> valueList1 = m_OBDIf.GetValueList(param);
-                    foreach (OBDParameterValue value in valueList1) {
-                        if (value.ErrorDetected) {
-                            return false;
-                        }
-                        for (int j = 0; j < ECUSupportNext.Count; j++) {
-                            ECUSupportNext[j] = false;
-                        }
-                        for (int j = 0; j < ECUSupportList.Count; j++) {
-                            if (ECUSupportList[j][0].ECUResponseID == value.ECUResponseID) {
-                                ECUSupportList[j].Add(value);
-                                ECUSupportNext[j] = value.GetBitFlag(31);
+
+            for (int i = 0; (i * 0x20) < MAX_PID; i++) {
+                param.Parameter = HByte + i * 0x20;
+                List<OBDParameterValue> valueList = m_OBDIf.GetValueList(param);
+                bool next = false;
+                foreach (OBDParameterValue value in valueList) {
+                    if (value.ErrorDetected) {
+                        return false;
+                    }
+                    if (!supportStatus.ContainsKey(value.ECUResponseID)) {
+                        bool[] bitFlag = new bool[MAX_PID];
+                        supportStatus.Add(value.ECUResponseID, bitFlag);
+                    }
+
+                    foreach (string key in supportStatus.Keys) {
+                        if (value.ECUResponseID == key) {
+                            for (int j = 0; j < 0x20; j++) {
+                                supportStatus[key][j + i * 0x20] = value.GetBitFlag(j);
                             }
                         }
                     }
-                    next = false;
-                    foreach (bool item in ECUSupportNext) {
-                        next = next || item;
-                    }
-                    if (!next) {
-                        break;
-                    }
+                    next = next || value.GetBitFlag(31);
+                }
+                if (!next) {
+                    break;
                 }
             }
 
-            foreach (List<OBDParameterValue> ECUValueList in ECUSupportList) {
-                List<bool> bitFlagList = new List<bool>();
-                foreach (OBDParameterValue value in ECUValueList) {
-                    for (int j = 0; j < 0x20; j++) {
-                        bitFlagList.Add(value.GetBitFlag(j));
-                    }
-                }
-                bool[] bitFlag = new bool[MAX_PID];
-                for (int i = 0; i < bitFlagList.Count && i < bitFlag.Length; i++) {
-                    bitFlag[i] = bitFlagList[i];
-                }
-                supportStatus.Add(ECUValueList[0].ECUResponseID, bitFlag);
-            }
             foreach (string key in supportStatus.Keys) {
                 string log = "";
                 if (m_OBDIf.STDType == StandardType.ISO_27145) {
