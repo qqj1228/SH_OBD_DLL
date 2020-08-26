@@ -8,14 +8,20 @@ using SH_OBD_DLL;
 namespace SH_OBD_DLL {
     public class SH_OBD_Dll {
         private const int MAX_PID = 0x100;
+        private readonly Logger m_log;
         private readonly OBDInterface m_OBDIf;
         public Dictionary<string, bool[]> Mode01Support { get; }
         public Dictionary<string, bool[]> Mode09Support { get; }
 
         public SH_OBD_Dll(string logPath) {
-            m_OBDIf = new OBDInterface(logPath);
+            m_log = new Logger(logPath, EnumLogLevel.LogLevelAll, true, 100);
+            m_OBDIf = new OBDInterface(m_log);
             Mode01Support = new Dictionary<string, bool[]>();
             Mode09Support = new Dictionary<string, bool[]>();
+        }
+
+        public Logger GetLogger() {
+            return m_log;
         }
 
         public OBDInterface GetOBDInterface() {
@@ -23,37 +29,37 @@ namespace SH_OBD_DLL {
         }
 
         public void LogCommSettingInfo() {
-            m_OBDIf.Log.TraceInfo(">>>>> Start to connect OBD. DllVersion: " + DllVersion<SH_OBD_Dll>.AssemblyVersion + " <<<<<");
-            m_OBDIf.Log.TraceInfo("Connection Procedure Initiated");
+            m_log.TraceInfo(">>>>> Start to connect OBD. DllVersion: " + DllVersion<SH_OBD_Dll>.AssemblyVersion + " <<<<<");
+            m_log.TraceInfo("Connection Procedure Initiated");
 
             if (m_OBDIf.DllSettings.AutoDetect) {
-                m_OBDIf.Log.TraceInfo("   Automatic Hardware Detection: ON");
+                m_log.TraceInfo("   Automatic Hardware Detection: ON");
             } else {
-                m_OBDIf.Log.TraceInfo("   Automatic Hardware Detection: OFF");
+                m_log.TraceInfo("   Automatic Hardware Detection: OFF");
             }
 
-            m_OBDIf.Log.TraceInfo(string.Format("   Baud Rate: {0}", m_OBDIf.DllSettings.BaudRate));
-            m_OBDIf.Log.TraceInfo(string.Format("   Default Port: {0}", m_OBDIf.DllSettings.ComPortName));
+            m_log.TraceInfo(string.Format("   Baud Rate: {0}", m_OBDIf.DllSettings.BaudRate));
+            m_log.TraceInfo(string.Format("   Default Port: {0}", m_OBDIf.DllSettings.ComPortName));
 
             switch (m_OBDIf.DllSettings.HardwareIndex) {
             case HardwareType.Automatic:
-                m_OBDIf.Log.TraceInfo("   Interface: Auto-Detect");
+                m_log.TraceInfo("   Interface: Auto-Detect");
                 break;
             case HardwareType.ELM327:
-                m_OBDIf.Log.TraceInfo("   Interface: ELM327/SH-VCI-302U");
+                m_log.TraceInfo("   Interface: ELM327/SH-VCI-302U");
                 break;
             default:
-                m_OBDIf.Log.TraceInfo("Bad hardware type.");
+                m_log.TraceInfo("Bad hardware type.");
                 throw new Exception("Bad hardware type.");
             }
 
-            m_OBDIf.Log.TraceInfo(string.Format("   Protocol: {0}", m_OBDIf.DllSettings.ProtocolName));
-            m_OBDIf.Log.TraceInfo(string.Format("   Application Layer Protocol: {0}", m_OBDIf.DllSettings.StandardName));
+            m_log.TraceInfo(string.Format("   Protocol: {0}", m_OBDIf.DllSettings.ProtocolName));
+            m_log.TraceInfo(string.Format("   Application Layer Protocol: {0}", m_OBDIf.DllSettings.StandardName));
 
             if (m_OBDIf.DllSettings.DoInitialization) {
-                m_OBDIf.Log.TraceInfo("   Initialize: YES");
+                m_log.TraceInfo("   Initialize: YES");
             } else {
-                m_OBDIf.Log.TraceInfo("   Initialize: NO");
+                m_log.TraceInfo("   Initialize: NO");
             }
         }
 
@@ -62,17 +68,17 @@ namespace SH_OBD_DLL {
             LogCommSettingInfo();
             if (m_OBDIf.DllSettings.AutoDetect) {
                 if (m_OBDIf.InitDeviceAuto()) {
-                    m_OBDIf.Log.TraceInfo("Connection Established!");
+                    m_log.TraceInfo("Connection Established!");
                 } else {
-                    m_OBDIf.Log.TraceWarning("Failed to find a compatible OBD-II interface.");
+                    m_log.TraceWarning("Failed to find a compatible OBD-II interface.");
                     m_OBDIf.Disconnect();
                     return false;
                 }
             } else {
                 if (m_OBDIf.InitDevice()) {
-                    m_OBDIf.Log.TraceInfo("Connection Established!");
+                    m_log.TraceInfo("Connection Established!");
                 } else {
-                    m_OBDIf.Log.TraceWarning("Failed to find a compatible OBD-II interface.");
+                    m_log.TraceWarning("Failed to find a compatible OBD-II interface.");
                     m_OBDIf.Disconnect();
                     return false;
                 }
@@ -147,7 +153,7 @@ namespace SH_OBD_DLL {
                 }
                 log = log.TrimEnd();
                 log += "]";
-                m_OBDIf.Log.TraceInfo(log);
+                m_log.TraceInfo(log);
             }
             return true;
         }
@@ -167,13 +173,13 @@ namespace SH_OBD_DLL {
             if (!GetSupportStatus(mode01, Mode01Support)) {
                 if (m_OBDIf.STDType == StandardType.ISO_27145) {
                     errorMsg = "获取 DID F4 支持状态出错！";
-                    m_OBDIf.Log.TraceError("Get DID F4 Support Status Error!");
+                    m_log.TraceError("Get DID F4 Support Status Error!");
                 } else if (m_OBDIf.STDType == StandardType.SAE_J1939) {
                     errorMsg = "获取 DM5 支持状态出错！";
-                    m_OBDIf.Log.TraceError("Get DM5 Support Status Error!");
+                    m_log.TraceError("Get DM5 Support Status Error!");
                 } else {
                     errorMsg = "获取 Mode01 支持状态出错！";
-                    m_OBDIf.Log.TraceError("Get Mode01 Support Status Error!");
+                    m_log.TraceError("Get Mode01 Support Status Error!");
                 }
                 return false;
             }
@@ -183,10 +189,10 @@ namespace SH_OBD_DLL {
                 if (!GetSupportStatus(mode09, Mode09Support)) {
                     if (m_OBDIf.STDType == StandardType.ISO_27145) {
                         errorMsg = "获取 DID F8 支持状态出错！";
-                        m_OBDIf.Log.TraceError("Get DID F8 Support Status Error!");
+                        m_log.TraceError("Get DID F8 Support Status Error!");
                     } else {
                         errorMsg = "获取 Mode09 支持状态出错！";
-                        m_OBDIf.Log.TraceError("Get Mode09 Support Status Error!");
+                        m_log.TraceError("Get Mode09 Support Status Error!");
                     }
                     return false;
                 }
@@ -198,7 +204,7 @@ namespace SH_OBD_DLL {
         public bool TestTCP() {
             bool bRet = Utility.TcpTest(m_OBDIf.DllSettings.RemoteIP, m_OBDIf.DllSettings.RemotePort);
             if (!bRet) {
-                m_OBDIf.Log.TraceError("Can't connect to TCP server of OBD VCI device!");
+                m_log.TraceError("Can't connect to TCP server of OBD VCI device!");
             }
             return bRet;
         }

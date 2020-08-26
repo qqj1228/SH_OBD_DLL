@@ -50,7 +50,6 @@
     <Compile Include="Classes\Logger.cs" />
     <Compile Include="Classes\SerialPort.cs" />
     <Compile Include="Classes\Settings.cs" />
-    <Compile Include="Classes\Structure.cs" />
     <Compile Include="Classes\TCPClientImp.cs" />
     <Compile Include="Classes\Utility.cs" />
     <Compile Include="Main.cs" />
