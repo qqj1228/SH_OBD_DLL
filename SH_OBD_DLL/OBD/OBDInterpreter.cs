@@ -6,14 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace SH_OBD_DLL {
     public partial class OBDInterpreter {
+        private readonly Parser m_dbc;
         private readonly NetWork m_netWork;
-        private readonly List<SignalDisplay> m_sigDisplays;
-        private readonly List<ValueDisplay> m_valDispalys;
 
-        public OBDInterpreter(NetWork netWork, List<SignalDisplay> sigDisplays, List<ValueDisplay> valDispalys) {
+        public OBDInterpreter(NetWork netWork, Parser dbc) {
+            m_dbc = dbc;
             m_netWork = netWork;
-            m_sigDisplays = sigDisplays;
-            m_valDispalys = valDispalys;
         }
 
         public OBDParameterValue GetPIDSupport(OBDResponse response) {
@@ -30,7 +28,7 @@ namespace SH_OBD_DLL {
             return value2;
         }
 
-        public OBDParameterValue GetPIDValue(uint ID, string strData) {
+        public OBDParameterValue GetPIDValue(uint ID, string strData, string signalName) {
             OBDParameterValue value2 = new OBDParameterValue();
             Message msg = m_netWork.GetMessage(ID);
             if (msg == null && ID < 0x80000000) {
@@ -40,16 +38,20 @@ namespace SH_OBD_DLL {
                 value2.ErrorDetected = true;
             } else {
                 if (msg.SetSignalRawValue(strData)) {
+                    value2.Message = msg;
                     foreach (Signal signal in msg.Signals.Values) {
-                        int iUsed = signal.TestSignalUesed();
-                        if (iUsed > 0) {
-                            value2.DoubleValue = Math.Round(signal.Value, 2);
-                            value2.BoolValue = signal.RawValue > 0;
-                            foreach (string item in signal.ListString) {
-                                value2.ListStringValue.Add(item);
+                        signal.DisplayString = m_dbc.GetDisplayString(signal, "不适用");
+                        if (signalName == signal.Name || signalName.Length == 0) {
+                            int iUsed = signal.TestSignalUesed();
+                            if (iUsed > 0) {
+                                value2.DoubleValue = Math.Round(signal.Value, 2);
+                                value2.BoolValue = signal.RawValue > 0;
+                                foreach (string item in signal.ListString) {
+                                    value2.ListStringValue.Add(item);
+                                }
+                                value2.ShortStringValue = signal.DisplayString;
+                                value2.StringValue = value2.ShortStringValue;
                             }
-                            value2.ShortStringValue = GetDisplayString(signal);
-                            value2.StringValue = value2.ShortStringValue;
                         }
                     }
                 } else {
@@ -65,7 +67,7 @@ namespace SH_OBD_DLL {
                 value2 = GetPIDSupport(response);
             } else {
                 uint ID = (uint)((param.Service == 2 ? param.Service - 1 : param.Service << 8) + param.Parameter);
-                value2 = GetPIDValue(ID, response.Data);
+                value2 = GetPIDValue(ID, response.Data, param.SignalName);
             }
             return value2;
         }
@@ -123,29 +125,30 @@ namespace SH_OBD_DLL {
                 return value2;
             }
 
-            switch (param.SubParameter) {
-            case 0:
+            switch (param.SignalName) {
+            case "":
+            case "OBDSUP":
                 // OBD型式
                 response.Data = response.GetDataByte(2);
-                value2 = GetPIDValue(0x11C, response.Data);
+                value2 = GetPIDValue(0x11C, response.Data, param.SignalName);
                 break;
-            case 1:
+            case "ACT_DTC_CNT":
                 // 激活的故障代码，未实现解析功能
                 response.Data = response.GetDataByte(0);
                 break;
-            case 2:
+            case "PRE_DTC_CNT":
                 // 先前激活的诊断故障代码，未实现解析功能
                 response.Data = response.GetDataByte(1);
                 break;
-            case 3:
+            case "CON_MON":
                 // 持续监视系统支持／状态，未实现解析功能
                 response.Data = response.GetDataByte(3);
                 break;
-            case 4:
+            case "NON_SUP":
                 // 非持续监视系统支持，未实现解析功能
                 response.Data = response.GetDataByte(4) + response.GetDataByte(5);
                 break;
-            case 5:
+            case "NON_STAT":
                 // 非持续监视系统状态，未实现解析功能
                 response.Data = response.GetDataByte(6) + response.GetDataByte(7);
                 break;
@@ -168,9 +171,8 @@ namespace SH_OBD_DLL {
             int OriginalParam = param.Parameter;
             int OriginalService = param.Service;
             param.Service = 9;
-            switch (param.SubParameter) {
-            case 0:
-                // CVN
+            switch (param.SignalName) {
+            case "CVN":
                 param.Parameter = 0x06;
                 for (int i = 0; i < qty; i++) {
                     strData += response.Data.Substring(i * 20 * 2, 4 * 2);
@@ -182,8 +184,7 @@ namespace SH_OBD_DLL {
                     value2.ListStringValue[i] = strVal.Substring(6, 2) + strVal.Substring(4, 2) + strVal.Substring(2, 2) + strVal.Substring(0, 2);
                 }
                 break;
-            case 1:
-                // CAL_ID
+            case "CAL_ID":
                 param.Parameter = 0x04;
                 for (int i = 0; i < qty; i++) {
                     strData += response.Data.Substring(4 * 2 + i * 20 * 2, 16 * 2);
@@ -350,35 +351,6 @@ namespace SH_OBD_DLL {
                 break;
             }
             return strSys;
-        }
-
-        string GetDisplayString(Signal sigIn) {
-            string ret = string.Empty;
-            int iUsed = sigIn.TestSignalUesed();
-            if (iUsed > 0) {
-                if (sigIn.ValueDescs.ContainsKey((uint)sigIn.RawValue)) {
-                    ret = sigIn.ValueDescs[(uint)sigIn.RawValue];
-                    foreach (ValueDisplay vd in m_valDispalys) {
-                        if (sigIn.Parent is Message msg) {
-                            if (vd.ID == msg.ID && vd.Name == sigIn.Name) {
-                                ret = vd.Values[(uint)sigIn.RawValue];
-                            }
-                        }
-                    }
-                } else {
-                    if (sigIn.Unit == "ASCII" || sigIn.Unit == "HEX") {
-                        foreach (string item in sigIn.ListString) {
-                            ret += item + ",";
-                        }
-                        ret = ret.TrimEnd(',');
-                    } else {
-                        ret = sigIn.Value.ToString();
-                    }
-                }
-            } else if (iUsed == 0) {
-                ret = "不适用";
-            }
-            return ret;
         }
 
     }

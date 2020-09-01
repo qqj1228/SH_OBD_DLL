@@ -39,6 +39,10 @@ namespace Test {
                 foreach (string key in CVN.Keys) {
                     Console.WriteLine(string.Format("CVN: {0}/{1}", key, CVN[key]));
                 }
+                Dictionary<string, string> ECUNAME = GetECUNAME(obd);
+                foreach (string key in ECUNAME.Keys) {
+                    Console.WriteLine(string.Format("ECUNAME: {0}/{1}", key, ECUNAME[key]));
+                }
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }
@@ -105,7 +109,7 @@ namespace Test {
                 param.OBDRequest = "00FEEC";
                 param.Service = 0;
                 param.Parameter = 0xFEEC;
-                param.SubParameter = 0;
+                param.SignalName = "VIN";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
                 OBDIf.SetTimeout(1000);
             }
@@ -153,7 +157,7 @@ namespace Test {
                 param.OBDRequest = "00D300";
                 param.Service = 0;
                 param.Parameter = 0xD300;
-                param.SubParameter = 0;
+                param.SignalName = "CVN";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
                 OBDIf.SetTimeout(1000);
             }
@@ -165,6 +169,46 @@ namespace Test {
                 }
                 bool flag = obd.Mode09Support.ContainsKey(value.ECUResponseID) && obd.Mode09Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1];
                 flag = flag || OBDIf.STDType == StandardType.SAE_J1939;
+                if (flag) {
+                    if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) != 0) {
+                        if (value.ListStringValue.Count == 0 || value.ListStringValue[0].Length == 0) {
+                            dicRet.Add(value.ECUResponseID, "");
+                        } else {
+                            string strVal = value.ListStringValue[0];
+                            for (int i = 1; i < value.ListStringValue.Count; i++) {
+                                strVal += "," + value.ListStringValue[i];
+                            }
+                            dicRet.Add(value.ECUResponseID, strVal);
+                        }
+                    }
+                }
+            }
+
+            return dicRet;
+        }
+
+        static Dictionary<string, string> GetECUNAME(SH_OBD_Dll obd) {
+            OBDInterface OBDIf = obd.GetOBDInterface();
+            Dictionary<string, string> dicRet = new Dictionary<string, string>();
+            OBDParameter param = new OBDParameter();
+            if (OBDIf.STDType == StandardType.ISO_27145) {
+                param.OBDRequest = "22F80A";
+                param.Service = 0x22;
+                param.Parameter = 0xF80A;
+                param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
+            } else if (OBDIf.STDType == StandardType.ISO_15031) {
+                param.OBDRequest = "090A";
+                param.Service = 9;
+                param.Parameter = 0xA;
+                param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
+            }
+
+            List<OBDParameterValue> valueList = OBDIf.GetValueList(param);
+            foreach (OBDParameterValue value in valueList) {
+                if (value.ErrorDetected) {
+                    continue;
+                }
+                bool flag = obd.Mode09Support.ContainsKey(value.ECUResponseID) && obd.Mode09Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1];
                 if (flag) {
                     if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) != 0) {
                         if (value.ListStringValue.Count == 0 || value.ListStringValue[0].Length == 0) {

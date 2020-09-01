@@ -50,10 +50,10 @@ namespace SH_OBD_DLL {
             }
         }
         public int Service { get; set; }
-        public int SubParameter { get; set; }
+        public string SignalName { get; set; }
         public int ValueTypes { get; set; }
 
-        public OBDParameter(int service, int parameter, int subParameter, int valueTypes) {
+        public OBDParameter(int service, int parameter, string signalName, int valueTypes) {
             if (parameter > 0xFF) {
                 m_OBDRequest = service.ToString("X2") + parameter.ToString("X4");
             } else {
@@ -61,7 +61,7 @@ namespace SH_OBD_DLL {
             }
             Service = service;
             m_parameter = parameter;
-            SubParameter = subParameter;
+            SignalName = signalName;
             ValueTypes = valueTypes;
         }
 
@@ -69,7 +69,7 @@ namespace SH_OBD_DLL {
             m_OBDRequest = "";
             Service = 0;
             m_parameter = 0;
-            SubParameter = 0;
+            SignalName = "";
             ValueTypes = 0;
         }
 
@@ -79,7 +79,7 @@ namespace SH_OBD_DLL {
                 m_OBDRequest = OBDRequest,
                 m_parameter = Parameter,
                 Service = Service,
-                SubParameter = SubParameter,
+                SignalName = SignalName,
             };
             return p;
         }

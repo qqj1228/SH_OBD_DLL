@@ -107,11 +107,6 @@
   </SignalDisplay>
   <SignalDisplay>
     <ID>2147485962</ID>
-    <Name>ECU_Acronym</Name>
-    <Display>ECU简称</Display>
-  </SignalDisplay>
-  <SignalDisplay>
-    <ID>2147485962</ID>
     <Name>ECU_NAME</Name>
     <Display>ECU名称</Display>
   </SignalDisplay>

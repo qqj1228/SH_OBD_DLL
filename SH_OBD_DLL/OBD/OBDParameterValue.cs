@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBCParser.DBCObj;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -15,6 +16,8 @@ namespace SH_OBD_DLL {
         public string StringValue { get; set; }
         public string ShortStringValue { get; set; }
         public string ECUResponseID { get; set; }
+        public Message Message { get; set; }
+
         private readonly bool[] m_bBitFlags;
 
         public OBDParameterValue(bool bValue, double dValue, string strValue, string shortValue) {

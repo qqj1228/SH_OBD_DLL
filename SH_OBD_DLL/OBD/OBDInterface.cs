@@ -26,8 +26,6 @@ namespace SH_OBD_DLL {
         private readonly Parser m_dbc;
         private readonly NetWork m_netWork;
         private readonly OBDInterpreter m_obdInterpreter;
-        private readonly List<SignalDisplay> m_sigDisplays;
-        private readonly List<ValueDisplay> m_valDispalys;
         private readonly int[] m_xattr;
 
         public bool DllSettingsResult { get; private set; }
@@ -38,11 +36,9 @@ namespace SH_OBD_DLL {
             m_log = log;
             m_log.TraceInfo("=======================================================================");
             m_log.TraceInfo("==================== START DllVersion: " + DllVersion<OBDInterface>.AssemblyVersion + " ====================");
-            m_sigDisplays = LoadDisplayFile<SignalDisplay>(".\\Configs\\signal.xml");
-            m_valDispalys = LoadDisplayFile<ValueDisplay>(".\\Configs\\value.xml");
-            m_dbc = new Parser();
+            m_dbc = new Parser(".\\Configs\\value.xml", ".\\Configs\\signal.xml");
             m_netWork = m_dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
-            m_obdInterpreter = new OBDInterpreter(m_netWork, m_sigDisplays, m_valDispalys);
+            m_obdInterpreter = new OBDInterpreter(m_netWork, m_dbc);
             DllSettingsResult = true;
             DllSettings = LoadDllSettings();
             string[] strAttr = DllSettings.AutoProtocolOrder.Split(',');

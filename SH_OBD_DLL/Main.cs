@@ -96,11 +96,11 @@ namespace SH_OBD_DLL {
             int HByte = 0;
             if (m_OBDIf.STDType == StandardType.ISO_27145) {
                 HByte = (mode << 8) & 0xFF00;
-                param = new OBDParameter(0x22, HByte, 0, 32);
+                param = new OBDParameter(0x22, HByte, "", 32);
             } else if (m_OBDIf.STDType == StandardType.ISO_15031) {
-                param = new OBDParameter(mode, 0, 0, 32);
+                param = new OBDParameter(mode, 0, "", 32);
             } else if (m_OBDIf.STDType == StandardType.SAE_J1939) {
-                param = new OBDParameter(0, mode, 0, 0);
+                param = new OBDParameter(0, mode, "", 0);
                 List<OBDParameterValue> valueList = m_OBDIf.GetValueList(param);
                 foreach (OBDParameterValue value in valueList) {
                     if (value.ErrorDetected) {
