@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DBCParser, Version=2020.7.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DBCDLL\DBCParser.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -76,13 +72,17 @@
     <Content Include="Configs\value.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="DBCDLL\DBCParser.dll" />
-    <Content Include="DBCDLL\DBCParser.pdb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configs\OBD_CMD.dbc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DBCParser\DBCParser\DBCParser.csproj">
+      <Project>{95511eb0-9072-4729-9d7c-2ade4b0f336f}</Project>
+      <Name>DBCParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
