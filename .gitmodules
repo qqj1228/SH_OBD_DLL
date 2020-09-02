@@ -1,0 +1,3 @@
+[submodule "DBCParser"]
+	path = DBCParser
+	url = https://github.com/qqj1228/DBCParser.git
