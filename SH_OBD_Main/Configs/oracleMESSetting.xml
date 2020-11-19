@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OracleMESSetting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Enable>true</Enable>
+  <Host>192.168.1.49</Host>
+  <Port>1521</Port>
+  <ServiceName>XE</ServiceName>
+  <UserID>c##scott</UserID>
+  <PassWord>tiger</PassWord>
+</OracleMESSetting>

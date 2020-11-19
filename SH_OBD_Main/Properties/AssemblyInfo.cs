@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("SH_OBD_DLL")]
+[assembly: AssemblyTitle("SH_OBD_Main")]
 [assembly: AssemblyDescription("Coded by qqj1228")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SH_OBD_DLL")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("SH Corporation")]
+[assembly: AssemblyProduct("SH_OBD_Main")]
+[assembly: AssemblyCopyright("Copyright © SH Corporation 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("b2795a87-baa4-4954-a02f-eae33baa961d")]
+[assembly: Guid("fb88a49a-58e0-43c1-acb7-0f287278729b")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
@@ -29,8 +29,8 @@ using System.Runtime.InteropServices;
 //      生成号
 //      修订号
 //
-//可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
-//通过使用 "*"，如下所示:
+// 可以指定所有值，也可以使用以下所示的 "*" 预置版本号和修订号
+// 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2020.09.01.0")]
-[assembly: AssemblyFileVersion("2020.09.01.0")]
+[assembly: AssemblyVersion("2020.08.26.0")]
+[assembly: AssemblyFileVersion("2020.08.26.0")]

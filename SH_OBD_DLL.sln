@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCParser", "DBCParser\DBCParser\DBCParser.csproj", "{95511EB0-9072-4729-9D7C-2ADE4B0F336F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SH_OBD_Main", "SH_OBD_Main\SH_OBD_Main.csproj", "{FB88A49A-58E0-43C1-ACB7-0F287278729B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{95511EB0-9072-4729-9D7C-2ADE4B0F336F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95511EB0-9072-4729-9D7C-2ADE4B0F336F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95511EB0-9072-4729-9D7C-2ADE4B0F336F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB88A49A-58E0-43C1-ACB7-0F287278729B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB88A49A-58E0-43C1-ACB7-0F287278729B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB88A49A-58E0-43C1-ACB7-0F287278729B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB88A49A-58E0-43C1-ACB7-0F287278729B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

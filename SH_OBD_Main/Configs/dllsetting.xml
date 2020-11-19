@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DllSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AutoDetect>true</AutoDetect>
+  <ComPort>4</ComPort>
+  <RemoteIP>127.0.0.1</RemoteIP>
+  <RemotePort>60001</RemotePort>
+  <BaudRateIndex>1</BaudRateIndex>
+  <DoInitialization>true</DoInitialization>
+  <CN6_OBD_SUP>29,2B</CN6_OBD_SUP>
+  <AutoProtocolOrder>6,7,10,5,8,9,4,3</AutoProtocolOrder>
+  <ProtocolIndex>10</ProtocolIndex>
+  <HardwareIndex>1</HardwareIndex>
+  <StandardIndex>0</StandardIndex>
+</DllSettings>
