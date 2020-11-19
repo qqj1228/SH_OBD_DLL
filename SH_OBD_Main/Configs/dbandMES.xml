@@ -5,11 +5,20 @@
   <DBName>SH_OBD</DBName>
   <IP>127.0.0.1</IP>
   <Port>1433</Port>
-  <WebServiceAddress>http://localhost:53827/webservicedemo.asmx?wsdl</WebServiceAddress>
-  <WebServiceName>WebServiceDemo</WebServiceName>
-  <WebServiceMethods>WriteDataToMes</WebServiceMethods>
-  <WebServiceWSDL>JmcJesService.wsdl</WebServiceWSDL>
-  <UseURL>true</UseURL>
-  <UploadWhenever>false</UploadWhenever>
-  <UseECUName>true</UseECUName>
+  <WSMES>
+    <Enable>false</Enable>
+    <Address>http://localhost:53827/webservicedemo.asmx?wsdl</Address>
+    <Name>WebServiceDemo</Name>
+    <Methods>WriteDataToMes</Methods>
+    <WSDL />
+    <UseURL>true</UseURL>
+  </WSMES>
+  <OraMES>
+    <Enable>false</Enable>
+    <Host>192.168.1.49</Host>
+    <Port>1521</Port>
+    <ServiceName>XE</ServiceName>
+    <UserID>c##scott</UserID>
+    <PassWord>tiger</PassWord>
+  </OraMES>
 </DBandMES>

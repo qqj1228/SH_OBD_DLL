@@ -147,12 +147,10 @@ namespace SH_OBD_Main {
         private void ToolStripBtnSettings_Click(object sender, EventArgs e) {
             DllSettings dllSettings = _obdIfEx.OBDIf.DllSettings;
             MainSettings mainSettings = _obdIfEx.MainSettings;
-            DBandMES dbandMES = _obdIfEx.DBandMES;
             SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest._db);
             settingsForm.ShowDialog();
             _obdIfEx.SaveDllSettings(dllSettings);
             _obdIfEx.SaveMainSettings(mainSettings);
-            _obdIfEx.SaveDBandMES(dbandMES);
             StatusLabelCommProtocol.Text = _obdIfEx.OBDIf.GetProtocol().ToString();
             StatusLabelAppProtocol.Text = _obdIfEx.OBDIf.GetStandard().ToString();
             StatusLabelDeviceType.Text = _obdIfEx.OBDIf.GetDevice().ToString().Replace("ELM327", "SH-VCI-302U");

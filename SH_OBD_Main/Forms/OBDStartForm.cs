@@ -42,7 +42,7 @@ namespace SH_OBD_Main {
                 }
             }
             _obdTest = new OBDTest(_obdIfEx);
-            _backColor = label1.BackColor;
+            _backColor = lblVIN.BackColor;
             if (_obdIfEx.ScannerPortOpened) {
                 _obdIfEx._sp.DataReceived += new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
             }
@@ -121,8 +121,8 @@ namespace SH_OBD_Main {
             if (!_obdTest.AdvanceMode) {
                 _ctsWriteDbStart.Cancel();
                 this.Invoke((EventHandler)delegate {
-                    this.labelResult.ForeColor = Color.Black;
-                    this.labelResult.Text = "写入本地数据库结束";
+                    this.lblResult.ForeColor = Color.Black;
+                    this.lblResult.Text = "写入本地数据库结束";
                 });
             }
         }
@@ -137,8 +137,8 @@ namespace SH_OBD_Main {
             if (!_obdTest.AdvanceMode) {
                 _ctsUploadDataStart.Cancel();
                 this.Invoke((EventHandler)delegate {
-                    this.labelResult.ForeColor = Color.Black;
-                    this.labelResult.Text = "上传数据结束";
+                    this.lblResult.ForeColor = Color.Black;
+                    this.lblResult.Text = "上传数据结束";
                 });
             }
         }
@@ -176,29 +176,29 @@ namespace SH_OBD_Main {
 
         private void StartOBDTest() {
             this.Invoke((EventHandler)delegate {
-                this.labelResult.ForeColor = Color.Black;
-                this.labelResult.Text = "准备OBD检测";
-                this.labelVINError.BackColor = _backColor;
-                this.labelVINError.ForeColor = Color.Gray;
-                this.labelCALIDCVN.BackColor = _backColor;
-                this.labelCALIDCVN.ForeColor = Color.Gray;
-                this.label3Space.BackColor = _backColor;
-                this.label3Space.ForeColor = Color.Gray;
+                this.lblResult.ForeColor = Color.Black;
+                this.lblResult.Text = "准备OBD检测";
+                this.lblVINError.BackColor = _backColor;
+                this.lblVINError.ForeColor = Color.Gray;
+                this.lblCALIDCVN.BackColor = _backColor;
+                this.lblCALIDCVN.ForeColor = Color.Gray;
+                this.lblOBDSUP.BackColor = _backColor;
+                this.lblOBDSUP.ForeColor = Color.Gray;
             });
             _obdIfEx.Log.TraceInfo(">>>>>>>>>> Start to test vehicle of VIN: " + _obdTest.StrVIN_IN + " MainVersion: " + MainFileVersion.AssemblyVersion + " <<<<<<<<<<");
             if (_obdIfEx.OBDIf.ConnectedStatus) {
                 _obdIfEx.OBDIf.Disconnect();
             }
             this.Invoke((EventHandler)delegate {
-                this.labelResult.ForeColor = Color.Black;
-                this.labelResult.Text = "正在连接车辆。。。";
+                this.lblResult.ForeColor = Color.Black;
+                this.lblResult.Text = "正在连接车辆。。。";
             });
             CancellationTokenSource tokenSource = UpdateUITask("正在连接车辆");
             if (!_obdIfEx.OBDDll.ConnectOBD()) {
                 tokenSource.Cancel();
                 this.Invoke((EventHandler)delegate {
-                    this.labelResult.ForeColor = Color.Red;
-                    this.labelResult.Text = "连接车辆失败！";
+                    this.lblResult.ForeColor = Color.Red;
+                    this.lblResult.Text = "连接车辆失败！";
                 });
                 _bCanOBDTest = true;
                 return;
@@ -234,30 +234,30 @@ namespace SH_OBD_Main {
 
             this.Invoke((EventHandler)delegate {
                 if (_obdTest.OBDResult) {
-                    this.labelResult.ForeColor = Color.GreenYellow;
-                    this.labelResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测结果：合格";
+                    this.lblResult.ForeColor = Color.GreenYellow;
+                    this.lblResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测结果：合格";
                     this.txtBoxVIN.Text = "";
                 } else {
                     if (!_obdTest.VINResult) {
-                        this.labelVINError.BackColor = Color.Red;
-                        this.labelVINError.ForeColor = Color.Black;
+                        this.lblVINError.BackColor = Color.Red;
+                        this.lblVINError.ForeColor = Color.Black;
                     }
                     if (!_obdTest.CALIDCVNResult || !_obdTest.CALIDUnmeaningResult) {
-                        this.labelCALIDCVN.BackColor = Color.Red;
-                        this.labelCALIDCVN.ForeColor = Color.Black;
+                        this.lblCALIDCVN.BackColor = Color.Red;
+                        this.lblCALIDCVN.ForeColor = Color.Black;
                     }
                     if (!_obdTest.OBDSUPResult) {
-                        this.label3Space.BackColor = Color.Red;
-                        this.label3Space.ForeColor = Color.Black;
+                        this.lblOBDSUP.BackColor = Color.Red;
+                        this.lblOBDSUP.ForeColor = Color.Black;
                     }
 
-                    this.labelResult.ForeColor = Color.Red;
+                    this.lblResult.ForeColor = Color.Red;
                     if (bNoTestRecord) {
-                        this.labelResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\n没有本地检测记录";
+                        this.lblResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\n没有本地检测记录";
                     } else if (bTestException) {
-                        this.labelResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测过程发生异常";
+                        this.lblResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测过程发生异常";
                     } else {
-                        this.labelResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测结果：不合格";
+                        this.lblResult.Text = "被检车辆: " + _obdTest.StrVIN_ECU + "\nOBD检测结果：不合格";
                     }
                 }
             });
@@ -289,11 +289,11 @@ namespace SH_OBD_Main {
                 while (!token.IsCancellationRequested) {
                     try {
                         this.Invoke((EventHandler)delegate {
-                            this.labelResult.ForeColor = Color.Black;
+                            this.lblResult.ForeColor = Color.Black;
                             if (count == 0) {
-                                this.labelResult.Text = strMsg + "。。。";
+                                this.lblResult.Text = strMsg + "。。。";
                             } else {
-                                this.labelResult.Text = strMsg + "，用时" + count.ToString() + "s";
+                                this.lblResult.Text = strMsg + "，用时" + count.ToString() + "s";
                             }
                         });
                     } catch (ObjectDisposedException ex) {
@@ -316,11 +316,11 @@ namespace SH_OBD_Main {
             }
             float scale = this.Height / _lastHeight;
             ResizeFont(this.txtBoxVIN, scale);
-            ResizeFont(this.label1, scale);
-            ResizeFont(this.labelResult, scale);
-            ResizeFont(this.labelVINError, scale);
-            ResizeFont(this.labelCALIDCVN, scale);
-            ResizeFont(this.label3Space, scale);
+            ResizeFont(this.lblVIN, scale);
+            ResizeFont(this.lblResult, scale);
+            ResizeFont(this.lblVINError, scale);
+            ResizeFont(this.lblCALIDCVN, scale);
+            ResizeFont(this.lblOBDSUP, scale);
             ResizeFont(this.btnAdvanceMode, scale);
             _lastHeight = this.Height;
         }
@@ -358,12 +358,12 @@ namespace SH_OBD_Main {
         }
 
         private void OBDStartForm_Load(object sender, EventArgs e) {
-            this.labelResult.ForeColor = Color.Black;
-            this.labelResult.Text = "准备OBD检测";
+            this.lblResult.ForeColor = Color.Black;
+            this.lblResult.Text = "准备OBD检测";
             this.txtBoxVIN.Focus();
-            this.labelVINError.ForeColor = Color.Gray;
-            this.labelCALIDCVN.ForeColor = Color.Gray;
-            this.label3Space.ForeColor = Color.Gray;
+            this.lblVINError.ForeColor = Color.Gray;
+            this.lblCALIDCVN.ForeColor = Color.Gray;
+            this.lblOBDSUP.ForeColor = Color.Gray;
         }
 
         private void TxtBoxVIN_KeyPress(object sender, KeyPressEventArgs e) {

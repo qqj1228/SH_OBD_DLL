@@ -66,12 +66,8 @@
     <Content Include="Configs\dllsetting.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\signal.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Configs\value.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Configs\dllsignal.xml" />
+    <Content Include="Configs\dllvalue.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configs\OBD_CMD.dbc">

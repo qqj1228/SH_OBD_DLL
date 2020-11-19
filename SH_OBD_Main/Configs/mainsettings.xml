@@ -3,5 +3,5 @@
   <ScannerBaudRateIndex>0</ScannerBaudRateIndex>
   <ScannerPort>5</ScannerPort>
   <UseSerialScanner>true</UseSerialScanner>
-  <Name>名称</Name>
+  <TesterName>名称</TesterName>
 </MainSettings>

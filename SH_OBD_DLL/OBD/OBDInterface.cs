@@ -36,7 +36,7 @@ namespace SH_OBD_DLL {
             _log = log;
             _log.TraceInfo("=======================================================================");
             _log.TraceInfo("==================== START DllVersion: " + DllVersion<OBDInterface>.AssemblyVersion + " ====================");
-            _dbc = new Parser(".\\Configs\\value.xml", ".\\Configs\\signal.xml");
+            _dbc = new Parser(".\\Configs\\dllvalue.xml", ".\\Configs\\dllsignal.xml");
             _netWork = _dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
             _obdInterpreter = new OBDInterpreter(_netWork, _dbc);
             DllSettingsResult = true;

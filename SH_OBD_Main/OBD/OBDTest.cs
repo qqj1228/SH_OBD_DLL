@@ -1413,8 +1413,9 @@ namespace SH_OBD_Main {
             }
             ExportPath += "\\" + StrVIN_IN + "_" + DateTime.Now.ToLocalTime().ToString("yyyyMMdd-HHmmss") + ".xlsx";
             FileInfo fileInfo = new FileInfo(OriPath);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo, true)) {
-                ExcelWorksheet worksheet1 = package.Workbook.Worksheets[1];
+                ExcelWorksheet worksheet1 = package.Workbook.Worksheets[0];
                 // VIN
                 worksheet1.Cells["B2"].Value = dt.Rows[0][0].ToString();
 

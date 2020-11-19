@@ -49,7 +49,6 @@ namespace SH_OBD_Main {
         public string DBName { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
-        public string DateSN { get; set; }
         public WebServiceMES WSMES { get; set; }
         public OracleMES OraMES { get; set; }
         [XmlIgnore]
@@ -61,7 +60,6 @@ namespace SH_OBD_Main {
             DBName = "SH_OBD";
             IP = "127.0.0.1";
             Port = "1433";
-            DateSN = DateTime.Now.ToLocalTime().ToString("yyyyMMdd") + ",0";
             WSMES = new WebServiceMES();
             OraMES = new OracleMES();
             ChangeWebService = true;
