@@ -10,21 +10,21 @@ using System.Text;
 namespace SH_OBD_Main {
     public class Model {
         public string StrConn { get; set; }
-        public readonly Logger m_log;
-        public DBandMES m_dbandMES;
+        public readonly Logger _log;
+        public DBandMES _dbandMES;
 
         public Model(DBandMES dbandMES, Logger log) {
-            m_log = log;
-            m_dbandMES = dbandMES;
+            _log = log;
+            _dbandMES = dbandMES;
             this.StrConn = "";
             ReadConfig();
         }
 
         void ReadConfig() {
-            StrConn = "user id=" + m_dbandMES.UserName + ";";
-            StrConn += "password=" + m_dbandMES.PassWord + ";";
-            StrConn += "database=" + m_dbandMES.DBName + ";";
-            StrConn += "data source=" + m_dbandMES.IP + "," + m_dbandMES.Port;
+            StrConn = "user id=" + _dbandMES.UserName + ";";
+            StrConn += "password=" + _dbandMES.PassWord + ";";
+            StrConn += "database=" + _dbandMES.DBName + ";";
+            StrConn += "data source=" + _dbandMES.IP + "," + _dbandMES.Port;
         }
 
         public void ShowDB(string strTable) {
@@ -48,7 +48,7 @@ namespace SH_OBD_Main {
                     str += "\n";
                 }
                 str = str.Trim('\n');
-                m_log.TraceInfo(str);
+                _log.TraceInfo(str);
                 sqlCmd.Dispose();
                 sqlConn.Close();
             }
@@ -79,7 +79,7 @@ namespace SH_OBD_Main {
                     }
                     return columns;
                 } catch (Exception ex) {
-                    m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                    _log.TraceError("==> SQL ERROR: " + ex.Message);
                 } finally {
                     sqlConn.Close();
                 }
@@ -115,10 +115,10 @@ namespace SH_OBD_Main {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
-                        m_log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
-                        m_log.TraceInfo(string.Format("==> Insert {0} record(s)", sqlCmd.ExecuteNonQuery()));
+                        _log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
+                        _log.TraceInfo(string.Format("==> Insert {0} record(s)", sqlCmd.ExecuteNonQuery()));
                     } catch (Exception ex) {
-                        m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                        _log.TraceError("==> SQL ERROR: " + ex.Message);
                     } finally {
                         sqlCmd.Dispose();
                         sqlConn.Close();
@@ -144,10 +144,10 @@ namespace SH_OBD_Main {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
-                        m_log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
-                        m_log.TraceInfo(string.Format("==> Update {0} record(s)", sqlCmd.ExecuteNonQuery()));
+                        _log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
+                        _log.TraceInfo(string.Format("==> Update {0} record(s)", sqlCmd.ExecuteNonQuery()));
                     } catch (Exception ex) {
-                        m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                        _log.TraceError("==> SQL ERROR: " + ex.Message);
                     } finally {
                         sqlCmd.Dispose();
                         sqlConn.Close();
@@ -167,18 +167,18 @@ namespace SH_OBD_Main {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
-                        m_log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
+                        _log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
                         count = sqlCmd.ExecuteNonQuery();
-                        m_log.TraceInfo(string.Format("==> {0} record(s) affected", count));
+                        _log.TraceInfo(string.Format("==> {0} record(s) affected", count));
                     } catch (Exception ex) {
-                        m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                        _log.TraceError("==> SQL ERROR: " + ex.Message);
                     } finally {
                         sqlCmd.Dispose();
                         sqlConn.Close();
                     }
                 }
             } catch (Exception ex) {
-                m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                _log.TraceError("==> SQL ERROR: " + ex.Message);
             }
             return count;
         }
@@ -217,7 +217,7 @@ namespace SH_OBD_Main {
                 }
                 return records;
             } catch (Exception ex) {
-                m_log.TraceError("==> SQL ERROR: " + ex.Message);
+                _log.TraceError("==> SQL ERROR: " + ex.Message);
             }
             return records;
         }
@@ -228,7 +228,7 @@ namespace SH_OBD_Main {
                 strSQL += key + " = '" + whereDic[key] + "' and ";
             }
             strSQL = strSQL.Substring(0, strSQL.Length - 5);
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             string[,] strArr = SelectDB(strSQL);
             if (strArr != null) {
                 return strArr.GetLength(0);
@@ -248,7 +248,7 @@ namespace SH_OBD_Main {
                 }
                 strSQL = strSQL.Substring(0, strSQL.Length - 5);
             }
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return SelectDB(strSQL);
         }
 
@@ -281,7 +281,7 @@ namespace SH_OBD_Main {
             string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by ID ";
             strSQL += "offset " + ((pageNum - 1) * pageSize).ToString() + " rows fetch next " + pageSize.ToString() + " rows only";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return SelectDB(strSQL);
         }
 
@@ -306,7 +306,7 @@ namespace SH_OBD_Main {
             }
             string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "'";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return SelectDB(strSQL);
         }
 
@@ -354,7 +354,7 @@ namespace SH_OBD_Main {
 
         public string GetPassWord() {
             string strSQL = "select PassWord from OBDUser where UserName = 'admin'";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             string[,] strArr = SelectDB(strSQL);
             if (strArr != null) {
                 return strArr[0, 0];
@@ -452,7 +452,7 @@ namespace SH_OBD_Main {
         public int InsertProtocol(string CAR_CODE, string Protocol) {
             string strSQL = "insert into OBDProtocol (CAR_CODE, Protocol) values ('";
             strSQL += CAR_CODE + "', '" + Protocol + "')";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return RunSQL(strSQL);
         }
 
@@ -460,13 +460,13 @@ namespace SH_OBD_Main {
             string strSQL = "update OBDProtocol set CAR_CODE = '";
             strSQL += CAR_CODE + "', Protocol = '" + Protocol + "' ";
             strSQL += "where ID = '" + strID + "'";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return RunSQL(strSQL);
         }
 
         public int DeleteProtocol(string strID) {
             string strSQL = "delete from OBDProtocol where ID = '" + strID + "'";
-            m_log.TraceInfo("==> T-SQL: " + strSQL);
+            _log.TraceInfo("==> T-SQL: " + strSQL);
             return RunSQL(strSQL);
         }
 

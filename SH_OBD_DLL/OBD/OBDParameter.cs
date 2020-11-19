@@ -5,46 +5,46 @@ namespace SH_OBD_DLL {
     /// 用于发送命令的OBD参数
     /// </summary>
     public class OBDParameter {
-        private int m_parameter;
+        private int _parameter;
         public int Parameter {
-            get { return m_parameter; }
+            get { return _parameter; }
             set {
-                m_parameter = value;
+                _parameter = value;
                 string strParam;
-                if (m_parameter > 0xFF) {
-                    strParam = m_parameter.ToString("X4");
+                if (_parameter > 0xFF) {
+                    strParam = _parameter.ToString("X4");
                 } else {
-                    strParam = m_parameter.ToString("X2");
+                    strParam = _parameter.ToString("X2");
                 }
-                if (m_OBDRequest.Length > 2) {
-                    m_OBDRequest = m_OBDRequest.Substring(0, 2) + strParam;
+                if (_OBDRequest.Length > 2) {
+                    _OBDRequest = _OBDRequest.Substring(0, 2) + strParam;
                 } else {
-                    m_OBDRequest += strParam;
+                    _OBDRequest += strParam;
                 }
             }
         }
-        private string m_OBDRequest;
+        private string _OBDRequest;
         public string OBDRequest {
-            get { return m_OBDRequest; }
+            get { return _OBDRequest; }
             set {
-                m_OBDRequest = value;
-                if (m_OBDRequest.Length <= 2) {
+                _OBDRequest = value;
+                if (_OBDRequest.Length <= 2) {
                     try {
-                        Service = Convert.ToInt32(m_OBDRequest, 16);
+                        Service = Convert.ToInt32(_OBDRequest, 16);
                     } catch (Exception) {
                         Service = 0;
                     }
-                    m_parameter = 0;
+                    _parameter = 0;
                 } else {
                     try {
-                        Service = Convert.ToInt32(m_OBDRequest.Substring(0, 2), 16);
+                        Service = Convert.ToInt32(_OBDRequest.Substring(0, 2), 16);
                     } catch (Exception) {
                         Service = 0;
                     }
                     try {
-                        m_parameter = Convert.ToInt32(m_OBDRequest.Substring(2), 16);
+                        _parameter = Convert.ToInt32(_OBDRequest.Substring(2), 16);
                     } catch (Exception) {
-                        m_parameter = 0;
+                        _parameter = 0;
                     }
                 }
             }
@@ -55,20 +55,20 @@ namespace SH_OBD_DLL {
 
         public OBDParameter(int service, int parameter, string signalName, int valueTypes) {
             if (parameter > 0xFF) {
-                m_OBDRequest = service.ToString("X2") + parameter.ToString("X4");
+                _OBDRequest = service.ToString("X2") + parameter.ToString("X4");
             } else {
-                m_OBDRequest = service.ToString("X2") + parameter.ToString("X2");
+                _OBDRequest = service.ToString("X2") + parameter.ToString("X2");
             }
             Service = service;
-            m_parameter = parameter;
+            _parameter = parameter;
             SignalName = signalName;
             ValueTypes = valueTypes;
         }
 
         public OBDParameter() {
-            m_OBDRequest = "";
+            _OBDRequest = "";
             Service = 0;
-            m_parameter = 0;
+            _parameter = 0;
             SignalName = "";
             ValueTypes = 0;
         }
@@ -76,8 +76,8 @@ namespace SH_OBD_DLL {
         public OBDParameter GetCopy() {
             OBDParameter p = new OBDParameter {
                 ValueTypes = ValueTypes,
-                m_OBDRequest = OBDRequest,
-                m_parameter = Parameter,
+                _OBDRequest = OBDRequest,
+                _parameter = Parameter,
                 Service = Service,
                 SignalName = SignalName,
             };
@@ -91,6 +91,7 @@ namespace SH_OBD_DLL {
             return copy;
         }
 
+        [Flags]
         public enum EnumValueTypes {
             Double = 0x01,
             Bool = 0x02,

@@ -2,23 +2,23 @@
 
 namespace SH_OBD_DLL {
     public class OBDCommELM : CommLine {
-        protected string m_Port = "COM1";
+        protected string _Port = "COM1";
         public int Port {
             get {
-                return int.Parse(m_Port.Substring(3));
+                return int.Parse(_Port.Substring(3));
             }
             set {
-                m_Port = "COM" + value.ToString();
-                m_log.TraceInfo(string.Format("Port set to {0}", m_Port));
+                _Port = "COM" + value.ToString();
+                _log.TraceInfo(string.Format("Port set to {0}", _Port));
             }
         }
 
-        protected int m_BaudRate = 38400;
+        protected int _BaudRate = 38400;
         public int BaudRate {
-            get { return m_BaudRate; }
+            get { return _BaudRate; }
             set {
-                m_BaudRate = value;
-                m_log.TraceInfo(string.Format("Baud rate set to {0}", m_BaudRate.ToString()));
+                _BaudRate = value;
+                _log.TraceInfo(string.Format("Baud rate set to {0}", _BaudRate.ToString()));
             }
         }
 
@@ -26,40 +26,40 @@ namespace SH_OBD_DLL {
             get { return TransTimeout; }
             set {
                 TransTimeout = value;
-                m_log.TraceInfo(string.Format("Timeout set to {0} ms", TransTimeout.ToString()));
+                _log.TraceInfo(string.Format("Timeout set to {0} ms", TransTimeout.ToString()));
             }
         }
 
-        protected byte m_asciiRxTerm = (byte)'>';
+        protected byte _asciiRxTerm = (byte)'>';
         public byte RxTerminator {
-            get { return m_asciiRxTerm; }
-            set { m_asciiRxTerm = value; }
+            get { return _asciiRxTerm; }
+            set { _asciiRxTerm = value; }
         }
 
-        protected string m_RemoteIP = "127.0.0.1";
+        protected string _RemoteIP = "127.0.0.1";
         public string RemoteIP {
-            get { return m_RemoteIP; }
+            get { return _RemoteIP; }
             set {
-                m_RemoteIP = value;
-                m_log.TraceInfo(string.Format("RemoteIP set to {0}", m_RemoteIP));
+                _RemoteIP = value;
+                _log.TraceInfo(string.Format("RemoteIP set to {0}", _RemoteIP));
             }
         }
 
-        protected int m_RemotePort = 60001;
+        protected int _RemotePort = 60001;
         public int RemotePort {
             get { return RemotePort; }
             set {
-                m_RemotePort = value;
-                m_log.TraceInfo(string.Format("RemotePort set to {0}", m_RemotePort.ToString()));
+                _RemotePort = value;
+                _log.TraceInfo(string.Format("RemotePort set to {0}", _RemotePort.ToString()));
             }
         }
 
-        protected byte[] m_RxFilterWithSpace;
-        protected byte[] m_RxFilterNoSpace;
+        protected byte[] _RxFilterWithSpace;
+        protected byte[] _RxFilterNoSpace;
 
         public OBDCommELM(DllSettings settings, Logger log) : base(settings, log) {
-            m_RxFilterWithSpace = new byte[] { 0x0A, 0x20, 0 };
-            m_RxFilterNoSpace = new byte[] { 0x0A, 0 };
+            _RxFilterWithSpace = new byte[] { 0x0A, 0x20, 0 };
+            _RxFilterNoSpace = new byte[] { 0x0A, 0 };
         }
 
         public string GetResponse(string command) {
@@ -67,25 +67,25 @@ namespace SH_OBD_DLL {
             bool bRxFilterNoSpace = false;
             if (command.Contains("AT")) {
                 // 如果是发送AT命令的话，返回值就不过滤空格
-                SetRxFilter(m_RxFilterNoSpace);
+                SetRxFilter(_RxFilterNoSpace);
                 bRxFilterNoSpace = true;
             }
             try {
-                m_log.TraceInfo(string.Format("TX: {0}", command));
+                _log.TraceInfo(string.Format("TX: {0}", command));
                 response = Transact(command);
-                m_log.TraceInfo(string.Format("RX: {0}", response.Replace("\r", @"\r").Replace("\n", @"\n")));
+                _log.TraceInfo(string.Format("RX: {0}", response.Replace("\r", @"\r").Replace("\n", @"\n")));
             } catch (Exception ex) {
-                m_log.TraceError("Transact() occur exception: " + ex.Message);
+                _log.TraceError("Transact() occur exception: " + ex.Message);
                 if (string.Compare(ex.Message, "Timeout") == 0) {
                     Open();
-                    m_log.TraceError("RX: COMM TIMED OUT!");
+                    _log.TraceError("RX: COMM TIMED OUT!");
                     response = "TIMEOUT";
                 }
                 response = ex.Message;
             } finally {
                 if (bRxFilterNoSpace) {
                     // 将返回值重设为过滤空格
-                    SetRxFilter(m_RxFilterWithSpace);
+                    SetRxFilter(_RxFilterWithSpace);
                 }
             }
             return response;
@@ -93,9 +93,9 @@ namespace SH_OBD_DLL {
 
         protected override CommBaseSettings CommSettings() {
             CommLine.CommLineSettings settings = new CommLine.CommLineSettings();
-            settings.SetStandard(m_Port, m_BaudRate);
-            settings.RxTerminator = m_asciiRxTerm;
-            settings.RxFilter = m_RxFilterWithSpace;
+            settings.SetStandard(_Port, _BaudRate);
+            settings.RxTerminator = _asciiRxTerm;
+            settings.RxFilter = _RxFilterWithSpace;
             settings.TxTerminator = new byte[] { 0x0D };
             base.Setup(settings);
             return settings;

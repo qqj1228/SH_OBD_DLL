@@ -10,17 +10,17 @@ using System.Xml.Serialization;
 
 namespace SH_OBD_DLL {
     public abstract class CommBase {
-        private SerialPortClass m_serial = null;
-        private TCPClientImp m_TCP = null;
-        private readonly DllSettings m_mainSettings; // 传入的主配置
-        protected readonly Logger m_log;
-        private bool m_online = false;
-        private bool m_auto = false;
-        private int m_writeCount = 0;
+        private SerialPortClass _serial = null;
+        private TCPClientImp _TCP = null;
+        private readonly DllSettings _mainSettings; // 传入的主配置
+        protected readonly Logger _log;
+        private bool _online = false;
+        private bool _auto = false;
+        private int _writeCount = 0;
 
         protected CommBase(DllSettings settings, Logger log) {
-            m_mainSettings = settings;
-            m_log = log;
+            _mainSettings = settings;
+            _log = log;
         }
 
         ~CommBase() {
@@ -29,7 +29,7 @@ namespace SH_OBD_DLL {
 
         public bool Online {
             get {
-                if (m_online) {
+                if (_online) {
                     return CheckOnline();
                 } else {
                     return false;
@@ -60,7 +60,7 @@ namespace SH_OBD_DLL {
 
         public bool Open() {
             bool bRet;
-            if (m_mainSettings.ComPort > 0) {
+            if (_mainSettings.ComPort > 0) {
                 bRet = OpenSerialPort();
             } else {
                 bRet = OpenTCPClient();
@@ -69,21 +69,21 @@ namespace SH_OBD_DLL {
         }
 
         protected bool OpenSerialPort() {
-            if (m_online) {
+            if (_online) {
                 return false;
             }
             CommBase.CommBaseSettings commBaseSettings = CommSettings();
-            m_serial = new SerialPortClass(commBaseSettings.Port, commBaseSettings.BaudRate, (Parity)commBaseSettings.Parity, commBaseSettings.DataBits, (StopBits)commBaseSettings.StopBits) {
+            _serial = new SerialPortClass(commBaseSettings.Port, commBaseSettings.BaudRate, (Parity)commBaseSettings.Parity, commBaseSettings.DataBits, (StopBits)commBaseSettings.StopBits) {
                 WriteTimeout = 5000 // 发送超时设为5s
             };
-            m_writeCount = 0;
-            m_auto = false;
-            m_serial.DataReceived += SerialDataReceived;
+            _writeCount = 0;
+            _auto = false;
+            _serial.DataReceived += SerialDataReceived;
             try {
-                if (m_serial.OpenPort()) {
-                    m_online = true;
+                if (_serial.OpenPort()) {
+                    _online = true;
                     if (AfterOpen()) {
-                        m_auto = commBaseSettings.AutoReopen;
+                        _auto = commBaseSettings.AutoReopen;
                         return true;
                     } else {
                         Close();
@@ -93,29 +93,29 @@ namespace SH_OBD_DLL {
                     return false;
                 }
             } catch (Exception ex) {
-                m_log.TraceFatal(string.Format("Can't open {0}! Reason: {1}", commBaseSettings.Port, ex.Message));
+                _log.TraceFatal(string.Format("Can't open {0}! Reason: {1}", commBaseSettings.Port, ex.Message));
                 return false;
             }
         }
 
         protected bool OpenTCPClient() {
-            if (m_online) {
+            if (_online) {
                 return false;
             }
             CommBase.CommBaseSettings commBaseSettings = CommSettings();
-            commBaseSettings.Port = m_mainSettings.ComPortName;
-            m_TCP = new TCPClientImp(m_mainSettings.RemoteIP, m_mainSettings.RemotePort, m_log);
-            m_auto = false;
-            m_TCP.RecvedMsg += OnRecvedMsg;
+            commBaseSettings.Port = _mainSettings.ComPortName;
+            _TCP = new TCPClientImp(_mainSettings.RemoteIP, _mainSettings.RemotePort, _log);
+            _auto = false;
+            _TCP.RecvedMsg += OnRecvedMsg;
             try {
-                m_TCP.ConnectServer();
+                _TCP.ConnectServer();
             } catch (Exception ex) {
-                m_log.TraceFatal(string.Format("Can't open {0}:{1}! Reason: {2}", m_mainSettings.RemoteIP, m_mainSettings.RemotePort, ex.Message));
+                _log.TraceFatal(string.Format("Can't open {0}:{1}! Reason: {2}", _mainSettings.RemoteIP, _mainSettings.RemotePort, ex.Message));
                 return false;
             }
-            m_online = true;
+            _online = true;
             if (AfterOpen()) {
-                m_auto = commBaseSettings.AutoReopen;
+                _auto = commBaseSettings.AutoReopen;
                 return true;
             } else {
                 Close();
@@ -138,27 +138,27 @@ namespace SH_OBD_DLL {
         }
 
         public void Close() {
-            if (!m_online) {
+            if (!_online) {
                 return;
             }
-            m_auto = false;
+            _auto = false;
             BeforeClose(false);
             InternalClose();
-            m_online = false;
+            _online = false;
         }
 
         private void InternalClose() {
-            if (m_mainSettings.ComPort > 0) {
-                m_serial.DataReceived -= SerialDataReceived;
-                m_serial.ClosePort();
+            if (_mainSettings.ComPort > 0) {
+                _serial.DataReceived -= SerialDataReceived;
+                _serial.ClosePort();
             } else {
-                m_TCP.RecvedMsg -= OnRecvedMsg;
-                m_TCP.Close();
+                _TCP.RecvedMsg -= OnRecvedMsg;
+                _TCP.Close();
             }
         }
 
         protected void ThrowException(string reason) {
-            if (m_online && reason != "Timeout") {
+            if (_online && reason != "Timeout") {
                 BeforeClose(true);
                 InternalClose();
             }
@@ -167,16 +167,16 @@ namespace SH_OBD_DLL {
 
         protected void Send(byte[] tosend) {
             if (CheckOnline()) {
-                m_writeCount = tosend.GetLength(0);
+                _writeCount = tosend.GetLength(0);
                 try {
-                    if (m_mainSettings.ComPort > 0) {
-                        m_serial.SendData(tosend, 0, m_writeCount);
+                    if (_mainSettings.ComPort > 0) {
+                        _serial.SendData(tosend, 0, _writeCount);
                     } else {
-                        m_TCP.SendData(tosend, 0, m_writeCount);
+                        _TCP.SendData(tosend, 0, _writeCount);
                     }
-                    m_writeCount = 0;
+                    _writeCount = 0;
                 } catch (Exception ex) {
-                    m_log.TraceError("Send failed: " + ex.Message);
+                    _log.TraceError("Send failed: " + ex.Message);
                     ThrowException("Send failed: " + ex.Message);
                 }
             }
@@ -203,18 +203,18 @@ namespace SH_OBD_DLL {
         protected virtual void OnRxException(Exception e) { }
 
         private bool CheckOnline() {
-            if (m_mainSettings.ComPort > 0) {
-                if (m_online) {
+            if (_mainSettings.ComPort > 0) {
+                if (_online) {
                     return true;
                 } else {
-                    if (m_auto && Open()) {
+                    if (_auto && Open()) {
                         return true;
                     }
-                    m_log.TraceError("CheckOnline: Offline");
+                    _log.TraceError("CheckOnline: Offline");
                     return false;
                 }
             } else {
-                return m_TCP.TestConnect();
+                return _TCP.TestConnect();
             }
         }
 

@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace SH_OBD_Main {
     public class OBDTest {
-        private readonly OBDIfEx m_obdIfEx;
-        private readonly DataTable m_dtInfo;
-        private readonly DataTable m_dtECUInfo;
-        private bool m_compIgn;
-        private bool m_CN6;
-        public readonly Model m_db;
+        private readonly OBDIfEx _obdIfEx;
+        private readonly DataTable _dtInfo;
+        private readonly DataTable _dtECUInfo;
+        private bool _compIgn;
+        private bool _CN6;
+        public readonly Model _db;
         public event Action OBDTestStart;
         public event Action SetupColumnsDone;
         public event Action WriteDbStart;
@@ -41,11 +41,11 @@ namespace SH_OBD_Main {
         public string StrVIN_ECU { get; set; }
 
         public OBDTest(OBDIfEx obdIfex) {
-            m_obdIfEx = obdIfex;
-            m_dtInfo = new DataTable("Info");
-            m_dtECUInfo = new DataTable("ECUInfo");
-            m_compIgn = false;
-            m_CN6 = false;
+            _obdIfEx = obdIfex;
+            _dtInfo = new DataTable("Info");
+            _dtECUInfo = new DataTable("ECUInfo");
+            _compIgn = false;
+            _CN6 = false;
             AdvanceMode = false;
             AccessAdvanceMode = 0;
             OBDResult = false;
@@ -56,22 +56,22 @@ namespace SH_OBD_Main {
             CALIDCVNAllEmpty = false;
             CALIDUnmeaningResult = true;
             OBDSUPResult = true;
-            m_db = new Model(m_obdIfEx.DBandMES, m_obdIfEx.Log);
+            _db = new Model(_obdIfEx.DBandMES, _obdIfEx.Log);
         }
 
         private int GetSN(string strNowDate) {
             int iRet;
-            string strSN = m_db.GetSN();
+            string strSN = _db.GetSN();
             if (strSN.Length == 0) {
-                iRet = m_obdIfEx.OBDResultSetting.StartSN;
+                iRet = _obdIfEx.OBDResultSetting.StartSN;
             } else if (strSN.Split(',')[0] != strNowDate) {
-                iRet = m_obdIfEx.OBDResultSetting.StartSN;
+                iRet = _obdIfEx.OBDResultSetting.StartSN;
             } else {
                 bool result = int.TryParse(strSN.Split(',')[1], out iRet);
                 if (result) {
-                    iRet = (iRet % 1000) + m_obdIfEx.OBDResultSetting.StartSN;
+                    iRet = (iRet % 1000) + _obdIfEx.OBDResultSetting.StartSN;
                 } else {
-                    iRet = m_obdIfEx.OBDResultSetting.StartSN;
+                    iRet = _obdIfEx.OBDResultSetting.StartSN;
                 }
             }
             return iRet;
@@ -84,15 +84,15 @@ namespace SH_OBD_Main {
                 --iSN;
             }
             iSN %= 10000;
-            m_db.SetSN(strNowDateTime + "," + iSN.ToString());
+            _db.SetSN(strNowDateTime + "," + iSN.ToString());
         }
 
         public DataTable GetDataTable(int index) {
             switch (index) {
             case 0:
-                return m_dtInfo;
+                return _dtInfo;
             case 1:
-                return m_dtECUInfo;
+                return _dtECUInfo;
             //case 2:
             //    return m_dtIUPR;
             default:
@@ -113,16 +113,16 @@ namespace SH_OBD_Main {
         private void SetDataRow(int lineNO, string strItem, DataTable dt, OBDParameter param) {
             Dictionary<string, bool[]> support = new Dictionary<string, bool[]>();
             if (param.Service == 1 || ((param.Parameter >> 8) & 0x00FF) == 0xF4) {
-                support = m_obdIfEx.OBDDll.Mode01Support;
+                support = _obdIfEx.OBDDll.Mode01Support;
             } else if (param.Service == 9 || ((param.Parameter >> 8) & 0x00FF) == 0xF8) {
-                support = m_obdIfEx.OBDDll.Mode09Support;
+                support = _obdIfEx.OBDDll.Mode09Support;
             }
             DataRow dr = dt.NewRow();
             dr[0] = lineNO;
             dr[1] = strItem;
 
             bool bGetData = false;
-            if (param.Service == 3 || param.Service == 7 || param.Service == 0x0A || param.Service == 0x19 || m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+            if (param.Service == 3 || param.Service == 7 || param.Service == 0x0A || param.Service == 0x19 || _obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 bGetData = true;
             }
             foreach (string key in support.Keys) {
@@ -137,7 +137,7 @@ namespace SH_OBD_Main {
                 dt.Rows.Add(dr);
                 return;
             }
-            List<OBDParameterValue> valueList = m_obdIfEx.OBDIf.GetValueList(param);
+            List<OBDParameterValue> valueList = _obdIfEx.OBDIf.GetValueList(param);
             if ((param.ValueTypes & (int)OBDParameter.EnumValueTypes.ListString) != 0) {
                 int maxLine = 0;
                 foreach (OBDParameterValue value in valueList) {
@@ -237,9 +237,9 @@ namespace SH_OBD_Main {
                     }
                 }
             }
-            if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
+            if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                 for (int i = 2; i < dt.Columns.Count; i++) {
-                    if (m_obdIfEx.OBDDll.Mode01Support.ContainsKey(dt.Columns[i].ColumnName) && !m_obdIfEx.OBDDll.Mode01Support[dt.Columns[i].ColumnName][0]) {
+                    if (_obdIfEx.OBDDll.Mode01Support.ContainsKey(dt.Columns[i].ColumnName) && !_obdIfEx.OBDDll.Mode01Support[dt.Columns[i].ColumnName][0]) {
                         dr[i] = "不适用";
                     }
                 }
@@ -253,12 +253,12 @@ namespace SH_OBD_Main {
         }
 
         private void SetDataTableInfo() {
-            DataTable dt = m_dtInfo;
+            DataTable dt = _dtInfo;
             int NO = 0;
             OBDParameter param = new OBDParameter();
             int HByte = 0;
-            if (m_obdIfEx.OBDResultSetting.MIL) {
-                if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDResultSetting.MIL) {
+                if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                     param = new OBDParameter {
                         OBDRequest = "22F401",
                         Service = 0x22,
@@ -266,14 +266,14 @@ namespace SH_OBD_Main {
                         ValueTypes = (int)OBDParameter.EnumValueTypes.Bool
                     };
                     HByte = 0xF400;
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                     param = new OBDParameter {
                         OBDRequest = "0101",
                         Service = 1,
                         Parameter = 1,
                         ValueTypes = (int)OBDParameter.EnumValueTypes.Bool
                     };
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                     param = new OBDParameter();
                 }
             } else {
@@ -281,8 +281,8 @@ namespace SH_OBD_Main {
             }
             SetDataRow(++NO, "MIL状态", dt, param);              // 0
 
-            if (m_obdIfEx.OBDResultSetting.MIL) {
-                if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
+            if (_obdIfEx.OBDResultSetting.MIL) {
+                if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                     param.Parameter = HByte + 0x21;
                     param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
                 } else {
@@ -293,7 +293,7 @@ namespace SH_OBD_Main {
             }
             SetDataRow(++NO, "MIL亮后行驶里程（km）", dt, param); // 1
 
-            if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                 param = new OBDParameter {
                     OBDRequest = "22F41C",
                     Service = 0x22,
@@ -301,14 +301,14 @@ namespace SH_OBD_Main {
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
                 };
                 HByte = 0xF400;
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                 param = new OBDParameter {
                     OBDRequest = "011C",
                     Service = 1,
                     Parameter = 0x1C,
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
                 };
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 param = new OBDParameter {
                     OBDRequest = "00FECE",
                     Service = 0,
@@ -318,21 +318,21 @@ namespace SH_OBD_Main {
             }
             SetDataRow(++NO, "OBD型式检验类型", dt, param);      // 2
             string OBD_SUP = dt.Rows[dt.Rows.Count - 1][2].ToString().Split(',')[0];
-            string[] CN6_OBD_SUP = m_obdIfEx.OBDIf.DllSettings.CN6_OBD_SUP.Split(',');
+            string[] CN6_OBD_SUP = _obdIfEx.OBDIf.DllSettings.CN6_OBD_SUP.Split(',');
             foreach (string item in CN6_OBD_SUP) {
                 if (OBD_SUP == item) {
-                    m_CN6 = true;
+                    _CN6 = true;
                     break;
                 }
             }
             // 判断ECM的OBD型式是否合法
-            if (m_obdIfEx.OBDResultSetting.OBD_SUP) {
+            if (_obdIfEx.OBDResultSetting.OBD_SUP) {
                 if (OBD_SUP.Length == 0 || OBD_SUP.Length > 2 || OBD_SUP == "不适用") {
                     OBDSUPResult = false;
                 }
             }
 
-            if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
+            if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                 param.Parameter = HByte + 0xA6;
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             } else {
@@ -340,12 +340,12 @@ namespace SH_OBD_Main {
             }
             SetDataRow(++NO, "总累积里程ODO（km）", dt, param);  // 3
 
-            if (m_obdIfEx.OBDResultSetting.DTC03) {
-                if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDResultSetting.DTC03) {
+                if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                     param.OBDRequest = "194233081E";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                     param.OBDRequest = "03";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                     param = new OBDParameter();
                 }
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
@@ -361,12 +361,12 @@ namespace SH_OBD_Main {
                 SetDataRow(++NO, "存储DTC", dt, param);
             }
 
-            if (m_obdIfEx.OBDResultSetting.DTC07) {
-                if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDResultSetting.DTC07) {
+                if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                     param.OBDRequest = "194233041E";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                     param.OBDRequest = "07";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                     param = new OBDParameter();
                 }
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
@@ -382,12 +382,12 @@ namespace SH_OBD_Main {
                 SetDataRow(++NO, "未决DTC", dt, param);
             }
 
-            if (m_obdIfEx.OBDResultSetting.DTC0A) {
-                if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDResultSetting.DTC0A) {
+                if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                     param.OBDRequest = "195533";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                     param.OBDRequest = "0A";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                     param = new OBDParameter();
                 }
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
@@ -404,12 +404,12 @@ namespace SH_OBD_Main {
             }
 
             int errorCount = 0;
-            if (m_obdIfEx.OBDResultSetting.Readiness) {
-                if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDResultSetting.Readiness) {
+                if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                     param.OBDRequest = "22F401";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                     param.OBDRequest = "0101";
-                } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+                } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                     param = new OBDParameter();
                 }
             } else {
@@ -423,21 +423,21 @@ namespace SH_OBD_Main {
                 };
                 valueList.Add(value);
             } else {
-                valueList = m_obdIfEx.OBDIf.GetValueList(param);
+                valueList = _obdIfEx.OBDIf.GetValueList(param);
             }
             SetReadinessDataRow(++NO, "失火监测", dt, valueList, 15, -4, ref errorCount);      // 7
             SetReadinessDataRow(++NO, "燃油系统监测", dt, valueList, 14, -4, ref errorCount);  // 8
             SetReadinessDataRow(++NO, "综合组件监测", dt, valueList, 13, -4, ref errorCount);  // 9
 
-            if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939 && !m_obdIfEx.OBDResultSetting.Readiness) {
+            if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939 && !_obdIfEx.OBDResultSetting.Readiness) {
                 foreach (OBDParameterValue value in valueList) {
-                    if (value.ECUResponseID != null && m_obdIfEx.OBDDll.Mode01Support.ContainsKey(value.ECUResponseID) && m_obdIfEx.OBDDll.Mode01Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1]) {
-                        m_compIgn = value.GetBitFlag(12);
+                    if (value.ECUResponseID != null && _obdIfEx.OBDDll.Mode01Support.ContainsKey(value.ECUResponseID) && _obdIfEx.OBDDll.Mode01Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1]) {
+                        _compIgn = value.GetBitFlag(12);
                         break;
                     }
                 }
             }
-            if (m_compIgn) {
+            if (_compIgn) {
                 // 压缩点火
                 SetReadinessDataRow(++NO, "NMHC催化剂监测", dt, valueList, 23, 8, ref errorCount);     // 10
                 SetReadinessDataRow(++NO, "NOx/SCR后处理监测", dt, valueList, 22, 8, ref errorCount);  // 11
@@ -455,18 +455,18 @@ namespace SH_OBD_Main {
                 SetReadinessDataRow(++NO, "加热氧气传感器监测", dt, valueList, 17, 8, ref errorCount); // 16
             }
             SetReadinessDataRow(++NO, "EGR/VVT系统监测", dt, valueList, 16, 8, ref errorCount);        // 15 / 17
-            if (m_obdIfEx.OBDResultSetting.Readiness && errorCount > 2) {
+            if (_obdIfEx.OBDResultSetting.Readiness && errorCount > 2) {
                 ReadinessResult = false;
             }
 
         }
 
         private void SetDataTableECUInfo() {
-            DataTable dt = m_dtECUInfo;
+            DataTable dt = _dtECUInfo;
             int NO = 0;
             OBDParameter param = new OBDParameter();
             int HByte = 0;
-            if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                 param = new OBDParameter {
                     OBDRequest = "22F802",
                     Service = 0x22,
@@ -474,14 +474,14 @@ namespace SH_OBD_Main {
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
                 HByte = 0xF800;
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                 param = new OBDParameter {
                     OBDRequest = "0902",
                     Service = 9,
                     Parameter = 2,
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 param = new OBDParameter {
                     OBDRequest = "00FEEC",
                     Service = 0,
@@ -498,25 +498,25 @@ namespace SH_OBD_Main {
                 }
             }
             StrVIN_ECU = strVIN;
-            if (m_obdIfEx.OBDResultSetting.VINError && StrVIN_IN != null && StrVIN_ECU != StrVIN_IN && StrVIN_IN.Length > 0) {
-                m_obdIfEx.Log.TraceWarning("Scanner VIN[" + StrVIN_IN + "] and ECU VIN[" + StrVIN_ECU + "] are not consistent");
+            if (_obdIfEx.OBDResultSetting.VINError && StrVIN_IN != null && StrVIN_ECU != StrVIN_IN && StrVIN_IN.Length > 0) {
+                _obdIfEx.Log.TraceWarning("Scanner VIN[" + StrVIN_IN + "] and ECU VIN[" + StrVIN_ECU + "] are not consistent");
                 VINResult = false;
             }
 
-            if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939 && m_obdIfEx.OBDResultSetting.UseECUAcronym) {
+            if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939 && _obdIfEx.OBDResultSetting.UseECUAcronym) {
                 param.Parameter = HByte + 0x0A;
             } else {
                 param = new OBDParameter();
             }
             SetDataRow(++NO, "ECU名称", dt, param); // 1
 
-            if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
+            if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                 param.OBDRequest = "22F804";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "0904";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
-            } else if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+            } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 param = new OBDParameter {
                     OBDRequest = "00D300",
                     Service = 0,
@@ -526,7 +526,7 @@ namespace SH_OBD_Main {
             }
             SetDataRow(++NO, "CAL_ID", dt, param);  // 2
 
-            if (m_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
+            if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                 param.Parameter = HByte + 6;
             } else {
                 param = new OBDParameter {
@@ -546,8 +546,8 @@ namespace SH_OBD_Main {
                 for (int j = 0; j < length; j++) {
                     string CALID = CALIDArray.Length > j ? CALIDArray[j] : "";
                     string CVN = CVNArray.Length > j ? CVNArray[j] : "";
-                    if (m_CN6) {
-                        if (!m_obdIfEx.OBDResultSetting.CALIDCVNEmpty) {
+                    if (_CN6) {
+                        if (!_obdIfEx.OBDResultSetting.CALIDCVNEmpty) {
                             if (CALID.Length * CVN.Length == 0) {
                                 if (CALID.Length + CVN.Length == 0) {
                                     if (j == 0) {
@@ -560,10 +560,10 @@ namespace SH_OBD_Main {
                             }
                         }
                         // 国六车型，CALID全部字符均为空格的话也判为乱码
-                        if (Utility.IsUnmeaningString(CALID, m_obdIfEx.OBDResultSetting.UnmeaningNum, true)) {
+                        if (Utility.IsUnmeaningString(CALID, _obdIfEx.OBDResultSetting.UnmeaningNum, true)) {
                             CALIDUnmeaningResult = false;
                         }
-                    } else if (Utility.IsUnmeaningString(CALID, m_obdIfEx.OBDResultSetting.UnmeaningNum, false)) {
+                    } else if (Utility.IsUnmeaningString(CALID, _obdIfEx.OBDResultSetting.UnmeaningNum, false)) {
                         // 国五车型，CALID全部字符均为空格的话不判为乱码
                         CALIDUnmeaningResult = false;
                     }
@@ -578,14 +578,14 @@ namespace SH_OBD_Main {
         /// <param name="errorMsg">错误信息</param>
         /// <returns>是否返回成功信息</returns>
         public void StartOBDTest(out string errorMsg) {
-            m_obdIfEx.Log.TraceInfo(string.Format(">>>>> Enter StartOBDTest function. Ver(Main / Dll): {0} / {1} <<<<<", MainFileVersion.AssemblyVersion, DllVersion<SH_OBD_Dll>.AssemblyVersion));
+            _obdIfEx.Log.TraceInfo(string.Format(">>>>> Enter StartOBDTest function. Ver(Main / Dll): {0} / {1} <<<<<", MainFileVersion.AssemblyVersion, DllVersion<SH_OBD_Dll>.AssemblyVersion));
             errorMsg = "";
-            m_dtInfo.Clear();
-            m_dtInfo.Dispose();
-            m_dtECUInfo.Clear();
-            m_dtECUInfo.Dispose();
-            m_compIgn = false;
-            m_CN6 = false;
+            _dtInfo.Clear();
+            _dtInfo.Dispose();
+            _dtECUInfo.Clear();
+            _dtECUInfo.Dispose();
+            _compIgn = false;
+            _CN6 = false;
             OBDResult = false;
             DTCResult = true;
             ReadinessResult = true;
@@ -597,17 +597,17 @@ namespace SH_OBD_Main {
 
             OBDTestStart?.Invoke();
 
-            if(!m_obdIfEx.OBDDll.SetSupportStatus(out errorMsg)) {
+            if(!_obdIfEx.OBDDll.SetSupportStatus(out errorMsg)) {
                 SetupColumnsDone?.Invoke();
                 throw new Exception(errorMsg);
             }
 
-            SetDataTableColumns<string>(m_dtInfo, m_obdIfEx.OBDDll.Mode01Support);
-            if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
+            SetDataTableColumns<string>(_dtInfo, _obdIfEx.OBDDll.Mode01Support);
+            if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 // J1939用mode01来初始化m_dtECUInfo
-                SetDataTableColumns<string>(m_dtECUInfo, m_obdIfEx.OBDDll.Mode01Support);
+                SetDataTableColumns<string>(_dtECUInfo, _obdIfEx.OBDDll.Mode01Support);
             } else {
-                SetDataTableColumns<string>(m_dtECUInfo, m_obdIfEx.OBDDll.Mode09Support);
+                SetDataTableColumns<string>(_dtECUInfo, _obdIfEx.OBDDll.Mode09Support);
             }
             SetupColumnsDone?.Invoke();
             SetDataTableInfo();
@@ -622,7 +622,7 @@ namespace SH_OBD_Main {
             strLog += ", OBDSUPResult: " + OBDSUPResult.ToString();
             strLog += ", VINResult: " + VINResult.ToString();
             strLog += ", CALIDCVNResult: " + CALIDCVNResult.ToString() + "]";
-            m_obdIfEx.Log.TraceInfo(strLog);
+            _obdIfEx.Log.TraceInfo(strLog);
 
             string strOBDResult = OBDResult ? "1" : "0";
 
@@ -631,26 +631,26 @@ namespace SH_OBD_Main {
             try {
                 SetDataTableResult(StrVIN_ECU, strOBDResult, ref dt);
             } catch (Exception ex) {
-                m_obdIfEx.Log.TraceError("Result DataTable Error: " + ex.Message);
+                _obdIfEx.Log.TraceError("Result DataTable Error: " + ex.Message);
                 dt.Dispose();
                 WriteDbDone?.Invoke();
                 throw new Exception("生成 Result DataTable 出错");
             }
 
-            m_db.ModifyDB(dt);
+            _db.ModifyDB(dt);
             WriteDbDone?.Invoke();
 
             try {
                 ExportResultFile(dt);
             } catch (Exception ex) {
-                m_obdIfEx.Log.TraceError("Exporting OBD test result file failed: " + ex.Message);
+                _obdIfEx.Log.TraceError("Exporting OBD test result file failed: " + ex.Message);
                 dt.Dispose();
                 throw new Exception("生成OBD检测结果文件出错");
             }
 
             // 用“无条件上传”和“OBD检测结果”判断是否需要直接返回不上传MES
-            if (!m_obdIfEx.OBDResultSetting.UploadWhenever && !OBDResult) {
-                m_obdIfEx.Log.TraceError("Won't upload data because OBD test result is NOK");
+            if (!_obdIfEx.OBDResultSetting.UploadWhenever && !OBDResult) {
+                _obdIfEx.Log.TraceError("Won't upload data because OBD test result is NOK");
                 NotUploadData?.Invoke();
                 dt.Dispose();
                 return;
@@ -670,9 +670,9 @@ namespace SH_OBD_Main {
             if (bShowMsg) {
                 UploadDataStart?.Invoke();
             }
-            m_obdIfEx.DBandMES.ChangeWebService = false;
-            if (!WSHelper.CreateWebService(m_obdIfEx.DBandMES, out string error)) {
-                m_obdIfEx.Log.TraceError("CreateWebService Error: " + error);
+            _obdIfEx.DBandMES.ChangeWebService = false;
+            if (!WSHelper.CreateWebService(_obdIfEx.DBandMES, out string error)) {
+                _obdIfEx.Log.TraceError("CreateWebService Error: " + error);
                 throw new Exception("上传失败：获取 WebService 接口出错, " + error);
             }
 
@@ -693,12 +693,12 @@ namespace SH_OBD_Main {
                 } else {
                     // 返回失败信息
                     if (strRet.Length > 0) {
-                        m_obdIfEx.Log.TraceError(WSHelper.GetMethodName(0) + " return false");
+                        _obdIfEx.Log.TraceError(WSHelper.GetMethodName(0) + " return false");
                     }
                     try {
                         strRet = WSHelper.GetResponseOutString(WSHelper.GetMethodName(0), out strMsg, dt1MES, dt2MES);
                     } catch (Exception ex) {
-                        m_obdIfEx.Log.TraceError("WebService GetResponseString occured Exception: " + ex.Message + (strMsg.Length > 0 ? ", " + strMsg : ""));
+                        _obdIfEx.Log.TraceError("WebService GetResponseString occured Exception: " + ex.Message + (strMsg.Length > 0 ? ", " + strMsg : ""));
                         dt2MES.Dispose();
                         dt1MES.Dispose();
                         if (bShowMsg) {
@@ -715,8 +715,8 @@ namespace SH_OBD_Main {
             dt1MES.Dispose();
             if (count < 4) {
                 // 上传数据接口返回成功信息
-                m_obdIfEx.Log.TraceInfo("Upload data success, VIN = " + strVIN);
-                m_db.UpdateUpload(strVIN, "1");
+                _obdIfEx.Log.TraceInfo("Upload data success, VIN = " + strVIN);
+                _db.UpdateUpload(strVIN, "1");
                 if (bShowMsg) {
                     UploadDataDone?.Invoke();
                 }
@@ -725,7 +725,7 @@ namespace SH_OBD_Main {
 #endif
             } else {
                 // 上传数据接口返回失败信息
-                m_obdIfEx.Log.TraceError("Upload data function return false, VIN = " + strVIN + (strMsg.Length > 0 ? ", " + strMsg : ""));
+                _obdIfEx.Log.TraceError("Upload data function return false, VIN = " + strVIN + (strMsg.Length > 0 ? ", " + strMsg : ""));
                 if (bShowMsg) {
                     UploadDataDone?.Invoke();
                 }
@@ -770,41 +770,41 @@ namespace SH_OBD_Main {
 
         private void SetDataTableResult(string strVIN, string strOBDResult, ref DataTable dtOut) {
             string strDTCTemp;
-            for (int i = 2; i < m_dtECUInfo.Columns.Count; i++) {
+            for (int i = 2; i < _dtECUInfo.Columns.Count; i++) {
                 DataRow dr = dtOut.NewRow();
                 dr[0] = strVIN;                                                     // VIN
-                dr[1] = m_dtECUInfo.Columns[i].ColumnName;                          // ECU_ID
-                for (int j = 2; j < m_dtInfo.Columns.Count; j++) {
-                    if (m_dtInfo.Columns[j].ColumnName == m_dtECUInfo.Columns[i].ColumnName) {
-                        dr[2] = m_dtInfo.Rows[0][j].ToString();                     // MIL
-                        dr[3] = m_dtInfo.Rows[1][j].ToString();                     // MIL_DIST
-                        dr[4] = m_dtInfo.Rows[2][j].ToString();                     // OBD_SUP
-                        dr[5] = m_dtInfo.Rows[3][j].ToString();                     // ODO
+                dr[1] = _dtECUInfo.Columns[i].ColumnName;                          // ECU_ID
+                for (int j = 2; j < _dtInfo.Columns.Count; j++) {
+                    if (_dtInfo.Columns[j].ColumnName == _dtECUInfo.Columns[i].ColumnName) {
+                        dr[2] = _dtInfo.Rows[0][j].ToString();                     // MIL
+                        dr[3] = _dtInfo.Rows[1][j].ToString();                     // MIL_DIST
+                        dr[4] = _dtInfo.Rows[2][j].ToString();                     // OBD_SUP
+                        dr[5] = _dtInfo.Rows[3][j].ToString();                     // ODO
                         // DTC03，若大于数据库字段容量则截断
-                        strDTCTemp = m_dtInfo.Rows[4][j].ToString().Replace("\n", ",");
+                        strDTCTemp = _dtInfo.Rows[4][j].ToString().Replace("\n", ",");
                         if (strDTCTemp.Length > 100) {
                             dr[6] = strDTCTemp.Substring(0, 97) + "...";
                         } else {
                             dr[6] = strDTCTemp;
                         }
                         // DTC07，若大于数据库字段容量则截断
-                        strDTCTemp = m_dtInfo.Rows[5][j].ToString().Replace("\n", ",");
+                        strDTCTemp = _dtInfo.Rows[5][j].ToString().Replace("\n", ",");
                         if (strDTCTemp.Length > 100) {
                             dr[7] = strDTCTemp.Substring(0, 97) + "...";
                         } else {
                             dr[7] = strDTCTemp;
                         }
                         // DTC0A，若大于数据库字段容量则截断
-                        strDTCTemp = m_dtInfo.Rows[6][j].ToString().Replace("\n", ",");
+                        strDTCTemp = _dtInfo.Rows[6][j].ToString().Replace("\n", ",");
                         if (strDTCTemp.Length > 100) {
                             dr[8] = strDTCTemp.Substring(0, 97) + "...";
                         } else {
                             dr[8] = strDTCTemp;
                         }
-                        dr[9] = m_dtInfo.Rows[7][j].ToString();                     // MIS_RDY
-                        dr[10] = m_dtInfo.Rows[8][j].ToString();                    // FUEL_RDY
-                        dr[11] = m_dtInfo.Rows[9][j].ToString();                    // CCM_RDY
-                        if (m_compIgn) {
+                        dr[9] = _dtInfo.Rows[7][j].ToString();                     // MIS_RDY
+                        dr[10] = _dtInfo.Rows[8][j].ToString();                    // FUEL_RDY
+                        dr[11] = _dtInfo.Rows[9][j].ToString();                    // CCM_RDY
+                        if (_compIgn) {
                             dr[12] = "不适用";                                      // CAT_RDY
                             dr[13] = "不适用";                                      // HCAT_RDY
                             dr[14] = "不适用";                                      // EVAP_RDY
@@ -812,21 +812,21 @@ namespace SH_OBD_Main {
                             dr[16] = "不适用";                                      // ACRF_RDY
                             dr[17] = "不适用";                                      // O2S_RDY
                             dr[18] = "不适用";                                      // HTR_RDY
-                            dr[19] = m_dtInfo.Rows[15][j].ToString();               // EGR_RDY
-                            dr[20] = m_dtInfo.Rows[10][j].ToString();               // HCCAT_RDY
-                            dr[21] = m_dtInfo.Rows[11][j].ToString();               // NCAT_RDY
-                            dr[22] = m_dtInfo.Rows[12][j].ToString();               // BP_RDY
-                            dr[23] = m_dtInfo.Rows[13][j].ToString();               // EGS_RDY
-                            dr[24] = m_dtInfo.Rows[14][j].ToString();               // PM_RDY
+                            dr[19] = _dtInfo.Rows[15][j].ToString();               // EGR_RDY
+                            dr[20] = _dtInfo.Rows[10][j].ToString();               // HCCAT_RDY
+                            dr[21] = _dtInfo.Rows[11][j].ToString();               // NCAT_RDY
+                            dr[22] = _dtInfo.Rows[12][j].ToString();               // BP_RDY
+                            dr[23] = _dtInfo.Rows[13][j].ToString();               // EGS_RDY
+                            dr[24] = _dtInfo.Rows[14][j].ToString();               // PM_RDY
                         } else {
-                            dr[12] = m_dtInfo.Rows[10][j].ToString();               // CAT_RDY
-                            dr[13] = m_dtInfo.Rows[11][j].ToString();               // HCAT_RDY
-                            dr[14] = m_dtInfo.Rows[12][j].ToString();               // EVAP_RDY
-                            dr[15] = m_dtInfo.Rows[13][j].ToString();               // AIR_RDY
-                            dr[16] = m_dtInfo.Rows[14][j].ToString();               // ACRF_RDY
-                            dr[17] = m_dtInfo.Rows[15][j].ToString();               // O2S_RDY
-                            dr[18] = m_dtInfo.Rows[16][j].ToString();               // HTR_RDY
-                            dr[19] = m_dtInfo.Rows[17][j].ToString();               // EGR_RDY
+                            dr[12] = _dtInfo.Rows[10][j].ToString();               // CAT_RDY
+                            dr[13] = _dtInfo.Rows[11][j].ToString();               // HCAT_RDY
+                            dr[14] = _dtInfo.Rows[12][j].ToString();               // EVAP_RDY
+                            dr[15] = _dtInfo.Rows[13][j].ToString();               // AIR_RDY
+                            dr[16] = _dtInfo.Rows[14][j].ToString();               // ACRF_RDY
+                            dr[17] = _dtInfo.Rows[15][j].ToString();               // O2S_RDY
+                            dr[18] = _dtInfo.Rows[16][j].ToString();               // HTR_RDY
+                            dr[19] = _dtInfo.Rows[17][j].ToString();               // EGR_RDY
                             dr[20] = "不适用";                                      // HCCAT_RDY
                             dr[21] = "不适用";                                      // NCAT_RDY
                             dr[22] = "不适用";                                      // BP_RDY
@@ -836,9 +836,9 @@ namespace SH_OBD_Main {
                         break;
                     }
                 }
-                dr[25] = m_dtECUInfo.Rows[1][i].ToString();                         // ECU_NAME
-                dr[26] = m_dtECUInfo.Rows[2][i].ToString().Replace("\n", ",");      // CAL_ID
-                dr[27] = m_dtECUInfo.Rows[3][i].ToString().Replace("\n", ",");      // CVN
+                dr[25] = _dtECUInfo.Rows[1][i].ToString();                         // ECU_NAME
+                dr[26] = _dtECUInfo.Rows[2][i].ToString().Replace("\n", ",");      // CAL_ID
+                dr[27] = _dtECUInfo.Rows[3][i].ToString().Replace("\n", ",");      // CVN
                 dr[28] = strOBDResult;
                 dr[29] = "0";
                 dtOut.Rows.Add(dr);
@@ -1020,8 +1020,8 @@ namespace SH_OBD_Main {
             int iSN = GetSN(strNowDateTime);
             ++iSN;
             iSN %= 10000;
-            dr["TestNo"] = "XC" + NormalizeCompanyCode(m_obdIfEx.OBDResultSetting.CompanyCode) + strNowDateTime + iSN.ToString("d4");
-            m_db.SetSN(strNowDateTime + "," + iSN.ToString());
+            dr["TestNo"] = "XC" + NormalizeCompanyCode(_obdIfEx.OBDResultSetting.CompanyCode) + strNowDateTime + iSN.ToString("d4");
+            _db.SetSN(strNowDateTime + "," + iSN.ToString());
             dr["TestType"] = "0";
             dr["APASS"] = "1";
             dr["OPASS"] = strOBDResult;
@@ -1049,7 +1049,7 @@ namespace SH_OBD_Main {
 
         private string GetModuleID(string ECUAcronym, string ECUID) {
             string moduleID = ECUAcronym;
-            if (m_obdIfEx.OBDResultSetting.UseECUAcronym) {
+            if (_obdIfEx.OBDResultSetting.UseECUAcronym) {
                 if (moduleID.Length == 0 || moduleID == "不适用") {
                     moduleID = ECUID;
                 }
@@ -1091,7 +1091,7 @@ namespace SH_OBD_Main {
             dt2MES.Columns.Add("CVN");
             for (int i = 0; i < dtIn.Rows.Count; i++) {
                 string ECUAcronym = dtIn.Rows[i][25].ToString().Split('-')[0];
-                if (m_CN6) {
+                if (_CN6) {
                     string[] CALIDArray = dtIn.Rows[i][26].ToString().Split(',');
                     string[] CVNArray = dtIn.Rows[i][27].ToString().Split(',');
                     int length = Math.Max(CALIDArray.Length, CVNArray.Length);
@@ -1100,13 +1100,13 @@ namespace SH_OBD_Main {
                         string CALID = CALIDArray.Length > j ? CALIDArray[j] : "";
                         string CVN = CVNArray.Length > j ? CVNArray[j] : "";
                         // 若同一个ECU下有多个CALID和CVN的上传策略
-                        if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939 && m_obdIfEx.OBDResultSetting.KMSSpecified) {
+                        if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939 && _obdIfEx.OBDResultSetting.KMSSpecified) {
                             // 国六、有多组CALID和CVN、J1939、康明斯车型特殊处理选项为true
                             // 以上条件均满足的话，若有多组CALID和CVN，除了第一组，其余均不上传
-                            m_obdIfEx.Log.TraceWarning(string.Format("KMS with CN6 vehicle ignore {0}(nd/rd/th) [CALID: {1}, CVN: {2}], won't upload", j + 1, CALID, CVN));
+                            _obdIfEx.Log.TraceWarning(string.Format("KMS with CN6 vehicle ignore {0}(nd/rd/th) [CALID: {1}, CVN: {2}], won't upload", j + 1, CALID, CVN));
                             continue;
                         }
-                        if (m_obdIfEx.OBDResultSetting.UseSCRName) {
+                        if (_obdIfEx.OBDResultSetting.UseSCRName) {
                             //第二个CALID和CVN使用“SCR”作为ModuleID上传
                             if (j == 1) {
                                 DataTable2MESAddRow(dt2MES, dtIn, i, "SCR", CALID, CVN);
@@ -1150,7 +1150,7 @@ namespace SH_OBD_Main {
         }
 
         private void SetDataRowInfoFromDB(int lineNO, string strItem, DataTable dtIn) {
-            DataRow dr = m_dtInfo.NewRow();
+            DataRow dr = _dtInfo.NewRow();
             dr[0] = lineNO;
             dr[1] = strItem;
             for (int i = 0; i < dtIn.Rows.Count; i++) {
@@ -1164,11 +1164,11 @@ namespace SH_OBD_Main {
                     }
                 }
             }
-            m_dtInfo.Rows.Add(dr);
+            _dtInfo.Rows.Add(dr);
         }
 
         private void SetDataRowECUInfoFromDB(int lineNO, string strItem, DataTable dtIn) {
-            DataRow dr = m_dtECUInfo.NewRow();
+            DataRow dr = _dtECUInfo.NewRow();
             dr[0] = lineNO;
             dr[1] = strItem;
             for (int i = 0; i < dtIn.Rows.Count; i++) {
@@ -1178,11 +1178,11 @@ namespace SH_OBD_Main {
                     dr[i + 2] = dtIn.Rows[i][lineNO + 23].ToString().Replace(",", "\n");
                 }
             }
-            m_dtECUInfo.Rows.Add(dr);
+            _dtECUInfo.Rows.Add(dr);
         }
 
         private void SetDataTableInfoFromDB(DataTable dtIn) {
-            if (m_dtInfo.Columns.Count <= 0) {
+            if (_dtInfo.Columns.Count <= 0) {
                 return;
             }
             int NO = 0;
@@ -1215,7 +1215,7 @@ namespace SH_OBD_Main {
         }
 
         private void SetDataTableECUInfoFromDB(DataTable dtIn) {
-            if (m_dtInfo.Columns.Count <= 0) {
+            if (_dtInfo.Columns.Count <= 0) {
                 return;
             }
             int NO = 0;
@@ -1230,25 +1230,25 @@ namespace SH_OBD_Main {
             DataTable dt = new DataTable("OBDData");
             SetDataTableResultColumns(ref dt);
 
-            Dictionary<string, int> ColsDic = m_db.GetTableColumnsDic("OBDData");
+            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
             Dictionary<string, string> VINDic = new Dictionary<string, string> { { "VIN", strVIN } };
-            string[,] Results = m_db.GetRecords("OBDData", VINDic);
+            string[,] Results = _db.GetRecords("OBDData", VINDic);
 
             SetDataTableResultFromDB(ColsDic, Results, dt);
-            SetDataTableColumnsFromDB(m_dtInfo, dt);
-            SetDataTableColumnsFromDB(m_dtECUInfo, dt);
+            SetDataTableColumnsFromDB(_dtInfo, dt);
+            SetDataTableColumnsFromDB(_dtECUInfo, dt);
             SetupColumnsDone?.Invoke();
             SetDataTableInfoFromDB(dt);
             SetDataTableECUInfoFromDB(dt);
             if (bOnlyShowData) {
-                m_obdIfEx.Log.TraceInfo("Only show data from database");
+                _obdIfEx.Log.TraceInfo("Only show data from database");
                 NotUploadData?.Invoke();
                 dt.Dispose();
                 return;
             }
             if (dt.Rows.Count > 0) {
-                if (!m_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
-                    m_obdIfEx.Log.TraceWarning("Won't upload data from database because OBD test result is NOK");
+                if (!_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
+                    _obdIfEx.Log.TraceWarning("Won't upload data from database because OBD test result is NOK");
                     NotUploadData?.Invoke();
                     dt.Dispose();
                     return;
@@ -1266,8 +1266,8 @@ namespace SH_OBD_Main {
                         strMsg += "CVN = " + dt.Rows[i][27] + " || ";
                     }
                     strMsg = strMsg.Substring(0, strMsg.Length - 4);
-                    m_obdIfEx.Log.TraceError("Manual Upload Data Failed: " + ex.Message + (errorMsg.Length > 0 ? ", " + errorMsg : ""));
-                    m_obdIfEx.Log.TraceError(strMsg);
+                    _obdIfEx.Log.TraceError("Manual Upload Data Failed: " + ex.Message + (errorMsg.Length > 0 ? ", " + errorMsg : ""));
+                    _obdIfEx.Log.TraceError(strMsg);
                     dt.Dispose();
                     throw;
                 }
@@ -1318,9 +1318,9 @@ namespace SH_OBD_Main {
             DataTable dt = new DataTable();
             SetDataTableResultColumns(ref dt);
 
-            Dictionary<string, int> ColsDic = m_db.GetTableColumnsDic("OBDData");
+            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
             Dictionary<string, string> dic = new Dictionary<string, string> { { "Upload", "0" } };
-            string[,] Results = m_db.GetRecords("OBDData", dic);
+            string[,] Results = _db.GetRecords("OBDData", dic);
             if (Results.GetLength(0) == 0) {
                 dt.Dispose();
                 return;
@@ -1328,7 +1328,7 @@ namespace SH_OBD_Main {
             List<string[,]> ResultsList = SplitResultsPerVIN(ColsDic, Results);
             for (int i = 0; i < ResultsList.Count; i++) {
                 SetDataTableResultFromDB(ColsDic, ResultsList[i], dt);
-                if (!m_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
+                if (!_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
                     continue;
                 }
                 try {
@@ -1344,8 +1344,8 @@ namespace SH_OBD_Main {
                         strMsg += "CVN = " + dt.Rows[j][27] + " || ";
                     }
                     strMsg = strMsg.Substring(0, strMsg.Length - 4) + "]";
-                    m_obdIfEx.Log.TraceError("Upload Data OnTime Failed: " + ex.Message + (errorMsg.Length > 0 ? ", " + errorMsg : ""));
-                    m_obdIfEx.Log.TraceError(strMsg);
+                    _obdIfEx.Log.TraceError("Upload Data OnTime Failed: " + ex.Message + (errorMsg.Length > 0 ? ", " + errorMsg : ""));
+                    _obdIfEx.Log.TraceError(strMsg);
                     continue;
                 }
             }
@@ -1419,15 +1419,15 @@ namespace SH_OBD_Main {
                 worksheet1.Cells["B2"].Value = dt.Rows[0][0].ToString();
 
                 // CALID, CVN
-                if (m_CN6) {
+                if (_CN6) {
                     string[] CALIDArray = dt.Rows[0][26].ToString().Split(',');
                     string[] CVNArray = dt.Rows[0][27].ToString().Split(',');
                     int length = Math.Max(CALIDArray.Length, CVNArray.Length);
                     for (int i = 0; i < length; i++) {
-                        if (m_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939 && i > 0 && m_obdIfEx.OBDResultSetting.KMSSpecified) {
+                        if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939 && i > 0 && _obdIfEx.OBDResultSetting.KMSSpecified) {
                             // 国六、有多组CALID和CVN、J1939、康明斯车型特殊处理选项为true
                             // 以上条件均满足的话，若有多组CALID和CVN，除了第一组，其余均不上传
-                            m_obdIfEx.Log.TraceWarning(string.Format("KMS with CN6 vehicle ignore {0}(nd/rd/th) [CALID: {1}, CVN: {2}], won't export into excel file", i + 1, CALIDArray[i], CVNArray[i]));
+                            _obdIfEx.Log.TraceWarning(string.Format("KMS with CN6 vehicle ignore {0}(nd/rd/th) [CALID: {1}, CVN: {2}], won't export into excel file", i + 1, CALIDArray[i], CVNArray[i]));
                             continue;
                         }
                         worksheet1.Cells[3 + i, 2].Value = CALIDArray.Length > i ? CALIDArray[i] : "";
@@ -1470,10 +1470,10 @@ namespace SH_OBD_Main {
                 worksheet1.Cells["D4"].Value += "";
 
                 string OtherID = "";
-                if (m_CN6) {
+                if (_CN6) {
                     if (worksheet1.Cells["B4"].Value.ToString().Length > 0 || worksheet1.Cells["D4"].Value.ToString().Length > 0) {
-                        if (m_obdIfEx.OBDResultSetting.UseECUAcronym) {
-                            if (m_obdIfEx.OBDResultSetting.UseSCRName) {
+                        if (_obdIfEx.OBDResultSetting.UseECUAcronym) {
+                            if (_obdIfEx.OBDResultSetting.UseSCRName) {
                                 worksheet1.Cells["E4"].Value = "SCR";
                             } else {
                                 worksheet1.Cells["E4"].Value = moduleID;
@@ -1524,7 +1524,7 @@ namespace SH_OBD_Main {
                 worksheet1.Cells["B12"].Value = Result;
 
                 // 检验员
-                worksheet1.Cells["E13"].Value = m_obdIfEx.UserPreferences.Name;
+                worksheet1.Cells["E13"].Value = _obdIfEx.MainSettings.TesterName;
 
                 byte[] bin = package.GetAsByteArray();
                 FileInfo exportFileInfo = new FileInfo(ExportPath);

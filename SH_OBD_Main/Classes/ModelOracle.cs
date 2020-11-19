@@ -8,14 +8,14 @@ using System.Text;
 
 namespace SH_OBD_Main {
     public class ModelOracle {
-        public readonly Logger m_log;
-        public OracleMESSetting m_oracleMESSetting;
+        public readonly Logger _log;
+        public OracleMES _oracleMESSetting;
         private string Connection { get; set; }
         public bool Connected { get; set; }
 
-        public ModelOracle(OracleMESSetting oracleMESSetting, Logger log) {
-            m_log = log;
-            m_oracleMESSetting = oracleMESSetting;
+        public ModelOracle(OracleMES oracleMESSetting, Logger log) {
+            _log = log;
+            _oracleMESSetting = oracleMESSetting;
             this.Connection = "";
             ReadConfig();
             Connected = false;
@@ -23,12 +23,12 @@ namespace SH_OBD_Main {
 
         void ReadConfig() {
             Connection = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=";
-            Connection += m_oracleMESSetting.Host + ")(PORT=";
-            Connection += m_oracleMESSetting.Port + "))(CONNECT_DATA=(SERVICE_NAME=";
-            Connection += m_oracleMESSetting.ServiceName + ")));";
+            Connection += _oracleMESSetting.Host + ")(PORT=";
+            Connection += _oracleMESSetting.Port + "))(CONNECT_DATA=(SERVICE_NAME=";
+            Connection += _oracleMESSetting.ServiceName + ")));";
             Connection += "Persist Security Info=True;";
-            Connection += "User ID=" + m_oracleMESSetting.UserID + ";";
-            Connection += "Password=" + m_oracleMESSetting.PassWord + ";";
+            Connection += "User ID=" + _oracleMESSetting.UserID + ";";
+            Connection += "Password=" + _oracleMESSetting.PassWord + ";";
         }
 
         public bool ConnectOracle() {
@@ -40,7 +40,7 @@ namespace SH_OBD_Main {
                 con.Close();
                 con.Dispose();
             } catch (Exception ex) {
-                m_log.TraceError("Connection error: " + ex.Message);
+                _log.TraceError("Connection error: " + ex.Message);
                 throw ex;
             }
             return Connected;
@@ -61,8 +61,8 @@ namespace SH_OBD_Main {
                     val = cmd.ExecuteNonQuery();
                     cmd.Parameters.Clear();
                 } catch (OracleException ex) {
-                    m_log.TraceError("Error SQL: " + strSQL);
-                    m_log.TraceError(ex.Message);
+                    _log.TraceError("Error SQL: " + strSQL);
+                    _log.TraceError(ex.Message);
                     throw new Exception(ex.Message);
                 } finally {
                     if (connection.State != ConnectionState.Closed) {
@@ -80,8 +80,8 @@ namespace SH_OBD_Main {
                     OracleDataAdapter adapter = new OracleDataAdapter(strSQL, connection);
                     adapter.Fill(dt);
                 } catch (OracleException ex) {
-                    m_log.TraceError("Error SQL: " + strSQL);
-                    m_log.TraceError(ex.Message);
+                    _log.TraceError("Error SQL: " + strSQL);
+                    _log.TraceError(ex.Message);
                     throw new Exception(ex.Message);
                 } finally {
                     if (connection.State != ConnectionState.Closed) {
@@ -103,8 +103,8 @@ namespace SH_OBD_Main {
                             return obj;
                         }
                     } catch (OracleException ex) {
-                        m_log.TraceError("Error SQL: " + strSQL);
-                        m_log.TraceError(ex.Message);
+                        _log.TraceError("Error SQL: " + strSQL);
+                        _log.TraceError(ex.Message);
                         throw new Exception(ex.Message);
                     } finally {
                         if (connection.State != ConnectionState.Closed) {

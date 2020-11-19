@@ -11,26 +11,26 @@ using System.Web.Services.Description;
 using System.Xml.Serialization;
 
 namespace SH_OBD_Main {
-    public class WSHelper {
+    public static class WSHelper {
         /// <summary>
         /// 输出的dll文件名称
         /// </summary>
-        private static string m_OutputDllFilename;
+        private static string _OutputDllFilename;
 
         /// <summary>
         /// WebService代理类名称
         /// </summary>
-        private static string m_ProxyClassName;
+        private static string _ProxyClassName;
 
         /// <summary>
         /// WebService代理类实例
         /// </summary>
-        private static object m_ObjInvoke;
+        private static object _ObjInvoke;
 
         /// <summary>
         /// WebService方法名
         /// </summary>
-        private static string[] m_Methods;
+        private static string[] _Methods;
 
         /// <summary>
         /// 接口方法字典
@@ -46,19 +46,19 @@ namespace SH_OBD_Main {
             bool result = false;
             try {
                 error = string.Empty;
-                m_OutputDllFilename = dbandMES.WebServiceName + ".dll";
-                m_ProxyClassName = dbandMES.WebServiceName;
-                m_Methods = dbandMES.GetMethodArray();
-                string webServiceUrl = dbandMES.WebServiceAddress;
-                string strWSDL = dbandMES.WebServiceWSDL;
+                _OutputDllFilename = dbandMES.WSMES.Name + ".dll";
+                _ProxyClassName = dbandMES.WSMES.Name;
+                _Methods = dbandMES.GetMethodArray();
+                string webServiceUrl = dbandMES.WSMES.Address;
+                string strWSDL = dbandMES.WSMES.WSDL;
 
                 // 如果程序集已存在，直接使用
-                if (File.Exists(Path.Combine(Environment.CurrentDirectory, m_OutputDllFilename))) {
+                if (File.Exists(Path.Combine(Environment.CurrentDirectory, _OutputDllFilename))) {
                     BuildMethods(dbandMES.GetMethodArray());
                     return true;
                 }
 
-                if (dbandMES.UseURL) {
+                if (dbandMES.WSMES.UseURL) {
                     // 使用 WebClient 下载 WSDL 信息。
                     WebClient web = new WebClient();
                     Stream stream = web.OpenRead(webServiceUrl);
@@ -74,7 +74,7 @@ namespace SH_OBD_Main {
                     stream.Close();
                     stream.Dispose();
                 } else {
-                    if (strWSDL != "") {
+                    if (strWSDL.Length > 0) {
                         // 通过加载xml文件来格式化WSDL
                         ServiceDescription description = ServiceDescription.Read(strWSDL);
                         // 编译输出 WebService 程序集
@@ -113,7 +113,7 @@ namespace SH_OBD_Main {
                 CompilerParameters parameter = new CompilerParameters {
                     GenerateExecutable = false,
                     // 指定输出dll文件名。
-                    OutputAssembly = m_OutputDllFilename
+                    OutputAssembly = _OutputDllFilename
                 };
 
                 parameter.ReferencedAssemblies.Add("System.dll");
@@ -142,13 +142,13 @@ namespace SH_OBD_Main {
         /// 反射构建Methods
         /// </summary>
         private static void BuildMethods(string[] methods) {
-            if (m_ObjInvoke != null) {
+            if (_ObjInvoke != null) {
                 return;
             }
-            Assembly asm = Assembly.LoadFrom(m_OutputDllFilename);
+            Assembly asm = Assembly.LoadFrom(_OutputDllFilename);
             //var types = asm.GetTypes();
-            Type asmType = asm.GetType(m_ProxyClassName);
-            m_ObjInvoke = Activator.CreateInstance(asmType);
+            Type asmType = asm.GetType(_ProxyClassName);
+            _ObjInvoke = Activator.CreateInstance(asmType);
 
             //var methods = asmType.GetMethods();
             foreach (string method in methods) {
@@ -168,7 +168,7 @@ namespace SH_OBD_Main {
         public static string GetResponseString(string method, params object[] para) {
             string result = null;
             if (m_MethodDic.ContainsKey(method)) {
-                var temp = m_MethodDic[method].Invoke(m_ObjInvoke, para);
+                var temp = m_MethodDic[method].Invoke(_ObjInvoke, para);
                 if (temp != null) {
                     result = temp.ToString();
                 }
@@ -185,7 +185,7 @@ namespace SH_OBD_Main {
             }
             para[paraIn.Length] = strMsg;
             if (m_MethodDic.ContainsKey(method)) {
-                var temp = m_MethodDic[method].Invoke(m_ObjInvoke, para);
+                var temp = m_MethodDic[method].Invoke(_ObjInvoke, para);
                 if (temp != null) {
                     result = temp.ToString();
                 }
@@ -195,8 +195,8 @@ namespace SH_OBD_Main {
         }
 
         public static string GetMethodName(int index) {
-            if (m_Methods != null && m_Methods.Length > index) {
-                return m_Methods[index];
+            if (_Methods != null && _Methods.Length > index) {
+                return _Methods[index];
             } else {
                 return "";
             }

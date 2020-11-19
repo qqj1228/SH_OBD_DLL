@@ -25,29 +25,29 @@ namespace SH_OBD_DLL {
     }
 
     public class OBDResponseList {
-        private readonly List<OBDResponse> m_Responses;
+        private readonly List<OBDResponse> _Responses;
         public bool ErrorDetected { get; set; }
         public string RawResponse { get; set; }
         public bool Pending { get; set; }
 
         public int ResponseCount {
-            get { return m_Responses.Count; }
+            get { return _Responses.Count; }
         }
 
         public OBDResponseList(string response) {
             RawResponse = response;
             ErrorDetected = false;
             Pending = false;
-            m_Responses = new List<OBDResponse>();
+            _Responses = new List<OBDResponse>();
         }
 
         public void AddOBDResponse(OBDResponse response) {
-            m_Responses.Add(response);
+            _Responses.Add(response);
         }
 
         public OBDResponse GetOBDResponse(int index) {
-            if (index < m_Responses.Count) {
-                return m_Responses[index];
+            if (index < _Responses.Count) {
+                return _Responses[index];
             }
             return null;
         }

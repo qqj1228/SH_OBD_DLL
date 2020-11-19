@@ -7,11 +7,14 @@ namespace SH_OBD_Main {
         public int ScannerBaudRateIndex { get; set; }
         public int ScannerPort { get; set; }
         public bool UseSerialScanner { get; set; }
+        public string TesterName { get; set; }
+
 
         public MainSettings() {
             ScannerPort = 2;
             ScannerBaudRateIndex = 0;
             UseSerialScanner = false;
+            TesterName = "tester";
         }
 
         public int ScannerBaudRate {
@@ -33,16 +36,10 @@ namespace SH_OBD_Main {
     [Flags]
     public enum LoadConfigResult : int {
         Success = 0,
-        UserPreferences = 1,
-        DllSettings = 2,
-        DBandMES = 4,
-        OBDResultSetting = 8,
-        MainSettings = 0x10
-    }
-
-    [Serializable]
-    public class UserPreferences {
-        public string Name { get; set; }
+        DllSettings = 1,
+        DBandMES = 2,
+        OBDResultSetting = 4,
+        MainSettings = 8,
     }
 
     [Serializable]
@@ -52,12 +49,9 @@ namespace SH_OBD_Main {
         public string DBName { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
-        public string WebServiceAddress { get; set; }
-        public string WebServiceName { get; set; }
-        public string WebServiceMethods { get; set; }
-        public string WebServiceWSDL { get; set; }
-        public bool UseURL { get; set; }
         public string DateSN { get; set; }
+        public WebServiceMES WSMES { get; set; }
+        public OracleMES OraMES { get; set; }
         [XmlIgnore]
         public bool ChangeWebService { get; set; }
 
@@ -67,22 +61,38 @@ namespace SH_OBD_Main {
             DBName = "SH_OBD";
             IP = "127.0.0.1";
             Port = "1433";
-            WebServiceAddress = "http://193.28.6.4:1908/";
-            WebServiceName = "Wes_DeviceTestData_MES";
-            WebServiceMethods = "WriteDataToMes";
-            WebServiceWSDL = "";
-            UseURL = true;
             DateSN = DateTime.Now.ToLocalTime().ToString("yyyyMMdd") + ",0";
+            WSMES = new WebServiceMES();
+            OraMES = new OracleMES();
             ChangeWebService = true;
         }
 
         public string[] GetMethodArray() {
-            return WebServiceMethods.Split(',');
+            return WSMES.Methods.Split(',');
         }
     }
 
     [Serializable]
-    public class OracleMESSetting {
+    public class WebServiceMES {
+        public bool Enable { get; set; }
+        public string Address { get; set; }
+        public string Name { get; set; }
+        public string Methods { get; set; }
+        public string WSDL { get; set; }
+        public bool UseURL { get; set; }
+
+        public WebServiceMES() {
+            Enable = false;
+            Address = "http://localhost:53827/webservicedemo.asmx?wsdl";
+            Name = "WebServiceDemo";
+            Methods = "WriteDataToMes";
+            WSDL = "";
+            UseURL = true;
+        }
+    }
+
+    [Serializable]
+    public class OracleMES {
         public bool Enable { get; set; }
         public string Host { get; set; }
         public string Port { get; set; }
@@ -90,8 +100,8 @@ namespace SH_OBD_Main {
         public string UserID { get; set; }
         public string PassWord { get; set; }
 
-        public OracleMESSetting() {
-            Enable = true;
+        public OracleMES() {
+            Enable = false;
             Host = "192.168.1.49";
             Port = "1521";
             ServiceName = "XE";

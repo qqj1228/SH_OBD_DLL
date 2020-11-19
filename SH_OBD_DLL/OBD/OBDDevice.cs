@@ -4,32 +4,32 @@ using System.Threading;
 
 namespace SH_OBD_DLL {
     public abstract class OBDDevice {
-        protected string m_DeviceDes;
-        protected string m_DeviceID;
-        protected Logger m_log;
-        protected OBDParser m_Parser;
-        protected OBDCommELM m_CommELM;
-        protected int[] m_xattr;
+        protected string _DeviceDes;
+        protected string _DeviceID;
+        protected Logger _log;
+        protected OBDParser _Parser;
+        protected OBDCommELM _CommELM;
+        protected int[] _xattr;
         public bool Online {
             get {
-                return m_CommELM.Online;
+                return _CommELM.Online;
             }
         }
         public string DeviceDesString {
             get {
-                return m_DeviceDes;
+                return _DeviceDes;
             }
         }
         public string DeviceIDString {
             get {
-                return m_DeviceID;
+                return _DeviceID;
             }
         }
 
         protected OBDDevice(DllSettings settings, Logger log, int[] xattr) {
-            m_log = log;
-            m_CommELM = new OBDCommELM(settings, log);
-            m_xattr = xattr;
+            _log = log;
+            _CommELM = new OBDCommELM(settings, log);
+            _xattr = xattr;
         }
 
         public abstract bool Initialize(DllSettings settings);

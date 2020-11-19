@@ -14,33 +14,33 @@ namespace SH_OBD_Main {
     public partial class MainForm : Form {
         private Dictionary<string, Form> dicSubForms;
         private OBDTestForm f_OBDTest;
-        private readonly OBDIfEx m_obdIfEx;
-        private readonly OBDTest m_obdTest;
-        private readonly Font m_boldFont;
-        private readonly Font m_originFont;
+        private readonly OBDIfEx _obdIfEx;
+        private readonly OBDTest _obdTest;
+        private readonly Font _boldFont;
+        private readonly Font _originFont;
 
         public MainForm(OBDIfEx obdIfEX, OBDTest obdTest) {
             InitializeComponent();
-            m_obdIfEx = obdIfEX;
-            m_obdTest = obdTest;
-            m_obdIfEx.OBDIf.OnConnect += new OBDInterface.__Delegate_OnConnect(On_OBD_Connect);
-            m_obdIfEx.OBDIf.OnDisconnect += new OBDInterface.__Delegate_OnDisconnect(On_OBD_Disconnect);
+            _obdIfEx = obdIfEX;
+            _obdTest = obdTest;
+            _obdIfEx.OBDIf.OnConnect += new OBDInterface.__Delegate_OnConnect(On_OBD_Connect);
+            _obdIfEx.OBDIf.OnDisconnect += new OBDInterface.__Delegate_OnDisconnect(On_OBD_Disconnect);
 
-            m_originFont = buttonDefaultFontStyle.Font;
-            m_boldFont = new Font(m_originFont, FontStyle.Bold);
+            _originFont = buttonDefaultFontStyle.Font;
+            _boldFont = new Font(_originFont, FontStyle.Bold);
 
             StatusLabelConnStatus.ForeColor = Color.Red;
             StatusLabelConnStatus.Text = "OBD通讯接口未连接";
             StatusLabelDeviceName.Text = "未获取到设备名";
-            StatusLabelCommProtocol.Text = m_obdIfEx.OBDIf.GetProtocol().ToString();
-            StatusLabelDeviceType.Text = m_obdIfEx.OBDIf.GetDevice().ToString().Replace("ELM327", "SH-VCI-302U");
-            if (m_obdIfEx.OBDIf.DllSettings != null) {
-                if (m_obdIfEx.OBDIf.DllSettings.AutoDetect) {
+            StatusLabelCommProtocol.Text = _obdIfEx.OBDIf.GetProtocol().ToString();
+            StatusLabelDeviceType.Text = _obdIfEx.OBDIf.GetDevice().ToString().Replace("ELM327", "SH-VCI-302U");
+            if (_obdIfEx.OBDIf.DllSettings != null) {
+                if (_obdIfEx.OBDIf.DllSettings.AutoDetect) {
                     StatusLabelPort.Text = "自动探测";
                     StatusLabelAppProtocol.Text = "自动探测";
                 } else {
-                    StatusLabelPort.Text = m_obdIfEx.OBDIf.DllSettings.ComPortName;
-                    StatusLabelAppProtocol.Text = m_obdIfEx.OBDIf.DllSettings.StandardName;
+                    StatusLabelPort.Text = _obdIfEx.OBDIf.DllSettings.ComPortName;
+                    StatusLabelAppProtocol.Text = _obdIfEx.OBDIf.DllSettings.StandardName;
                 }
             }
 
@@ -53,7 +53,7 @@ namespace SH_OBD_Main {
         void InitSubForm() {
             dicSubForms = new Dictionary<string, Form>();
 
-            f_OBDTest = new OBDTestForm(m_obdIfEx, m_obdTest);
+            f_OBDTest = new OBDTestForm(_obdIfEx, _obdTest);
 
             buttonOBDTest.Text = Properties.Resources.buttonName_OBDTest;
 
@@ -76,9 +76,8 @@ namespace SH_OBD_Main {
             } else {
                 StatusLabelConnStatus.Text = "OBD通讯接口已连接";
                 StatusLabelConnStatus.ForeColor = Color.Green;
-                StatusLabelDeviceName.Text = m_obdIfEx.OBDIf.GetDeviceIDString();
-                StatusLabelCommProtocol.Text = m_obdIfEx.OBDIf.GetProtocol().ToString();
-                toolStripBtnUserPrefs.Enabled = false;
+                StatusLabelDeviceName.Text = _obdIfEx.OBDIf.GetDeviceIDString();
+                StatusLabelCommProtocol.Text = _obdIfEx.OBDIf.GetProtocol().ToString();
                 toolStripBtnSettings.Enabled = false;
                 BroadcastConnectionUpdate();
             }
@@ -88,7 +87,6 @@ namespace SH_OBD_Main {
             StatusLabelConnStatus.Text = "OBD通讯接口未连接";
             StatusLabelConnStatus.ForeColor = Color.Red;
             StatusLabelDeviceName.Text = "未获取到设备名";
-            toolStripBtnUserPrefs.Enabled = true;
             toolStripBtnSettings.Enabled = true;
             BroadcastConnectionUpdate();
         }
@@ -100,11 +98,11 @@ namespace SH_OBD_Main {
                 }
                 foreach (var item in panel1.Controls) {
                     if (item is Button btn) {
-                        btn.Font = m_originFont;
+                        btn.Font = _originFont;
                         btn.ForeColor = Color.Black;
                     }
                 }
-                button.Font = m_boldFont;
+                button.Font = _boldFont;
                 button.ForeColor = Color.Red;
 
                 Form form = dicSubForms[button.Text];
@@ -133,11 +131,11 @@ namespace SH_OBD_Main {
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
-            if (m_obdIfEx.OBDIf.ConnectedStatus) {
+            if (_obdIfEx.OBDIf.ConnectedStatus) {
                 toolStripBtnConnect.Enabled = false;
                 toolStripBtnDisconnect.Enabled = true;
                 ShowConnectedLabel();
-                StatusLabelDeviceName.Text = m_obdIfEx.OBDIf.GetDeviceIDString();
+                StatusLabelDeviceName.Text = _obdIfEx.OBDIf.GetDeviceIDString();
             } else {
                 toolStripBtnConnect.Enabled = true;
                 toolStripBtnDisconnect.Enabled = false;
@@ -146,26 +144,18 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void ToolStripBtnUserPrefs_Click(object sender, EventArgs e) {
-            UserPreferences userPreferences = m_obdIfEx.UserPreferences;
-            UserPreferencesForm userForm = new UserPreferencesForm(userPreferences, m_obdTest);
-            userForm.ShowDialog();
-            m_obdIfEx.SaveUserPreferences(userPreferences);
-            userForm.Dispose();
-        }
-
         private void ToolStripBtnSettings_Click(object sender, EventArgs e) {
-            DllSettings dllSettings = m_obdIfEx.OBDIf.DllSettings;
-            MainSettings mainSettings = m_obdIfEx.MainSettings;
-            DBandMES dbandMES = m_obdIfEx.DBandMES;
-            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, dbandMES);
+            DllSettings dllSettings = _obdIfEx.OBDIf.DllSettings;
+            MainSettings mainSettings = _obdIfEx.MainSettings;
+            DBandMES dbandMES = _obdIfEx.DBandMES;
+            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest._db);
             settingsForm.ShowDialog();
-            m_obdIfEx.SaveDllSettings(dllSettings);
-            m_obdIfEx.SaveMainSettings(mainSettings);
-            m_obdIfEx.SaveDBandMES(dbandMES);
-            StatusLabelCommProtocol.Text = m_obdIfEx.OBDIf.GetProtocol().ToString();
-            StatusLabelAppProtocol.Text = m_obdIfEx.OBDIf.GetStandard().ToString();
-            StatusLabelDeviceType.Text = m_obdIfEx.OBDIf.GetDevice().ToString().Replace("ELM327", "SH-VCI-302U");
+            _obdIfEx.SaveDllSettings(dllSettings);
+            _obdIfEx.SaveMainSettings(mainSettings);
+            _obdIfEx.SaveDBandMES(dbandMES);
+            StatusLabelCommProtocol.Text = _obdIfEx.OBDIf.GetProtocol().ToString();
+            StatusLabelAppProtocol.Text = _obdIfEx.OBDIf.GetStandard().ToString();
+            StatusLabelDeviceType.Text = _obdIfEx.OBDIf.GetDevice().ToString().Replace("ELM327", "SH-VCI-302U");
             if (dllSettings.AutoDetect) {
                 StatusLabelPort.Text = "自动探测";
             } else {
@@ -177,31 +167,31 @@ namespace SH_OBD_Main {
         private void ToolStripBtnConnect_Click(object sender, EventArgs e) {
             toolStripBtnConnect.Enabled = false;
             toolStripBtnDisconnect.Enabled = true;
-            m_obdIfEx.OBDDll.LogCommSettingInfo();
+            _obdIfEx.OBDDll.LogCommSettingInfo();
 
             Task.Factory.StartNew(ConnectThreadNew);
         }
 
         private void ToolStripBtnDisconnect_Click(object sender, EventArgs e) {
             ShowDisconnectedLabel();
-            m_obdIfEx.OBDIf.Disconnect();
+            _obdIfEx.OBDIf.Disconnect();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
             f_OBDTest.Close();
-            m_boldFont.Dispose();
-            m_obdIfEx.OBDIf.OnConnect -= new OBDInterface.__Delegate_OnConnect(On_OBD_Connect);
-            m_obdIfEx.OBDIf.OnDisconnect -= new OBDInterface.__Delegate_OnDisconnect(On_OBD_Disconnect);
-            m_obdTest.AdvanceMode = false;
+            _boldFont.Dispose();
+            _obdIfEx.OBDIf.OnConnect -= new OBDInterface.__Delegate_OnConnect(On_OBD_Connect);
+            _obdIfEx.OBDIf.OnDisconnect -= new OBDInterface.__Delegate_OnDisconnect(On_OBD_Disconnect);
+            _obdTest.AdvanceMode = false;
         }
 
         private void ConnectThreadNew() {
             ShowConnectingLabel();
-            if (m_obdIfEx.OBDDll.ConnectOBD()) {
+            if (_obdIfEx.OBDDll.ConnectOBD()) {
                 ShowConnectedLabel();
             } else {
                 ShowDisconnectedLabel();
-                m_obdIfEx.OBDIf.Disconnect();
+                _obdIfEx.OBDIf.Disconnect();
                 MessageBox.Show(
                     "无法找到与本机相连的兼容的OBD-II硬件设备。\r\n请确认没有其他软件正在使用所需端口。",
                     "连接车辆失败",
@@ -214,7 +204,7 @@ namespace SH_OBD_Main {
             this.Invoke((EventHandler)delegate {
                 StatusLabelConnStatus.ForeColor = Color.Green;
                 StatusLabelConnStatus.Text = "OBD通讯接口已连接";
-                switch (m_obdIfEx.OBDIf.STDType) {
+                switch (_obdIfEx.OBDIf.STDType) {
                 case StandardType.Automatic:
                     StatusLabelAppProtocol.Text = "Automatic";
                     break;

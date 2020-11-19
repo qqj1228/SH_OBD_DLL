@@ -14,37 +14,37 @@ using System.Xml.Serialization;
 
 namespace SH_OBD_DLL {
     public class OBDInterface {
-        private const string m_dllSettings_xml = ".\\Configs\\dllsetting.xml";
+        private const string _dllSettings_xml = ".\\Configs\\dllsetting.xml";
 
         public delegate void __Delegate_OnConnect();
         public delegate void __Delegate_OnDisconnect();
         public event __Delegate_OnDisconnect OnDisconnect;
         public event __Delegate_OnConnect OnConnect;
 
-        private OBDDevice m_obdDevice;
-        private readonly Logger m_log;
-        private readonly Parser m_dbc;
-        private readonly NetWork m_netWork;
-        private readonly OBDInterpreter m_obdInterpreter;
-        private readonly int[] m_xattr;
+        private OBDDevice _obdDevice;
+        private readonly Logger _log;
+        private readonly Parser _dbc;
+        private readonly NetWork _netWork;
+        private readonly OBDInterpreter _obdInterpreter;
+        private readonly int[] _xattr;
 
         public bool DllSettingsResult { get; private set; }
         public DllSettings DllSettings { get; private set; }
         public StandardType STDType { get; set; }
 
         public OBDInterface(Logger log) {
-            m_log = log;
-            m_log.TraceInfo("=======================================================================");
-            m_log.TraceInfo("==================== START DllVersion: " + DllVersion<OBDInterface>.AssemblyVersion + " ====================");
-            m_dbc = new Parser(".\\Configs\\value.xml", ".\\Configs\\signal.xml");
-            m_netWork = m_dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
-            m_obdInterpreter = new OBDInterpreter(m_netWork, m_dbc);
+            _log = log;
+            _log.TraceInfo("=======================================================================");
+            _log.TraceInfo("==================== START DllVersion: " + DllVersion<OBDInterface>.AssemblyVersion + " ====================");
+            _dbc = new Parser(".\\Configs\\value.xml", ".\\Configs\\signal.xml");
+            _netWork = _dbc.ParseFile(".\\Configs\\OBD_CMD.dbc");
+            _obdInterpreter = new OBDInterpreter(_netWork, _dbc);
             DllSettingsResult = true;
             DllSettings = LoadDllSettings();
             string[] strAttr = DllSettings.AutoProtocolOrder.Split(',');
-            m_xattr = new int[strAttr.Length];
+            _xattr = new int[strAttr.Length];
             for (int i = 0; i < strAttr.Length; i++) {
-                int.TryParse(strAttr[i], out m_xattr[i]);
+                int.TryParse(strAttr[i], out _xattr[i]);
             }
             SetDevice(HardwareType.ELM327);
             Disconnect();
@@ -52,7 +52,7 @@ namespace SH_OBD_DLL {
         }
 
         public bool ConnectedStatus {
-            get { return m_obdDevice.Online; }
+            get { return _obdDevice.Online; }
         }
 
         public HardwareType GetDevice() {
@@ -60,11 +60,11 @@ namespace SH_OBD_DLL {
         }
 
         public string GetDeviceDesString() {
-            return m_obdDevice.DeviceDesString;
+            return _obdDevice.DeviceDesString;
         }
 
         public string GetDeviceIDString() {
-            return m_obdDevice.DeviceIDString;
+            return _obdDevice.DeviceIDString;
         }
 
         public ProtocolType GetProtocol() {
@@ -76,42 +76,42 @@ namespace SH_OBD_DLL {
         }
 
         public void SetTimeout(int iTimeout = 500) {
-            m_obdDevice.SetTimeout(iTimeout);
+            _obdDevice.SetTimeout(iTimeout);
         }
 
         public bool InitDevice() {
             bool flag;
             SetDevice(DllSettings.HardwareIndex);
-            flag = m_obdDevice.Initialize(DllSettings);
-            STDType = m_obdDevice.GetStandardType();
+            flag = _obdDevice.Initialize(DllSettings);
+            STDType = _obdDevice.GetStandardType();
             if (flag) {
                 OnConnect?.Invoke();
-                m_log.TraceInfo("Connection Established!");
+                _log.TraceInfo("Connection Established!");
                 return true;
             } else {
-                m_log.TraceWarning("Failed to find a compatible OBD-II interface.");
+                _log.TraceWarning("Failed to find a compatible OBD-II interface.");
                 return false;
             }
         }
 
         public bool InitDeviceAuto() {
-            m_log.TraceInfo("Beginning AUTO initialization...");
+            _log.TraceInfo("Beginning AUTO initialization...");
             string order = "";
-            foreach (int item in m_xattr) {
+            foreach (int item in _xattr) {
                 order += "," + item.ToString();
             }
             order = order.TrimStart(',');
-            m_log.TraceInfo("Auto Protocol Order: " + order);
-            m_log.TraceInfo("Application Layer Protocol: " + STDType.ToString());
+            _log.TraceInfo("Auto Protocol Order: " + order);
+            _log.TraceInfo("Application Layer Protocol: " + STDType.ToString());
 
             SetDevice(HardwareType.ELM327);
             bool flag;
             DllSettings.StandardIndex = STDType;
-            flag = m_obdDevice.InitializeAuto(DllSettings);
-            STDType = m_obdDevice.GetStandardType();
+            flag = _obdDevice.InitializeAuto(DllSettings);
+            STDType = _obdDevice.GetStandardType();
             if (flag) {
-                DllSettings.ProtocolIndex = m_obdDevice.GetProtocolType();
-                DllSettings.ComPort = m_obdDevice.GetComPortIndex();
+                DllSettings.ProtocolIndex = _obdDevice.GetProtocolType();
+                DllSettings.ComPort = _obdDevice.GetComPortIndex();
                 SaveDllSettings(DllSettings);
                 OnConnect?.Invoke();
                 return true;
@@ -122,8 +122,8 @@ namespace SH_OBD_DLL {
         public List<OBDParameterValue> GetValueList(OBDParameter param) {
             List<OBDParameterValue> ValueList = new List<OBDParameterValue>();
 
-            m_log.TraceInfo("Requesting: " + param.OBDRequest);
-            OBDResponseList responses = m_obdDevice.Query(param);
+            _log.TraceInfo("Requesting: " + param.OBDRequest);
+            OBDResponseList responses = _obdDevice.Query(param);
             string strItem = "Responses: ";
             if (responses.ErrorDetected) {
                 strItem += "Error Detected!";
@@ -133,22 +133,22 @@ namespace SH_OBD_DLL {
                     ShortStringValue = "ERROR_RESP"
                 };
                 ValueList.Add(value);
-                m_log.TraceInfo(strItem);
+                _log.TraceInfo(strItem);
                 return ValueList;
             } else {
                 for (int i = 0; i < responses.ResponseCount; i++) {
                     strItem += string.Format("[{0}] ", Utility.GetReadableHexString(0, responses.GetOBDResponse(i).Data));
                 }
                 strItem = strItem.TrimEnd();
-                m_log.TraceInfo(strItem);
+                _log.TraceInfo(strItem);
             }
 
             for (int i = 0; i < responses.ResponseCount; i++) {
-                OBDParameterValue obdValue = m_obdInterpreter.GetValue(param, responses.GetOBDResponse(i));
+                OBDParameterValue obdValue = _obdInterpreter.GetValue(param, responses.GetOBDResponse(i));
                 if (obdValue.ErrorDetected) {
-                    m_log.TraceError(string.Format("Values: [ECU: {0}, Error Detected!]", obdValue.ECUResponseID));
+                    _log.TraceError(string.Format("Values: [ECU: {0}, Error Detected!]", obdValue.ECUResponseID));
                 } else {
-                    m_log.TraceInfo(GetLogString(param, obdValue));
+                    _log.TraceInfo(GetLogString(param, obdValue));
                 }
                 ValueList.Add(obdValue);
             }
@@ -194,22 +194,22 @@ namespace SH_OBD_DLL {
         }
 
         public string GetRawResponse(string strCmd) {
-            return m_obdDevice.Query(strCmd);
+            return _obdDevice.Query(strCmd);
         }
 
         public OBDResponseList GetResponseList(OBDParameter param) {
-            OBDResponseList responses = m_obdDevice.Query(param);
+            OBDResponseList responses = _obdDevice.Query(param);
             string strItem = "Responses: ";
             for (int i = 0; i < responses.ResponseCount; i++) {
                 strItem += string.Format("[{0}] ", Utility.GetReadableHexString(0, responses.GetOBDResponse(i).Data));
             }
             strItem = strItem.TrimEnd();
-            m_log.TraceInfo(strItem);
+            _log.TraceInfo(strItem);
             return responses;
         }
 
         public void Disconnect() {
-            m_obdDevice.Disconnect();
+            _obdDevice.Disconnect();
             STDType = StandardType.Automatic;
             OnDisconnect?.Invoke();
         }
@@ -218,12 +218,12 @@ namespace SH_OBD_DLL {
             DllSettings.HardwareIndex = device;
             switch (device) {
             case HardwareType.ELM327:
-                m_log.TraceInfo("Set device to ELM327");
-                m_obdDevice = new OBDDeviceELM327(DllSettings, m_log, m_xattr);
+                _log.TraceInfo("Set device to ELM327");
+                _obdDevice = new OBDDeviceELM327(DllSettings, _log, _xattr);
                 break;
             default:
-                m_log.TraceInfo("Set device to ELM327");
-                m_obdDevice = new OBDDeviceELM327(DllSettings, m_log, m_xattr);
+                _log.TraceInfo("Set device to ELM327");
+                _obdDevice = new OBDDeviceELM327(DllSettings, _log, _xattr);
                 break;
             }
         }
@@ -248,7 +248,7 @@ namespace SH_OBD_DLL {
         public void SaveDllSettings(DllSettings settings) {
             DllSettings = settings;
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(DllSettings));
-            using (TextWriter writer = new StreamWriter(m_dllSettings_xml)) {
+            using (TextWriter writer = new StreamWriter(_dllSettings_xml)) {
                 xmlSerializer.Serialize(writer, DllSettings);
                 writer.Close();
             }
@@ -257,12 +257,12 @@ namespace SH_OBD_DLL {
         public DllSettings LoadDllSettings() {
             try {
                 XmlSerializer serializer = new XmlSerializer(typeof(DllSettings));
-                using (FileStream reader = new FileStream(m_dllSettings_xml, FileMode.Open)) {
+                using (FileStream reader = new FileStream(_dllSettings_xml, FileMode.Open)) {
                     DllSettings = (DllSettings)serializer.Deserialize(reader);
                     reader.Close();
                 }
             } catch (Exception ex) {
-                m_log.TraceError("Using default dll settings because of failed to load them, reason: " + ex.Message);
+                _log.TraceError("Using default dll settings because of failed to load them, reason: " + ex.Message);
                 DllSettings = new DllSettings();
                 DllSettingsResult = false;
             }

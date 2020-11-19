@@ -18,7 +18,7 @@ namespace SH_OBD_DLL {
         public string ECUResponseID { get; set; }
         public Message Message { get; set; }
 
-        private readonly bool[] m_bBitFlags;
+        private readonly bool[] _bBitFlags;
 
         public OBDParameterValue(bool bValue, double dValue, string strValue, string shortValue) {
             BoolValue = bValue;
@@ -32,15 +32,15 @@ namespace SH_OBD_DLL {
             StringValue = "";
             ShortStringValue = "";
             ListStringValue = new List<string>();
-            m_bBitFlags = new bool[32];
+            _bBitFlags = new bool[32];
         }
 
         public bool GetBitFlag(int index) {
-            return m_bBitFlags[index];
+            return _bBitFlags[index];
         }
 
         public void SetBitFlag(int index, bool status) {
-            m_bBitFlags[index] = status;
+            _bBitFlags[index] = status;
         }
 
         public void SetDataWithBool(bool bValue) {

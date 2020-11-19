@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace SH_OBD_DLL {
     public partial class OBDInterpreter {
-        private readonly Parser m_dbc;
-        private readonly NetWork m_netWork;
+        private readonly Parser _dbc;
+        private readonly NetWork _netWork;
 
         public OBDInterpreter(NetWork netWork, Parser dbc) {
-            m_dbc = dbc;
-            m_netWork = netWork;
+            _dbc = dbc;
+            _netWork = netWork;
         }
 
         public OBDParameterValue GetPIDSupport(OBDResponse response) {
@@ -30,9 +30,9 @@ namespace SH_OBD_DLL {
 
         public OBDParameterValue GetPIDValue(uint ID, string strData, string signalName) {
             OBDParameterValue value2 = new OBDParameterValue();
-            Message msg = m_netWork.GetMessage(ID);
+            Message msg = _netWork.GetMessage(ID);
             if (msg == null && ID < 0x80000000) {
-                msg = m_netWork.GetMessage(ID + 0x80000000);
+                msg = _netWork.GetMessage(ID + 0x80000000);
             }
             if (msg == null) {
                 value2.ErrorDetected = true;
@@ -40,7 +40,7 @@ namespace SH_OBD_DLL {
                 if (msg.SetSignalRawValue(strData)) {
                     value2.Message = msg;
                     foreach (Signal signal in msg.Signals.Values) {
-                        signal.DisplayString = m_dbc.GetDisplayString(signal, "不适用");
+                        signal.DisplayString = _dbc.GetDisplayString(signal, "不适用");
                         if (signalName == signal.Name || signalName.Length == 0) {
                             int iUsed = signal.TestSignalUesed();
                             if (iUsed > 0) {

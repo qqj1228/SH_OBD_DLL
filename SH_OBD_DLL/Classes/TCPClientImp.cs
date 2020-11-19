@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 namespace SH_OBD_DLL {
     public class TCPClientImp {
         private const int BUF_SIZE = 256;
-        private readonly string m_strHostName;
-        private readonly int m_iPort;
-        private readonly Logger m_log;
-        private TcpClient m_client;
-        private NetworkStream m_clientStream;
-        private byte[] m_recvBuf;
+        private readonly string _strHostName;
+        private readonly int _iPort;
+        private readonly Logger _log;
+        private TcpClient _client;
+        private NetworkStream _clientStream;
+        private byte[] _recvBuf;
         public event EventHandler<RecvMsgEventArgs> RecvedMsg;
 
         public TCPClientImp(string strHostName, int iPort, Logger log) {
-            m_strHostName = strHostName;
-            m_iPort = iPort;
-            m_log = log;
+            _strHostName = strHostName;
+            _iPort = iPort;
+            _log = log;
         }
 
         ~TCPClientImp() {
@@ -29,11 +29,11 @@ namespace SH_OBD_DLL {
 
         public void ConnectServer() {
             try {
-                m_client = new TcpClient(m_strHostName, m_iPort);
-                m_clientStream = m_client.GetStream();
-                m_recvBuf = new byte[BUF_SIZE];
+                _client = new TcpClient(_strHostName, _iPort);
+                _clientStream = _client.GetStream();
+                _recvBuf = new byte[BUF_SIZE];
                 RecvMsgEventArgs args = new RecvMsgEventArgs();
-                m_clientStream.BeginRead(m_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
+                _clientStream.BeginRead(_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
             } catch (Exception) {
                 Close();
                 throw;
@@ -41,21 +41,21 @@ namespace SH_OBD_DLL {
         }
 
         public void Close() {
-            if (m_clientStream != null) {
-                m_clientStream.Close();
+            if (_clientStream != null) {
+                _clientStream.Close();
             }
-            if (m_client != null) {
-                m_client.Close();
+            if (_client != null) {
+                _client.Close();
             }
         }
 
         public void SendData(byte[] data, int offset, int count) {
-            m_clientStream.Write(data, offset, count);
+            _clientStream.Write(data, offset, count);
         }
 
         public void SendData(string strMsg) {
             byte[] sendMessage = Encoding.UTF8.GetBytes(strMsg);
-            m_clientStream.Write(sendMessage, 0, sendMessage.Length);
+            _clientStream.Write(sendMessage, 0, sendMessage.Length);
         }
 
         private void AsyncRecvMsg(IAsyncResult ar) {
@@ -63,21 +63,21 @@ namespace SH_OBD_DLL {
             args.RecvBytes.Clear();
             args.Message = "";
             try {
-                if (m_clientStream.CanRead) {
+                if (_clientStream.CanRead) {
                     // CanRead为false，说明m_clientStream流不可读，可能是m_clientStream流已关闭或发生错误，退出本次读取处理
                     // 为true，则说明m_clientStream流可读，可继续执行后续代码
-                    int bytesRead = m_clientStream.EndRead(ar);
+                    int bytesRead = _clientStream.EndRead(ar);
                     // 读取缓冲区大小为256字节，用于OBD诊断命令已足够，无需使用NetworkStream.DataAvailable属性
                     // 来判断是否还有数据没有读取完，需要分段多次读取
                     for (int i = 0; i < bytesRead; i++) {
-                        args.RecvBytes.Add(m_recvBuf[i]);
+                        args.RecvBytes.Add(_recvBuf[i]);
                     }
-                    args.Message += Encoding.UTF8.GetString(m_recvBuf, 0, bytesRead);
+                    args.Message += Encoding.UTF8.GetString(_recvBuf, 0, bytesRead);
                     // 继续准备读取可能会传进来的数据
-                    m_clientStream.BeginRead(m_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
+                    _clientStream.BeginRead(_recvBuf, 0, BUF_SIZE, AsyncRecvMsg, args);
                 }
             } catch (Exception ex) {
-                m_log.TraceError(ex.Message);
+                _log.TraceError(ex.Message);
                 Close();
             } finally {
                 RecvedMsg?.Invoke(this, args);
@@ -85,7 +85,7 @@ namespace SH_OBD_DLL {
         }
 
         public bool TestConnect() {
-            Socket cltSocket = m_client.Client;
+            Socket cltSocket = _client.Client;
             bool bRet = false;
             // This is how you can determine whether a socket is still connected.
             bool blockingState = cltSocket.Blocking;
@@ -98,10 +98,10 @@ namespace SH_OBD_DLL {
                 // 10035 == WSAEWOULDBLOCK
                 if (ex.NativeErrorCode.Equals(10035)) {
                     bRet = true;
-                    m_log.TraceWarning(string.Format("Still Connected, but the Send would block[{0}]", ex.NativeErrorCode));
+                    _log.TraceWarning(string.Format("Still Connected, but the Send would block[{0}]", ex.NativeErrorCode));
                 } else {
                     bRet = false;
-                    m_log.TraceError(string.Format("Disconnected: {0}[{1}]", ex.Message, ex.NativeErrorCode));
+                    _log.TraceError(string.Format("Disconnected: {0}[{1}]", ex.Message, ex.NativeErrorCode));
                 }
             } finally {
                 cltSocket.Blocking = blockingState;

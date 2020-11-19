@@ -42,7 +42,6 @@
             this.toolStripBtnConnect = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnDisconnect = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripBtnUserPrefs = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
@@ -198,7 +197,6 @@
             this.toolStripBtnConnect,
             this.toolStripBtnDisconnect,
             this.toolStripSeparator1,
-            this.toolStripBtnUserPrefs,
             this.toolStripBtnSettings,
             this.toolStripSeparator2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -230,15 +228,6 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 55);
-            // 
-            // toolStripBtnUserPrefs
-            // 
-            this.toolStripBtnUserPrefs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnUserPrefs.Image")));
-            this.toolStripBtnUserPrefs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripBtnUserPrefs.Name = "toolStripBtnUserPrefs";
-            this.toolStripBtnUserPrefs.Size = new System.Drawing.Size(108, 52);
-            this.toolStripBtnUserPrefs.Text = "用户设置";
-            this.toolStripBtnUserPrefs.Click += new System.EventHandler(this.ToolStripBtnUserPrefs_Click);
             // 
             // toolStripBtnSettings
             // 
@@ -302,7 +291,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Button buttonOBDTest;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabelAppProtocol;
-        private System.Windows.Forms.ToolStripButton toolStripBtnUserPrefs;
     }
 }
 

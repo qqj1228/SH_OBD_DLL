@@ -10,21 +10,21 @@ using System.Windows.Forms;
 
 namespace SH_OBD_Main {
     public partial class PassWordForm : Form {
-        private readonly OBDTest m_obdTest;
+        private readonly OBDTest _obdTest;
 
         public PassWordForm(OBDTest obdTest) {
             InitializeComponent();
-            m_obdTest = obdTest;
+            _obdTest = obdTest;
         }
 
         private void BtnOK_Click(object sender, EventArgs e) {
             MD5 md5 = new MD5CryptoServiceProvider();
             byte[] output = md5.ComputeHash(Encoding.Default.GetBytes(this.txtBoxPassWord.Text.Trim()));
             string strValue = BitConverter.ToString(output).Replace("-", "");
-            if (strValue == m_obdTest.m_db.GetPassWord()) {
-                m_obdTest.AccessAdvanceMode = 1;
+            if (strValue == _obdTest._db.GetPassWord()) {
+                _obdTest.AccessAdvanceMode = 1;
             } else {
-                m_obdTest.AccessAdvanceMode = -1;
+                _obdTest.AccessAdvanceMode = -1;
             }
             md5.Dispose();
             this.Close();
