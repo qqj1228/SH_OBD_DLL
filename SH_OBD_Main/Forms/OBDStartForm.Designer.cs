@@ -202,7 +202,7 @@
             // 
             this.lblLogo.AutoSize = true;
             this.lblLogo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblLogo.Font = new System.Drawing.Font("宋体", 40F, System.Drawing.FontStyle.Bold);
+            this.lblLogo.Font = new System.Drawing.Font("宋体", 30F, System.Drawing.FontStyle.Bold);
             this.lblLogo.Location = new System.Drawing.Point(181, 0);
             this.lblLogo.Name = "lblLogo";
             this.lblLogo.Size = new System.Drawing.Size(594, 78);

@@ -41,6 +41,11 @@ namespace SH_OBD_Main {
         OBDResultSetting = 4,
         MainSettings = 8,
     }
+    public enum DataTableType {
+        dtInfo,
+        dtECUInfo,
+        dtIUPR,
+    }
 
     [Serializable]
     public class DBandMES {
@@ -112,7 +117,6 @@ namespace SH_OBD_Main {
     public class OBDResultSetting {
         public bool UploadWhenever { get; set; }
         public bool UseECUAcronym { get; set; }
-        public bool UseSCRName { get; set; }
         public bool MIL { get; set; }
         public bool DTC03 { get; set; }
         public bool DTC07 { get; set; }
@@ -125,13 +129,11 @@ namespace SH_OBD_Main {
         public int StartSN { get; set; }
         public int UnmeaningNum { get; set; }
         public bool SpecifiedProtocol { get; set; }
-        public bool KMSSpecified { get; set; }
         public string CompanyCode { get; set; }
 
         public OBDResultSetting() {
             UploadWhenever = false;
             UseECUAcronym = false;
-            UseSCRName = false;
             MIL = false;
             DTC03 = false;
             DTC07 = false;
@@ -144,7 +146,6 @@ namespace SH_OBD_Main {
             StartSN = 0;
             UnmeaningNum = 5;
             SpecifiedProtocol = false;
-            KMSSpecified = true;
             CompanyCode = "0079";
         }
     }

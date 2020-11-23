@@ -48,7 +48,7 @@
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\TCPClientImp.cs" />
     <Compile Include="Classes\Utility.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="DllMain.cs" />
     <Compile Include="OBD\OBDCommELM.cs" />
     <Compile Include="OBD\OBDDevice.cs" />
     <Compile Include="OBD\OBDDeviceELM327.cs" />

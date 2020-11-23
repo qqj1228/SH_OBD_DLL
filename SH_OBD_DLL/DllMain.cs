@@ -83,15 +83,11 @@ namespace SH_OBD_DLL {
                     return false;
                 }
             }
-
-            // 初始化用到的变量
-            Mode01Support.Clear();
-            Mode09Support.Clear();
-
             return true;
         }
 
         private bool GetSupportStatus(int mode, Dictionary<string, bool[]> supportStatus) {
+            supportStatus.Clear();
             OBDParameter param = new OBDParameter();
             int HByte = 0;
             if (_OBDIf.STDType == StandardType.ISO_27145) {

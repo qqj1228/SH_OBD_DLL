@@ -315,6 +315,7 @@ namespace SH_OBD_Main {
                 return;
             }
             float scale = this.Height / _lastHeight;
+            ResizeFont(this.lblLogo, scale);
             ResizeFont(this.txtBoxVIN, scale);
             ResizeFont(this.lblVIN, scale);
             ResizeFont(this.lblResult, scale);
