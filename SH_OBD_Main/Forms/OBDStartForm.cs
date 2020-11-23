@@ -63,11 +63,9 @@ namespace SH_OBD_Main {
                 _obdIfEx.Log.TraceError("Delete WebService dll file failed: " + ex.Message);
             }
 #endif
+            // 测试本地数据库连接是否正常
             Task.Factory.StartNew(TestNativeDatabase);
-            // 在OBDData表中新增Upload字段，用于存储上传是否成功的标志
-            Task.Factory.StartNew(_obdTest._db.AddUploadField);
-            // 在OBDUser表中新增SN字段，用于存储检测报表编号中顺序号的特征字符串
-            Task.Factory.StartNew(_obdTest._db.AddSNField);
+
             // 定时上传以前上传失败的数据
             _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 60 * 1000);
             _timer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimeUpload);
@@ -80,7 +78,7 @@ namespace SH_OBD_Main {
                 _obdTest._db.ShowDB("OBDUser");
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("Access native database failed: " + ex.Message);
-                MessageBox.Show("检测到数据库通讯异常，请排查相关故障：\n" + ex.Message, "数据库通讯异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("检测到本地数据库通讯异常，请排查相关故障：\n" + ex.Message, "本地数据库通讯异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

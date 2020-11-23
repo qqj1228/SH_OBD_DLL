@@ -368,33 +368,6 @@ namespace SH_OBD_Main {
             return RunSQL(strSQL);
         }
 
-        public void AddUploadField() {
-            string strSQL = "select Upload from OBDData where ID = '1'";
-            string[,] rets = SelectDB(strSQL);
-            if (rets == null || rets.GetLength(0) < 1) {
-                strSQL = "alter table OBDData add Upload int not null default(0)";
-                RunSQL(strSQL);
-                strSQL = "update OBDData set Upload = '1' where VIN = 'testvincode012345'";
-                RunSQL(strSQL);
-            }
-        }
-
-        public void AddSNField() {
-            string strSQL = "select SN from OBDUser where ID = '1'";
-            string[,] rets = SelectDB(strSQL);
-            if (rets == null || rets.GetLength(0) < 1) {
-                strSQL = "alter table OBDUser add SN varchar(20) null";
-                RunSQL(strSQL);
-            }
-        }
-
-        public void AddOBDProtocol() {
-            string strSQL = "IF OBJECT_ID(N'SH_OBD.dbo.OBDProtocol') IS NULL ";
-            strSQL += "Create TABLE SH_OBD.dbo.OBDProtocol (ID int IDENTITY PRIMARY KEY NOT NULL, CAR_CODE varchar(20) NOT NULL, ";
-            strSQL += "Engine varchar(20), Stage varchar(20), Fuel varchar(20), Model varchar(20), Protocol varchar(50) NOT NULL)";
-            RunSQL(strSQL);
-        }
-
         public string GetSN() {
             string strSQL = "select SN from OBDUser where ID = '1'";
             string[,] rets = SelectDB(strSQL);
@@ -412,74 +385,22 @@ namespace SH_OBD_Main {
             return RunSQL(strSQL);
         }
 
-        public bool AddProtocol(DataTable dt) {
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                Dictionary<string, string> whereDic = new Dictionary<string, string> {
-                    { "CAR_CODE", dt.Rows[i]["CAR_CODE"].ToString() },
-                };
-                string strSQL = "";
-                int count = GetRecordCount(dt.TableName, whereDic);
-                if (count > 0) {
-                    strSQL = "update " + dt.TableName + " set ";
-                    for (int j = 0; j < dt.Columns.Count; j++) {
-                        strSQL += dt.Columns[j].ColumnName + " = '" + dt.Rows[i][j].ToString() + "', ";
-                    }
-                    strSQL = strSQL.Substring(0, strSQL.Length - 2);
-                    strSQL += " where ";
-                    foreach (string key in whereDic.Keys) {
-                        strSQL += key + " = '" + whereDic[key] + "' and ";
-                    }
-                    strSQL = strSQL.Substring(0, strSQL.Length - 5);
-                } else if (count == 0) {
-                    strSQL = "insert " + dt.TableName + " (";
-                    for (int j = 0; j < dt.Columns.Count; j++) {
-                        strSQL += dt.Columns[j].ColumnName + ", ";
-                    }
-                    strSQL = strSQL.Substring(0, strSQL.Length - 2) + ") values ('";
-
-                    for (int j = 0; j < dt.Columns.Count; j++) {
-                        strSQL += dt.Rows[i][j].ToString() + "', '";
-                    }
-                    strSQL = strSQL.Substring(0, strSQL.Length - 3) + ")";
-                } else if (count < 0) {
-                    return false;
-                }
-                RunSQL(strSQL);
-            }
-            return true;
-        }
-
-        public int InsertProtocol(string CAR_CODE, string Protocol) {
-            string strSQL = "insert into OBDProtocol (CAR_CODE, Protocol) values ('";
-            strSQL += CAR_CODE + "', '" + Protocol + "')";
-            _log.TraceInfo("==> T-SQL: " + strSQL);
-            return RunSQL(strSQL);
-        }
-
-        public int UpdateProtocol(string CAR_CODE, string Protocol, string strID) {
-            string strSQL = "update OBDProtocol set CAR_CODE = '";
-            strSQL += CAR_CODE + "', Protocol = '" + Protocol + "' ";
-            strSQL += "where ID = '" + strID + "'";
-            _log.TraceInfo("==> T-SQL: " + strSQL);
-            return RunSQL(strSQL);
-        }
-
-        public int DeleteProtocol(string strID) {
-            string strSQL = "delete from OBDProtocol where ID = '" + strID + "'";
-            _log.TraceInfo("==> T-SQL: " + strSQL);
-            return RunSQL(strSQL);
-        }
-
-        public string GetProtocol(string carCode) {
-            string strSQL = "select Protocol from OBDProtocol where CAR_CODE = '" + carCode + "'";
-            string[,] rets = SelectDB(strSQL);
-            string strRet;
-            if (rets == null || rets.GetLength(0) < 1) {
-                strRet = "";
+        public int DeleteDB(string strTable, string strID) {
+            string strSQL;
+            if (strID == null) {
+                strSQL = "delete from " + strTable;
             } else {
-                strRet = rets[0, 0];
+                strSQL = "delete from " + strTable + " where ID = '" + strID + "'";
             }
-            return strRet;
+            _log.TraceInfo("==> T-SQL: " + strSQL);
+            return RunSQL(strSQL);
         }
+
+        public int ResetTableID(string strTable, int iStart = 0) {
+            string strSQL = "DBCC CHECKIDENT('" + strTable + "', RESEED, " + iStart.ToString() + ")";
+            _log.TraceInfo("==> T-SQL: " + strSQL);
+            return RunSQL(strSQL);
+        }
+
     }
 }
