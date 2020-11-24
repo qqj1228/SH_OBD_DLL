@@ -83,7 +83,6 @@
     <Compile Include="Classes\Model.cs" />
     <Compile Include="Classes\ModelOracle.cs" />
     <Compile Include="Classes\Settings.cs" />
-    <Compile Include="Classes\WebService.cs" />
     <Compile Include="Forms\CheckForm.cs">
       <SubType>Form</SubType>
     </Compile>
