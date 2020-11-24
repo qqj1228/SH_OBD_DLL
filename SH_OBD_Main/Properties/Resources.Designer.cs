@@ -88,6 +88,15 @@ namespace SH_OBD_Main.Properties {
         }
         
         /// <summary>
+        ///   查找类似 修改校验内容 的本地化字符串。
+        /// </summary>
+        internal static string buttonName_Check {
+            get {
+                return ResourceManager.GetString("buttonName_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 DTC 故障码 的本地化字符串。
         /// </summary>
         internal static string buttonName_DTC {

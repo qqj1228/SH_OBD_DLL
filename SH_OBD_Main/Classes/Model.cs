@@ -10,13 +10,13 @@ using System.Text;
 namespace SH_OBD_Main {
     public class Model {
         public string StrConn { get; set; }
-        public readonly Logger _log;
-        public DBandMES _dbandMES;
+        private readonly Logger _log;
+        private readonly DBandMES _dbandMES;
 
         public Model(DBandMES dbandMES, Logger log) {
             _log = log;
             _dbandMES = dbandMES;
-            this.StrConn = "";
+            StrConn = "";
             ReadConfig();
         }
 
@@ -119,6 +119,7 @@ namespace SH_OBD_Main {
                         _log.TraceInfo(string.Format("==> Insert {0} record(s)", sqlCmd.ExecuteNonQuery()));
                     } catch (Exception ex) {
                         _log.TraceError("==> SQL ERROR: " + ex.Message);
+                        throw;
                     } finally {
                         sqlCmd.Dispose();
                         sqlConn.Close();
@@ -148,6 +149,7 @@ namespace SH_OBD_Main {
                         _log.TraceInfo(string.Format("==> Update {0} record(s)", sqlCmd.ExecuteNonQuery()));
                     } catch (Exception ex) {
                         _log.TraceError("==> SQL ERROR: " + ex.Message);
+                        throw;
                     } finally {
                         sqlCmd.Dispose();
                         sqlConn.Close();

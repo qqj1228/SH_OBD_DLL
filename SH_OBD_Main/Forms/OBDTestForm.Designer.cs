@@ -34,10 +34,10 @@
             this.labelMESInfo = new System.Windows.Forms.Label();
             this.txtBoxVIN = new System.Windows.Forms.TextBox();
             this.chkBoxManualUpload = new System.Windows.Forms.CheckBox();
-            this.btnImport = new System.Windows.Forms.Button();
             this.chkBoxShowData = new System.Windows.Forms.CheckBox();
             this.grpBoxIUPR = new System.Windows.Forms.GroupBox();
             this.GridViewIUPR = new System.Windows.Forms.DataGridView();
+            this.txtBoxVehicleType = new System.Windows.Forms.TextBox();
             this.grpBoxInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridViewInfo)).BeginInit();
             this.grpBoxECUInfo.SuspendLayout();
@@ -139,7 +139,7 @@
             // 
             this.labelMESInfo.AutoSize = true;
             this.labelMESInfo.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelMESInfo.Location = new System.Drawing.Point(476, 9);
+            this.labelMESInfo.Location = new System.Drawing.Point(487, 9);
             this.labelMESInfo.Name = "labelMESInfo";
             this.labelMESInfo.Size = new System.Drawing.Size(77, 12);
             this.labelMESInfo.TabIndex = 8;
@@ -155,32 +155,22 @@
             this.txtBoxVIN.Size = new System.Drawing.Size(121, 21);
             this.txtBoxVIN.TabIndex = 9;
             this.txtBoxVIN.Text = "等待扫描VIN号";
-            this.txtBoxVIN.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBoxVIN_KeyPress);
+            this.txtBoxVIN.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtBox_KeyPress);
             // 
             // chkBoxManualUpload
             // 
             this.chkBoxManualUpload.AutoSize = true;
-            this.chkBoxManualUpload.Location = new System.Drawing.Point(261, 38);
+            this.chkBoxManualUpload.Location = new System.Drawing.Point(386, 38);
             this.chkBoxManualUpload.Name = "chkBoxManualUpload";
             this.chkBoxManualUpload.Size = new System.Drawing.Size(96, 16);
             this.chkBoxManualUpload.TabIndex = 10;
             this.chkBoxManualUpload.Text = "手动上传数据";
             this.chkBoxManualUpload.UseVisualStyleBackColor = true;
             // 
-            // btnImport
-            // 
-            this.btnImport.Location = new System.Drawing.Point(478, 33);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(120, 24);
-            this.btnImport.TabIndex = 11;
-            this.btnImport.Text = "导入Excel报表数据";
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.BtnImport_Click);
-            // 
             // chkBoxShowData
             // 
             this.chkBoxShowData.AutoSize = true;
-            this.chkBoxShowData.Location = new System.Drawing.Point(364, 38);
+            this.chkBoxShowData.Location = new System.Drawing.Point(489, 38);
             this.chkBoxShowData.Name = "chkBoxShowData";
             this.chkBoxShowData.Size = new System.Drawing.Size(108, 16);
             this.chkBoxShowData.TabIndex = 12;
@@ -214,14 +204,23 @@
             this.GridViewIUPR.Size = new System.Drawing.Size(444, 355);
             this.GridViewIUPR.TabIndex = 0;
             // 
+            // txtBoxVehicleType
+            // 
+            this.txtBoxVehicleType.Location = new System.Drawing.Point(260, 35);
+            this.txtBoxVehicleType.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBoxVehicleType.Name = "txtBoxVehicleType";
+            this.txtBoxVehicleType.Size = new System.Drawing.Size(121, 21);
+            this.txtBoxVehicleType.TabIndex = 14;
+            this.txtBoxVehicleType.Text = "等待扫描车型代码";
+            // 
             // OBDTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.txtBoxVehicleType);
             this.Controls.Add(this.grpBoxIUPR);
             this.Controls.Add(this.chkBoxShowData);
-            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.chkBoxManualUpload);
             this.Controls.Add(this.txtBoxVIN);
             this.Controls.Add(this.labelMESInfo);
@@ -257,9 +256,9 @@
         private System.Windows.Forms.Label labelMESInfo;
         private System.Windows.Forms.TextBox txtBoxVIN;
         private System.Windows.Forms.CheckBox chkBoxManualUpload;
-        private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox chkBoxShowData;
         private System.Windows.Forms.GroupBox grpBoxIUPR;
         private System.Windows.Forms.DataGridView GridViewIUPR;
+        private System.Windows.Forms.TextBox txtBoxVehicleType;
     }
 }

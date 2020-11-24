@@ -11,15 +11,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SH_OBD_Main {
-    public partial class MainForm : Form {
+    public partial class AdvancedForm : Form {
         private Dictionary<string, Form> dicSubForms;
         private OBDTestForm f_OBDTest;
+        private CheckForm f_Check;
         private readonly OBDIfEx _obdIfEx;
         private readonly OBDTest _obdTest;
         private readonly Font _boldFont;
         private readonly Font _originFont;
 
-        public MainForm(OBDIfEx obdIfEX, OBDTest obdTest) {
+        public AdvancedForm(OBDIfEx obdIfEX, OBDTest obdTest) {
             InitializeComponent();
             _obdIfEx = obdIfEX;
             _obdTest = obdTest;
@@ -45,19 +46,22 @@ namespace SH_OBD_Main {
             }
 
             InitSubForm();
-            this.Text = "SH_OBD - Ver " + MainFileVersion.AssemblyVersion;
+            this.Text += " Ver(Main/Dll): " + MainFileVersion.AssemblyVersion + "/" + DllVersion<SH_OBD_Dll>.AssemblyVersion;
         }
 
-        ~MainForm() { f_OBDTest.Close(); }
+        ~AdvancedForm() { f_OBDTest.Close(); }
 
         void InitSubForm() {
             dicSubForms = new Dictionary<string, Form>();
 
             f_OBDTest = new OBDTestForm(_obdIfEx, _obdTest);
+            f_Check = new CheckForm(_obdTest, _obdIfEx.Log);
 
             buttonOBDTest.Text = Properties.Resources.buttonName_OBDTest;
+            buttonCheck.Text = Properties.Resources.buttonName_Check;
 
             dicSubForms.Add(Properties.Resources.buttonName_OBDTest, f_OBDTest);
+            dicSubForms.Add(Properties.Resources.buttonName_Check, f_Check);
         }
 
         private void BroadcastConnectionUpdate() {
@@ -130,7 +134,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e) {
+        private void AdvancedForm_Load(object sender, EventArgs e) {
             if (_obdIfEx.OBDIf.ConnectedStatus) {
                 toolStripBtnConnect.Enabled = false;
                 toolStripBtnDisconnect.Enabled = true;
@@ -175,12 +179,12 @@ namespace SH_OBD_Main {
             _obdIfEx.OBDIf.Disconnect();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+        private void AdvancedForm_FormClosing(object sender, FormClosingEventArgs e) {
             f_OBDTest.Close();
             _boldFont.Dispose();
             _obdIfEx.OBDIf.OnConnect -= new OBDInterface.__Delegate_OnConnect(On_OBD_Connect);
             _obdIfEx.OBDIf.OnDisconnect -= new OBDInterface.__Delegate_OnDisconnect(On_OBD_Disconnect);
-            _obdTest.AdvanceMode = false;
+            _obdTest.AdvancedMode = false;
         }
 
         private void ConnectThreadNew() {

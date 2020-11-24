@@ -22,9 +22,9 @@ namespace SH_OBD_Main {
             byte[] output = md5.ComputeHash(Encoding.Default.GetBytes(this.txtBoxPassWord.Text.Trim()));
             string strValue = BitConverter.ToString(output).Replace("-", "");
             if (strValue == _obdTest._db.GetPassWord()) {
-                _obdTest.AccessAdvanceMode = 1;
+                _obdTest.AccessAdvancedMode = 1;
             } else {
-                _obdTest.AccessAdvanceMode = -1;
+                _obdTest.AccessAdvancedMode = -1;
             }
             md5.Dispose();
             this.Close();

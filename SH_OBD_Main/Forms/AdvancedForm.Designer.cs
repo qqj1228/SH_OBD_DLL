@@ -1,5 +1,5 @@
 ﻿namespace SH_OBD_Main {
-    partial class MainForm {
+    partial class AdvancedForm {
         /// <summary>
         /// 必需的设计器变量。
         /// </summary>
@@ -23,7 +23,7 @@
         /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdvancedForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.StatusLabelConnStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusLabelDeviceName = new System.Windows.Forms.ToolStripStatusLabel();
@@ -32,6 +32,7 @@
             this.StatusLabelDeviceType = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusLabelPort = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonCheck = new System.Windows.Forms.Button();
             this.buttonOBDTest = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -117,11 +118,22 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.buttonCheck);
             this.panel1.Controls.Add(this.buttonOBDTest);
             this.panel1.Location = new System.Drawing.Point(0, 55);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(120, 551);
             this.panel1.TabIndex = 1;
+            // 
+            // buttonCheck
+            // 
+            this.buttonCheck.Location = new System.Drawing.Point(3, 32);
+            this.buttonCheck.Name = "buttonCheck";
+            this.buttonCheck.Size = new System.Drawing.Size(110, 23);
+            this.buttonCheck.TabIndex = 14;
+            this.buttonCheck.Text = "buttonCheck";
+            this.buttonCheck.UseVisualStyleBackColor = true;
+            this.buttonCheck.Click += new System.EventHandler(this.Button_Click);
             // 
             // buttonOBDTest
             // 
@@ -252,11 +264,12 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(920, 640);
             this.Name = "MainForm";
             this.Text = "SH_OBD";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdvancedForm_FormClosing);
+            this.Load += new System.EventHandler(this.AdvancedForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -291,6 +304,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Button buttonOBDTest;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabelAppProtocol;
+        private System.Windows.Forms.Button buttonCheck;
     }
 }
 

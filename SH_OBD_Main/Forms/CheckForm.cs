@@ -1,0 +1,325 @@
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using SH_OBD_DLL;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace SH_OBD_Main {
+    public partial class CheckForm : Form {
+        private readonly DataTable _dtContent;
+        private readonly OBDTest _obdTest;
+        private readonly Logger _log;
+
+        public CheckForm(OBDTest obdTest, Logger log) {
+            InitializeComponent();
+            _dtContent = new DataTable();
+            _obdTest = obdTest;
+            _log = log;
+        }
+
+        private void CheckForm_Resize(object sender, EventArgs e) {
+            int margin = grpBoxType.Location.X - (grpBoxProject.Location.X + grpBoxProject.Width);
+            grpBoxProject.Width = (btnModify.Location.X - grpBoxProject.Location.X) / 5 - margin;
+            grpBoxType.Location = new Point(grpBoxProject.Location.X + grpBoxProject.Width + margin, grpBoxProject.Location.Y);
+            grpBoxType.Width = grpBoxProject.Width;
+            grpBoxECUID.Location = new Point(grpBoxType.Location.X + grpBoxType.Width + margin, grpBoxProject.Location.Y);
+            grpBoxECUID.Width = grpBoxProject.Width;
+            grpBoxCALID.Location = new Point(grpBoxECUID.Location.X + grpBoxECUID.Width + margin, grpBoxProject.Location.Y);
+            grpBoxCALID.Width = grpBoxProject.Width;
+            grpBoxCVN.Location = new Point(grpBoxCALID.Location.X + grpBoxCALID.Width + margin, grpBoxProject.Location.Y);
+            grpBoxCVN.Width = grpBoxProject.Width;
+        }
+
+        private void SetGridViewColumnsSortMode(DataGridView gridView, DataGridViewColumnSortMode sortMode) {
+            for (int i = 0; i < gridView.Columns.Count; i++) {
+                gridView.Columns[i].SortMode = sortMode;
+            }
+        }
+
+        private void SetDataTableColumns<T>(DataTable dt, string[] columns) {
+            dt.Clear();
+            dt.Columns.Clear();
+            foreach (string col in columns) {
+                dt.Columns.Add(new DataColumn(col, typeof(T)));
+            }
+        }
+
+        private void SetDataTableRow(DataTable dt) {
+            string[,] results = _obdTest._db.GetRecords("VehicleType", null);
+            if (results == null) {
+                return;
+            }
+            for (int iRow = 0; iRow < results.GetLength(0); iRow++) {
+                DataRow dr = dt.NewRow();
+                for (int iCol = 0; iCol < results.GetLength(1); iCol++) {
+                    dr[iCol] = results[iRow, iCol];
+                }
+                dt.Rows.Add(dr);
+            }
+        }
+
+        private void SetDataTableContent() {
+            string[] columns = _obdTest._db.GetTableColumns("VehicleType");
+            SetDataTableColumns<string>(_dtContent, columns);
+            if (GridContent.Columns.Count > 0) {
+                SetGridViewColumnsSortMode(GridContent, DataGridViewColumnSortMode.NotSortable);
+            }
+            SetDataTableRow(_dtContent);
+        }
+
+        private void ArrangeRecords(string[,] records, int[] order) {
+            OrderArray.Orderby(records, order);
+            DataTable dtArranged = new DataTable("VehicleType");
+            dtArranged.Columns.Add("Project");
+            dtArranged.Columns.Add("Type");
+            dtArranged.Columns.Add("ECU_ID");
+            dtArranged.Columns.Add("CAL_ID");
+            dtArranged.Columns.Add("CVN");
+            DataRow dr = dtArranged.NewRow();
+            for (int j = 0; j < records.GetLength(1) - 1; j++) {
+                dr[j] = records[0, j + 1];
+            }
+            dtArranged.Rows.Add(dr);
+            for (int i = 1; i < records.GetLength(0); i++) {
+                bool equal = true;
+                dr = dtArranged.NewRow();
+                for (int j = 0; j < records.GetLength(1) - 1; j++) {
+                    dr[j] = records[i, j + 1];
+                    equal = equal && dr[j].ToString() == records[i - 1, j + 1];
+                }
+                if (!equal) {
+                    dtArranged.Rows.Add(dr);
+                }
+            }
+            _obdTest._db.DeleteDB("VehicleType", null);
+            _obdTest._db.ResetTableID("VehicleType");
+            try {
+                _obdTest._db.InsertDB(dtArranged);
+            } catch (Exception) {
+                MessageBox.Show("整理数据出错", "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            dtArranged.Dispose();
+        }
+
+        private void CheckForm_Load(object sender, EventArgs e) {
+            GridContent.DataSource = _dtContent;
+            SetDataTableContent();
+        }
+
+        private void GridContent_Click(object sender, EventArgs e) {
+            int index = -1;
+            if (GridContent.CurrentRow != null) {
+                index = GridContent.CurrentRow.Index;
+            }
+            if (index >= 0 && index < _dtContent.Rows.Count) {
+                txtBoxProject.Text = _dtContent.Rows[index]["Project"].ToString();
+                txtBoxType.Text = _dtContent.Rows[index]["Type"].ToString();
+                txtBoxECUID.Text = _dtContent.Rows[index]["ECU_ID"].ToString();
+                txtBoxCALID.Text = _dtContent.Rows[index]["CAL_ID"].ToString();
+                txtBoxCVN.Text = _dtContent.Rows[index]["CVN"].ToString();
+            }
+        }
+
+        private void BtnModify_Click(object sender, EventArgs e) {
+            if (txtBoxType.Text.Length > 0 && txtBoxECUID.Text.Length > 0 && txtBoxCALID.Text.Length > 0 && txtBoxCVN.Text.Length > 0) {
+                int index = GridContent.CurrentRow.Index;
+                DataTable dtModify = new DataTable("VehicleType");
+                dtModify.Columns.Add("Project");
+                dtModify.Columns.Add("Type");
+                dtModify.Columns.Add("ECU_ID");
+                dtModify.Columns.Add("CAL_ID");
+                dtModify.Columns.Add("CVN");
+                DataRow dr = dtModify.NewRow();
+                dr["Project"] = txtBoxProject.Text;
+                dr["Type"] = txtBoxType.Text;
+                dr["ECU_ID"] = txtBoxECUID.Text;
+                dr["CAL_ID"] = txtBoxCALID.Text;
+                dr["CVN"] = txtBoxCVN.Text;
+                dtModify.Rows.Add(dr);
+                Dictionary<string, string> whereDic = new Dictionary<string, string> {
+                    { "ID", _dtContent.Rows[index]["ID"].ToString() }
+                };
+                try {
+                    _obdTest._db.UpdateDB(dtModify, whereDic);
+                    SetDataTableContent();
+                    GridContent.Rows[index].Selected = true;
+                    GridContent.CurrentCell = GridContent.Rows[index].Cells[0];
+                } catch (Exception) {
+                    MessageBox.Show("修改数据出错", "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                dtModify.Dispose();
+            }
+        }
+
+        private void BtnInsert_Click(object sender, EventArgs e) {
+            if (txtBoxType.Text.Length > 0 && txtBoxECUID.Text.Length > 0 && txtBoxCALID.Text.Length > 0 && txtBoxCVN.Text.Length > 0) {
+                int index = GridContent.Rows.Count;
+                DataTable dtInsert = new DataTable("VehicleType");
+                dtInsert.Columns.Add("Project");
+                dtInsert.Columns.Add("Type");
+                dtInsert.Columns.Add("ECU_ID");
+                dtInsert.Columns.Add("CAL_ID");
+                dtInsert.Columns.Add("CVN");
+                DataRow dr = dtInsert.NewRow();
+                dr["Project"] = txtBoxProject.Text;
+                dr["Type"] = txtBoxType.Text;
+                dr["ECU_ID"] = txtBoxECUID.Text;
+                dr["CAL_ID"] = txtBoxCALID.Text;
+                dr["CVN"] = txtBoxCVN.Text;
+                dtInsert.Rows.Add(dr);
+                try {
+                    _obdTest._db.InsertDB(dtInsert);
+                    SetDataTableContent();
+                    GridContent.Rows[index].Selected = true;
+                    GridContent.CurrentCell = GridContent.Rows[index].Cells[0];
+                } catch (Exception) {
+                    MessageBox.Show("插入数据出错", "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                dtInsert.Dispose();
+            }
+        }
+
+        private void BtnRemove_Click(object sender, EventArgs e) {
+            int selectedCount = GridContent.SelectedRows.Count;
+            if (selectedCount > 0) {
+                int deletedCount = 0;
+                for (int i = 0; i < selectedCount; i++) {
+                    if ((DataRowView)GridContent.SelectedRows[i].DataBoundItem is DataRowView rowView) {
+                        deletedCount += _obdTest._db.DeleteDB("VehicleType", rowView.Row["ID"].ToString());
+                    }
+                }
+                SetDataTableContent();
+                if (deletedCount != selectedCount) {
+                    _log.TraceError("Remove error, removed count: " + deletedCount.ToString() + ", selected item count: " + selectedCount.ToString());
+                    MessageBox.Show("删除数据出错，删除行数：" + deletedCount.ToString(), "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void MenuItemImport_Click(object sender, EventArgs e) {
+            DataTable dtImport = new DataTable("VehicleType");
+            OpenFileDialog openFileDialog = new OpenFileDialog {
+                Title = "打开 Excel 导入文件",
+                Filter = "Excel 2007 及以上 (*.xlsx)|*.xlsx",
+                FilterIndex = 0,
+                RestoreDirectory = true
+            };
+            DialogResult result = openFileDialog.ShowDialog();
+            try {
+                if (result == DialogResult.OK && openFileDialog.FileName.Length > 0) {
+                    dtImport.Columns.Add("Project");
+                    dtImport.Columns.Add("Type");
+                    dtImport.Columns.Add("ECU_ID");
+                    dtImport.Columns.Add("CAL_ID");
+                    dtImport.Columns.Add("CVN");
+                    FileInfo xlFile = new FileInfo(openFileDialog.FileName);
+                    using (ExcelPackage package = new ExcelPackage(xlFile, true)) {
+                        ExcelWorksheet worksheet1 = package.Workbook.Worksheets[1];
+                        for (int i = 2; i < worksheet1.Cells.Rows; i++) {
+                            if (worksheet1.Cells[i, 1].Value == null || worksheet1.Cells[i, 1].Value.ToString().Length == 0) {
+                                break;
+                            }
+                            DataRow dr = dtImport.NewRow();
+                            dr["Project"] = worksheet1.Cells[i, 2].Value.ToString();
+                            dr["Type"] = worksheet1.Cells[i, 3].Value.ToString();
+                            dr["ECU_ID"] = worksheet1.Cells[i, 4].Value.ToString();
+                            dr["CAL_ID"] = worksheet1.Cells[i, 5].Value.ToString();
+                            dr["CVN"] = worksheet1.Cells[i, 6].Value.ToString();
+                            dtImport.Rows.Add(dr);
+                        }
+                    }
+                    _obdTest._db.InsertDB(dtImport);
+                    string[,] results = _obdTest._db.GetRecords("VehicleType", null);
+                    if (results != null) {
+                        ArrangeRecords(results, new int[] { 1, 2, 3, 4, 5 });
+                        SetDataTableContent();
+                        MessageBox.Show("导入Excel数据完成", "导入数据");
+                    }
+                }
+            } finally {
+                openFileDialog.Dispose();
+                dtImport.Dispose();
+            }
+        }
+
+        private void MenuItemExport_Click(object sender, EventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
+                Title = "保存 Excel 导出文件",
+                Filter = "Excel 2007 及以上 (*.xlsx)|*.xlsx",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+                OverwritePrompt = true,
+                FileName = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd") + "_Export"
+            };
+            DialogResult result = saveFileDialog.ShowDialog();
+            try {
+                if (result == DialogResult.OK) {
+                    using (ExcelPackage package = new ExcelPackage()) {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("车型校验文件");
+                        // 标题
+                        for (int i = 0; i < _dtContent.Columns.Count; i++) {
+                            worksheet.Cells[1, i + 1].Value = _dtContent.Columns[i].ColumnName;
+                            // 边框
+                            worksheet.Cells[1, i + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin, Color.Black);
+                        }
+                        // 格式化标题
+                        using (var range = worksheet.Cells[1, 1, 1, _dtContent.Columns.Count]) {
+                            range.Style.Font.Bold = true;
+                            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        }
+
+                        // 记录
+                        for (int iRow = 0; iRow < _dtContent.Rows.Count; iRow++) {
+                            for (int iCol = 0; iCol < _dtContent.Columns.Count; iCol++) {
+                                worksheet.Cells[iRow + 2, iCol + 1].Value = _dtContent.Rows[iRow][iCol].ToString();
+                                // 边框
+                                worksheet.Cells[iRow + 2, iCol + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin, Color.Black);
+                            }
+                        }
+                        // 格式化记录
+                        using (var range = worksheet.Cells[2, 1, _dtContent.Rows.Count + 1, _dtContent.Columns.Count]) {
+                            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        }
+                        // 自适应列宽
+                        worksheet.Cells.AutoFitColumns(0);
+                        // 保存文件
+                        FileInfo xlFile = new FileInfo(saveFileDialog.FileName);
+                        package.SaveAs(xlFile);
+                    }
+                    MessageBox.Show("导出Excel数据完成", "导出数据");
+                }
+            } finally {
+                saveFileDialog.Dispose();
+            }
+        }
+
+        private void MenuItemRefresh_Click(object sender, EventArgs e) {
+            int index = GridContent.CurrentRow.Index;
+            SetDataTableContent();
+            if (GridContent.Rows.Count > index) {
+                GridContent.Rows[index].Selected = true;
+                GridContent.CurrentCell = GridContent.Rows[index].Cells[0];
+            }
+        }
+
+        private void MenuItemArrange_Click(object sender, EventArgs e) {
+            string[,] temp = new string[_dtContent.Rows.Count, _dtContent.Columns.Count];
+            for (int i = 0; i < _dtContent.Rows.Count; i++) {
+                for (int j = 0; j < _dtContent.Columns.Count; j++) {
+                    temp[i, j] = _dtContent.Rows[i][j].ToString();
+                }
+            }
+            ArrangeRecords(temp, new int[] { 1, 2, 3, 4, 5 });
+            SetDataTableContent();
+        }
+    }
+}
