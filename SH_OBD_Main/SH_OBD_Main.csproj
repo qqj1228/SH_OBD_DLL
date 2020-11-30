@@ -207,6 +207,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DBCParser\DBCParser.csproj">
+      <Project>{95511EB0-9072-4729-9D7C-2ADE4B0F336F}</Project>
+      <Name>DBCParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SH_OBD_DLL\SH_OBD_DLL.csproj">
       <Project>{b2795a87-baa4-4954-a02f-eae33baa961d}</Project>
       <Name>SH_OBD_DLL</Name>
