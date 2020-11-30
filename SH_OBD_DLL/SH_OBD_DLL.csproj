@@ -75,7 +75,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBCParser\DBCParser\DBCParser.csproj">
+    <ProjectReference Include="..\DBCParser\DBCParser.csproj">
       <Project>{95511eb0-9072-4729-9d7c-2ade4b0f336f}</Project>
       <Name>DBCParser</Name>
     </ProjectReference>
