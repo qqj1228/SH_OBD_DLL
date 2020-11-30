@@ -66,7 +66,7 @@ namespace SH_OBD_Main {
         }
 
         private void SetDataTableContent() {
-            string[] columns = _obdTest._db.GetTableColumns("VehicleType");
+            string[] columns = _obdTest._db.GetColumnsName("VehicleType");
             SetDataTableColumns<string>(_dtContent, columns);
             if (GridContent.Columns.Count > 0) {
                 SetGridViewColumnsSortMode(GridContent, DataGridViewColumnSortMode.NotSortable);
@@ -75,24 +75,23 @@ namespace SH_OBD_Main {
         }
 
         private void ArrangeRecords(string[,] records, int[] order) {
+            if (records.GetLength(0) <= 0) {
+                return;
+            }
             OrderArray.Orderby(records, order);
             DataTable dtArranged = new DataTable("VehicleType");
-            dtArranged.Columns.Add("Project");
-            dtArranged.Columns.Add("Type");
-            dtArranged.Columns.Add("ECU_ID");
-            dtArranged.Columns.Add("CAL_ID");
-            dtArranged.Columns.Add("CVN");
+            _obdTest._db.GetEmptyTable(dtArranged);
             DataRow dr = dtArranged.NewRow();
-            for (int j = 0; j < records.GetLength(1) - 1; j++) {
-                dr[j] = records[0, j + 1];
+            for (int j = 0; j < records.GetLength(1); j++) {
+                dr[j] = records[0, j];
             }
             dtArranged.Rows.Add(dr);
             for (int i = 1; i < records.GetLength(0); i++) {
                 bool equal = true;
                 dr = dtArranged.NewRow();
-                for (int j = 0; j < records.GetLength(1) - 1; j++) {
-                    dr[j] = records[i, j + 1];
-                    equal = equal && dr[j].ToString() == records[i - 1, j + 1];
+                for (int j = 0; j < records.GetLength(1); j++) {
+                    dr[j] = records[i, j];
+                    equal = equal && dr[j].ToString() == records[i - 1, j];
                 }
                 if (!equal) {
                     dtArranged.Rows.Add(dr);
@@ -102,8 +101,8 @@ namespace SH_OBD_Main {
             _obdTest._db.ResetTableID("VehicleType");
             try {
                 _obdTest._db.InsertDB(dtArranged);
-            } catch (Exception) {
-                MessageBox.Show("整理数据出错", "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch (Exception ex) {
+                MessageBox.Show(ex.Message, "整理数据出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             dtArranged.Dispose();
         }
@@ -162,11 +161,7 @@ namespace SH_OBD_Main {
             if (txtBoxType.Text.Length > 0 && txtBoxECUID.Text.Length > 0 && txtBoxCALID.Text.Length > 0 && txtBoxCVN.Text.Length > 0) {
                 int index = GridContent.Rows.Count;
                 DataTable dtInsert = new DataTable("VehicleType");
-                dtInsert.Columns.Add("Project");
-                dtInsert.Columns.Add("Type");
-                dtInsert.Columns.Add("ECU_ID");
-                dtInsert.Columns.Add("CAL_ID");
-                dtInsert.Columns.Add("CVN");
+                _obdTest._db.GetEmptyTable(dtInsert);
                 DataRow dr = dtInsert.NewRow();
                 dr["Project"] = txtBoxProject.Text;
                 dr["Type"] = txtBoxType.Text;
@@ -179,8 +174,8 @@ namespace SH_OBD_Main {
                     SetDataTableContent();
                     GridContent.Rows[index].Selected = true;
                     GridContent.CurrentCell = GridContent.Rows[index].Cells[0];
-                } catch (Exception) {
-                    MessageBox.Show("插入数据出错", "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "插入数据出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 dtInsert.Dispose();
             }
@@ -192,7 +187,7 @@ namespace SH_OBD_Main {
                 int deletedCount = 0;
                 for (int i = 0; i < selectedCount; i++) {
                     if ((DataRowView)GridContent.SelectedRows[i].DataBoundItem is DataRowView rowView) {
-                        deletedCount += _obdTest._db.DeleteDB("VehicleType", rowView.Row["ID"].ToString());
+                        deletedCount += _obdTest._db.DeleteDB("VehicleType", rowView.Row["ROWID"].ToString());
                     }
                 }
                 SetDataTableContent();
@@ -205,6 +200,7 @@ namespace SH_OBD_Main {
 
         private void MenuItemImport_Click(object sender, EventArgs e) {
             DataTable dtImport = new DataTable("VehicleType");
+            _obdTest._db.GetEmptyTable(dtImport);
             OpenFileDialog openFileDialog = new OpenFileDialog {
                 Title = "打开 Excel 导入文件",
                 Filter = "Excel 2007 及以上 (*.xlsx)|*.xlsx",
@@ -214,11 +210,6 @@ namespace SH_OBD_Main {
             DialogResult result = openFileDialog.ShowDialog();
             try {
                 if (result == DialogResult.OK && openFileDialog.FileName.Length > 0) {
-                    dtImport.Columns.Add("Project");
-                    dtImport.Columns.Add("Type");
-                    dtImport.Columns.Add("ECU_ID");
-                    dtImport.Columns.Add("CAL_ID");
-                    dtImport.Columns.Add("CVN");
                     FileInfo xlFile = new FileInfo(openFileDialog.FileName);
                     using (ExcelPackage package = new ExcelPackage(xlFile, true)) {
                         ExcelWorksheet worksheet1 = package.Workbook.Worksheets[1];
@@ -303,7 +294,10 @@ namespace SH_OBD_Main {
         }
 
         private void MenuItemRefresh_Click(object sender, EventArgs e) {
-            int index = GridContent.CurrentRow.Index;
+            int index = 0;
+            if (GridContent.Rows.Count > 0) {
+                index = GridContent.CurrentRow.Index;
+            }
             SetDataTableContent();
             if (GridContent.Rows.Count > index) {
                 GridContent.Rows[index].Selected = true;

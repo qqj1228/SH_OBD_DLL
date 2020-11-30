@@ -19,7 +19,7 @@ namespace SH_OBD_Main {
         private readonly DataTable _dtIUPR;
         private bool _compIgn;
         private bool _CN6;
-        public readonly Model _db;
+        public readonly ModelSQLite _db;
         public readonly ModelOracle _dbOracle;
         public event Action OBDTestStart;
         public event Action SetupColumnsDone;
@@ -68,7 +68,7 @@ namespace SH_OBD_Main {
             StrVIN_ECU = "";
             StrVIN_IN = "";
             StrType_IN = "";
-            _db = new Model(_obdIfEx.DBandMES, _obdIfEx.Log);
+            _db = new ModelSQLite(_obdIfEx.DBandMES, _obdIfEx.Log);
             _dbOracle = new ModelOracle(_obdIfEx.DBandMES.OraMES, _obdIfEx.Log);
             Checks = new List<CheckResult>();
         }

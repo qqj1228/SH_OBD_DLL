@@ -151,7 +151,6 @@ namespace SH_OBD_Main {
                         _serialRecvBuf = "";
                         return;
                     }
-                    _bCanOBDTest = false;
                     string strTxt = _serialRecvBuf.Split('\n')[0];
                     _serialRecvBuf = _serialRecvBuf.Split('\n')[1];
                     string[] codes = strTxt.Trim().Split('*');
@@ -176,6 +175,7 @@ namespace SH_OBD_Main {
         }
 
         private void StartOBDTest() {
+            _bCanOBDTest = false;
             Invoke((EventHandler)delegate {
                 lblResult.ForeColor = Color.Black;
                 lblResult.Text = "准备OBD检测";
@@ -376,7 +376,6 @@ namespace SH_OBD_Main {
                     MessageBox.Show("上一辆车还未完全结束检测过程，请稍后再试", "OBD检测出错", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                _bCanOBDTest = false;
                 TextBox tb = sender as TextBox;
                 string[] codes = tb.Text.Split('*');
                 if (codes != null) {

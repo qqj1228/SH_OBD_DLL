@@ -15,9 +15,9 @@ namespace SH_OBD_Main {
     public partial class SettingsForm : Form {
         private readonly DllSettings _dllSettings;
         private readonly MainSettings _mainSettings;
-        private readonly Model _db;
+        private readonly ModelSQLite _db;
 
-        public SettingsForm(DllSettings dllSettings, MainSettings mainSettings, Model db) {
+        public SettingsForm(DllSettings dllSettings, MainSettings mainSettings, ModelSQLite db) {
             InitializeComponent();
             _dllSettings = dllSettings;
             _mainSettings = mainSettings;

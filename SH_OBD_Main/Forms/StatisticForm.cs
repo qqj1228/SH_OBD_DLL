@@ -63,13 +63,13 @@ namespace SH_OBD_Main {
                     whereDic.Add("Upload", "0");
                 }
             }
-            Model.FilterTime time = Model.FilterTime.NoFilter;
+            ModelSQLite.FilterTime time = ModelSQLite.FilterTime.NoFilter;
             if (this.radioBtnDay.Checked) {
-                time = Model.FilterTime.Day;
+                time = ModelSQLite.FilterTime.Day;
             } else if (this.radioBtnWeek.Checked) {
-                time = Model.FilterTime.Week;
+                time = ModelSQLite.FilterTime.Week;
             } else if (this.radioBtnMonth.Checked) {
-                time = Model.FilterTime.Month;
+                time = ModelSQLite.FilterTime.Month;
             }
             int max = (_allQty / _pageSize) + (_allQty % _pageSize > 0 ? 1 : 0);
             this.UpDownPage.Maximum = max > 0 ? max : 1;
@@ -117,13 +117,13 @@ namespace SH_OBD_Main {
         }
 
         private void GetQty() {
-            Model.FilterTime time = Model.FilterTime.Day;
+            ModelSQLite.FilterTime time = ModelSQLite.FilterTime.Day;
             if (this.radioBtnDay.Checked) {
-                time = Model.FilterTime.Day;
+                time = ModelSQLite.FilterTime.Day;
             } else if (this.radioBtnWeek.Checked) {
-                time = Model.FilterTime.Week;
+                time = ModelSQLite.FilterTime.Week;
             } else if (this.radioBtnMonth.Checked) {
-                time = Model.FilterTime.Month;
+                time = ModelSQLite.FilterTime.Month;
             }
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             string[] columns = { "VIN" };
