@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B2795A87-BAA4-4954-A02F-EAE33BAA961D}</ProjectGuid>
+    <ProjectGuid>{95511EB0-9072-4729-9D7C-2ADE4B0F336F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SH_OBD_DLL</RootNamespace>
-    <AssemblyName>SH_OBD_DLL</AssemblyName>
+    <RootNamespace>DBCParser</RootNamespace>
+    <AssemblyName>DBCParser</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,44 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\CommBase.cs" />
-    <Compile Include="Classes\CommLine.cs" />
-    <Compile Include="Classes\Logger.cs" />
-    <Compile Include="Classes\SerialPort.cs" />
-    <Compile Include="Classes\Settings.cs" />
-    <Compile Include="Classes\TCPClientImp.cs" />
-    <Compile Include="Classes\Utility.cs" />
-    <Compile Include="DllMain.cs" />
-    <Compile Include="OBD\OBDCommELM.cs" />
-    <Compile Include="OBD\OBDDevice.cs" />
-    <Compile Include="OBD\OBDDeviceELM327.cs" />
-    <Compile Include="OBD\OBDInterface.cs" />
-    <Compile Include="OBD\OBDInterpreter.cs" />
-    <Compile Include="OBD\OBDParameter.cs" />
-    <Compile Include="OBD\OBDParameterValue.cs" />
-    <Compile Include="OBD\OBDParser.cs" />
-    <Compile Include="OBD\OBDParserCAN.cs" />
-    <Compile Include="OBD\OBDParserNotCAN.cs" />
-    <Compile Include="OBD\OBDResponseList.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="DBCObj\Attribute.cs" />
+    <Compile Include="DBCObj\Message.cs" />
+    <Compile Include="DBCObj\NetWork.cs" />
+    <Compile Include="DBCObj\Node.cs" />
+    <Compile Include="DBCObj\DBCObjBase.cs" />
+    <Compile Include="DBCObj\Signal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Configs\dllsetting.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Configs\dllsignal.xml" />
-    <Content Include="Configs\dllvalue.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configs\OBD_CMD.dbc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DBCParser\DBCParser.csproj">
-      <Project>{95511eb0-9072-4729-9d7c-2ade4b0f336f}</Project>
-      <Name>DBCParser</Name>
-    </ProjectReference>
+    <Compile Include="DictionaryEx.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
