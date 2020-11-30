@@ -107,9 +107,9 @@ namespace SH_OBD_Main {
                         using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, sqliteConn)) {
                             adapter.Fill(dt);
                         }
-                        dt.Clear();
                         sqliteTrans.Commit();
                     }
+                    dt.Clear();
                 } catch (Exception ex) {
                     _log.TraceError("==> Error SQL: " + strSQL);
                     _log.TraceError("==> SQL ERROR: " + ex.Message);
@@ -122,12 +122,14 @@ namespace SH_OBD_Main {
             }
         }
 
-        public void InsertDB(DataTable dt) {
+        public void InsertDB(DataTable dt, string primaryKey = "ID") {
             string columns = " (";
             string row = " values (";
             for (int i = 0; i < dt.Columns.Count; i++) {
-                columns += dt.Columns[i].ColumnName + ",";
-                row += "@" + dt.Columns[i].ColumnName + ",";
+                if (primaryKey != dt.Columns[i].ColumnName) {
+                    columns += dt.Columns[i].ColumnName + ",";
+                    row += "@" + dt.Columns[i].ColumnName + ",";
+                }
             }
             columns = columns.Substring(0, columns.Length - 1) + ")";
             row = row.Substring(0, row.Length - 1) + ")";
@@ -143,11 +145,14 @@ namespace SH_OBD_Main {
                             for (int i = 0; i < dt.Rows.Count; i++) {
                                 string strDisplaySQL = strSQL;
                                 for (int j = 0; j < dt.Columns.Count; j++) {
-                                    DbType dbType = SqlDbTypeToDbType(schema.Rows[j]["DATA_TYPE"].ToString());
-                                    int length = Convert.ToInt32(schema.Rows[j]["CHARACTER_MAXIMUM_LENGTH"]);
-                                    sqliteCmd.Parameters.Add("@" + dt.Columns[j].ColumnName, dbType, length);
-                                    sqliteCmd.Parameters[j].Value = dt.Rows[i][j].ToString();
-                                    strDisplaySQL = strDisplaySQL.Replace(sqliteCmd.Parameters[j].ParameterName, sqliteCmd.Parameters[j].Value.ToString());
+                                    if (primaryKey != dt.Columns[j].ColumnName) {
+                                        DbType dbType = SqlDbTypeToDbType(schema.Rows[j]["DATA_TYPE"].ToString());
+                                        int length = Convert.ToInt32(schema.Rows[j]["CHARACTER_MAXIMUM_LENGTH"]);
+                                        string strParaName = "@" + dt.Columns[j].ColumnName;
+                                        sqliteCmd.Parameters.Add(strParaName, dbType, length);
+                                        sqliteCmd.Parameters[strParaName].Value = dt.Rows[i][j].ToString();
+                                        strDisplaySQL = strDisplaySQL.Replace(strParaName, sqliteCmd.Parameters[strParaName].Value.ToString());
+                                    }
                                 }
                                 _log.TraceInfo(string.Format("==> SQL: {0}", strDisplaySQL));
                                 _log.TraceInfo(string.Format("==> Insert {0} record(s)", sqliteCmd.ExecuteNonQuery()));
