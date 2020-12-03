@@ -76,7 +76,7 @@ namespace SH_OBD_Main {
 
         private void TestNativeDatabase() {
             try {
-                _obdTest._db.ShowDB("OBDUser");
+                _obdTest.DbNative.GetPassWord();
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("Access native database failed: " + ex.Message);
                 MessageBox.Show("检测到本地数据库通讯异常，请排查相关故障：\n" + ex.Message, "本地数据库通讯异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -363,7 +363,7 @@ namespace SH_OBD_Main {
 
         private void TestOracleConnect() {
             try {
-                _obdTest._dbOracle.ConnectOracle();
+                _obdTest.DbMES.ConnectOracle();
             } catch (Exception ex) {
                 MessageBox.Show("检测到与MES通讯异常，数据将无法上传: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

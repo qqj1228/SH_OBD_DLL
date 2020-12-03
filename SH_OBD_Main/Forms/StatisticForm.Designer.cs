@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatisticForm));
             this.grpBoxTime = new System.Windows.Forms.GroupBox();
             this.radioBtnMonth = new System.Windows.Forms.RadioButton();
             this.radioBtnWeek = new System.Windows.Forms.RadioButton();
@@ -317,6 +318,7 @@
             this.Controls.Add(this.grpBoxAllQty);
             this.Controls.Add(this.GridContent);
             this.Controls.Add(this.grpBoxTime);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "StatisticForm";
             this.Text = "统计信息";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StatisticForm_FormClosing);

@@ -23,32 +23,6 @@ namespace SH_OBD_Main {
             StrConn = "data source=" + _dbandMES.DBName;
         }
 
-        public void ShowDB(string strTable) {
-            string strSQL = "select * from " + strTable;
-            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
-                sqliteConn.Open();
-                SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
-                SQLiteDataReader sqliteData = sqliteCmd.ExecuteReader();
-                string str = "";
-                int c = sqliteData.FieldCount;
-                while (sqliteData.Read()) {
-                    for (int i = 0; i < c; i++) {
-                        object obj = sqliteData.GetValue(i);
-                        if (obj.GetType() == typeof(DateTime)) {
-                            str += ((DateTime)obj).ToString("yyyy-MM-dd HH:mm:ss") + "\t";
-                        } else {
-                            str += obj.ToString() + "\t";
-                        }
-                    }
-                    str += "\n";
-                }
-                str = str.Trim('\n');
-                _log.TraceInfo(str);
-                sqliteCmd.Dispose();
-                sqliteConn.Close();
-            }
-        }
-
         private DataTable GetTableColumnsSchema(string strTable) {
             DataTable schema = new DataTable();
             using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
@@ -57,8 +31,9 @@ namespace SH_OBD_Main {
                     schema = sqliteConn.GetSchema("Columns", new string[] { null, null, strTable });
                     schema.DefaultView.Sort = "ORDINAL_POSITION";
                     schema = schema.DefaultView.ToTable();
-                } catch (Exception ex) {
-                    _log.TraceError("==> SQL ERROR: " + ex.Message);
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Get columns schema from table: " + strTable + " error");
+                    _log.TraceError(ex.Message);
                     throw;
                 } finally {
                     if (sqliteConn.State != ConnectionState.Closed) {
@@ -110,9 +85,9 @@ namespace SH_OBD_Main {
                         sqliteTrans.Commit();
                     }
                     dt.Clear();
-                } catch (Exception ex) {
-                    _log.TraceError("==> Error SQL: " + strSQL);
-                    _log.TraceError("==> SQL ERROR: " + ex.Message);
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strSQL);
+                    _log.TraceError(ex.Message);
                     throw;
                 } finally {
                     if (sqliteConn.State != ConnectionState.Closed) {
@@ -122,7 +97,85 @@ namespace SH_OBD_Main {
             }
         }
 
-        public void InsertDB(DataTable dt, string primaryKey = "ID") {
+        /// <summary>
+        /// 执行update insert delete语句，失败了返回-1，成功了返回影响的行数，自动commit
+        /// </summary>
+        /// <param name="strSQL"></param>
+        /// <returns></returns>
+        private int ExecuteNonQuery(string strSQL) {
+            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                int val = -1;
+                try {
+                    sqliteConn.Open();
+                    SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
+                    val = sqliteCmd.ExecuteNonQuery();
+                    sqliteCmd.Parameters.Clear();
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strSQL);
+                    _log.TraceError(ex.Message);
+                    throw;
+                } finally {
+                    if (sqliteConn.State != ConnectionState.Closed) {
+                        sqliteConn.Close();
+                    }
+                }
+                return val;
+            }
+        }
+
+        /// <summary>
+        /// 执行select语句，自动commit
+        /// </summary>
+        /// <param name="strSQL"></param>
+        /// <param name="dt"></param>
+        private void Query(string strSQL, DataTable dt) {
+            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                try {
+                    sqliteConn.Open();
+                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, sqliteConn);
+                    adapter.Fill(dt);
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strSQL);
+                    _log.TraceError(ex.Message);
+                    throw;
+                } finally {
+                    if (sqliteConn.State != ConnectionState.Closed) {
+                        sqliteConn.Close();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 执行select语句，返回第一个数据对象，自动commit
+        /// </summary>
+        /// <param name="strSQL"></param>
+        /// <returns></returns>
+        private object QueryOne(string strSQL) {
+            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                using (SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn)) {
+                    try {
+                        sqliteConn.Open();
+                        object obj = sqliteCmd.ExecuteScalar();
+                        if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value))) {
+                            return null;
+                        } else {
+                            return obj;
+                        }
+                    } catch (SQLiteException ex) {
+                        _log.TraceError("Error SQL: " + strSQL);
+                        _log.TraceError(ex.Message);
+                        throw;
+                    } finally {
+                        if (sqliteConn.State != ConnectionState.Closed) {
+                            sqliteConn.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void InsertRecords(DataTable dt, string primaryKey = "ID") {
             string columns = " (";
             string row = " values (";
             for (int i = 0; i < dt.Columns.Count; i++) {
@@ -137,13 +190,14 @@ namespace SH_OBD_Main {
 
             DataTable schema = GetTableColumnsSchema(dt.TableName);
             using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                string strDisplaySQL = string.Empty;
                 try {
                     sqliteConn.Open();
                     using (SQLiteTransaction sqliteTrans = sqliteConn.BeginTransaction()) {
                         using (SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn)) {
                             sqliteCmd.CommandText = strSQL;
                             for (int i = 0; i < dt.Rows.Count; i++) {
-                                string strDisplaySQL = strSQL;
+                                strDisplaySQL = strSQL;
                                 for (int j = 0; j < dt.Columns.Count; j++) {
                                     if (primaryKey != dt.Columns[j].ColumnName) {
                                         DbType dbType = SqlDbTypeToDbType(schema.Rows[j]["DATA_TYPE"].ToString());
@@ -154,14 +208,14 @@ namespace SH_OBD_Main {
                                         strDisplaySQL = strDisplaySQL.Replace(strParaName, sqliteCmd.Parameters[strParaName].Value.ToString());
                                     }
                                 }
-                                _log.TraceInfo(string.Format("==> SQL: {0}", strDisplaySQL));
-                                _log.TraceInfo(string.Format("==> Insert {0} record(s)", sqliteCmd.ExecuteNonQuery()));
+                                sqliteCmd.ExecuteNonQuery();
                             }
                         }
                         sqliteTrans.Commit();
                     }
-                } catch (Exception ex) {
-                    _log.TraceError("==> SQL ERROR: " + ex.Message);
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strDisplaySQL);
+                    _log.TraceError(ex.Message);
                     throw;
                 } finally {
                     if (sqliteConn.State != ConnectionState.Closed) {
@@ -171,130 +225,123 @@ namespace SH_OBD_Main {
             }
         }
 
-        public void UpdateDB(DataTable dt, Dictionary<string, string> whereDic) {
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                string strSQL = "update " + dt.TableName + " set ";
-                for (int j = 0; j < dt.Columns.Count; j++) {
-                    strSQL += dt.Columns[j].ColumnName + " = '" + dt.Rows[i][j].ToString() + "', ";
-                }
-                strSQL = strSQL.Substring(0, strSQL.Length - 2);
-                strSQL += " where ";
-                foreach (string key in whereDic.Keys) {
-                    strSQL += key + " = '" + whereDic[key] + "' and ";
-                }
-                strSQL = strSQL.Substring(0, strSQL.Length - 5);
+        public void UpdateRecords(DataTable dt, Dictionary<string, string> whereDic) {
+            string strSQL = "update " + dt.TableName + " set ";
+            for (int j = 0; j < dt.Columns.Count; j++) {
+                strSQL += dt.Columns[j].ColumnName + " = @" + dt.Columns[j].ColumnName + ", ";
+            }
+            strSQL = strSQL.Substring(0, strSQL.Length - 2);
+            strSQL += " where ";
+            foreach (string key in whereDic.Keys) {
+                strSQL += key + " = '" + whereDic[key] + "' and ";
+            }
+            strSQL += "1 = 1";
 
-                using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
-                    SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
-                    try {
-                        sqliteConn.Open();
-                        _log.TraceInfo(string.Format("==> SQL: {0}", strSQL));
-                        _log.TraceInfo(string.Format("==> Update {0} record(s)", sqliteCmd.ExecuteNonQuery()));
-                    } catch (Exception ex) {
-                        _log.TraceError("==> SQL ERROR: " + ex.Message);
-                        throw;
-                    } finally {
-                        sqliteCmd.Dispose();
+            DataTable schema = GetTableColumnsSchema(dt.TableName);
+            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                string strDisplaySQL = string.Empty;
+                try {
+                    sqliteConn.Open();
+                    using (SQLiteTransaction sqliteTrans = sqliteConn.BeginTransaction()) {
+                        using (SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn)) {
+                            sqliteCmd.CommandText = strSQL;
+                            for (int i = 0; i < dt.Rows.Count; i++) {
+                                strDisplaySQL = strSQL;
+                                for (int j = 0; j < dt.Columns.Count; j++) {
+                                    for (int k = 0; k < schema.Rows.Count; k++) {
+                                        if (dt.Columns[j].ColumnName == schema.Rows[k]["COLUMN_NAME"].ToString()) {
+                                            DbType dbType = SqlDbTypeToDbType(schema.Rows[k]["DATA_TYPE"].ToString());
+                                            int length = Convert.ToInt32(schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"]);
+                                            string strParaName = "@" + dt.Columns[j].ColumnName;
+                                            sqliteCmd.Parameters.Add(strParaName, dbType, length);
+                                            sqliteCmd.Parameters[strParaName].Value = dt.Rows[i][j].ToString();
+                                            strDisplaySQL = strDisplaySQL.Replace(strParaName, sqliteCmd.Parameters[strParaName].Value.ToString());
+                                        }
+                                    }
+                                }
+                                sqliteCmd.ExecuteNonQuery();
+                            }
+                        }
+                        sqliteTrans.Commit();
+                    }
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strDisplaySQL);
+                    _log.TraceError(ex.Message);
+                    throw;
+                } finally {
+                    if (sqliteConn.State != ConnectionState.Closed) {
                         sqliteConn.Close();
                     }
                 }
-
             }
         }
 
-        int RunSQL(string strSQL) {
+        public int DeleteRecords(string strTable, string whereCol, List<string> whereVals) {
+            string strSQL = "delete from " + strTable + " where " + whereCol + " = @value";
+
             int count = 0;
-            if (strSQL.Length == 0) {
-                return -1;
-            }
-            try {
-                using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
-                    SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
-                    try {
-                        sqliteConn.Open();
-                        _log.TraceInfo(string.Format("==> SQL: {0}", strSQL));
-                        count = sqliteCmd.ExecuteNonQuery();
-                        _log.TraceInfo(string.Format("==> {0} record(s) affected", count));
-                    } catch (Exception ex) {
-                        _log.TraceError("==> SQL ERROR: " + ex.Message);
-                    } finally {
-                        sqliteCmd.Dispose();
+            DataTable schema = GetTableColumnsSchema(strTable);
+            using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
+                string strDisplaySQL = string.Empty;
+                try {
+                    sqliteConn.Open();
+                    using (SQLiteTransaction sqliteTrans = sqliteConn.BeginTransaction()) {
+                        using (SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn)) {
+                            sqliteCmd.CommandText = strSQL;
+                            for (int i = 0; i < whereVals.Count; i++) {
+                                strDisplaySQL = strSQL;
+                                int index = 0;
+                                for (int k = 0; k < schema.Rows.Count; k++) {
+                                    if (whereCol == schema.Rows[k]["COLUMN_NAME"].ToString()) {
+                                        index = k;
+                                    }
+                                    DbType dbType = SqlDbTypeToDbType(schema.Rows[index]["DATA_TYPE"].ToString());
+                                    int length = Convert.ToInt32(schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"]);
+                                    sqliteCmd.Parameters.Add("@value", dbType, length);
+                                    sqliteCmd.Parameters["@value"].Value = whereVals[i].ToString();
+                                    strDisplaySQL = strDisplaySQL.Replace("@value", sqliteCmd.Parameters["@value"].Value.ToString());
+                                }
+                                count += sqliteCmd.ExecuteNonQuery();
+                            }
+                        }
+                        sqliteTrans.Commit();
+                    }
+                } catch (SQLiteException ex) {
+                    _log.TraceError("Error SQL: " + strDisplaySQL);
+                    _log.TraceError(ex.Message);
+                    throw;
+                } finally {
+                    if (sqliteConn.State != ConnectionState.Closed) {
                         sqliteConn.Close();
                     }
                 }
-            } catch (Exception ex) {
-                _log.TraceError("==> SQL ERROR: " + ex.Message);
             }
             return count;
         }
 
-        string[,] SelectDB(string strSQL) {
-            string[,] records = null;
-            try {
-                int count = 0;
-                List<string[]> rowList;
-                using (SQLiteConnection sqliteConn = new SQLiteConnection(StrConn)) {
-                    SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
-                    sqliteConn.Open();
-                    SQLiteDataReader sqliteData = sqliteCmd.ExecuteReader();
-                    count = sqliteData.FieldCount;
-                    rowList = new List<string[]>();
-                    while (sqliteData.Read()) {
-                        string[] items = new string[count];
-                        for (int i = 0; i < count; i++) {
-                            object obj = sqliteData.GetValue(i);
-                            if (obj.GetType() == typeof(DateTime)) {
-                                items[i] = ((DateTime)obj).ToString("yyyy-MM-dd HH:mm:ss");
-                            } else {
-                                items[i] = obj.ToString();
-                            }
-                        }
-                        rowList.Add(items);
-                    }
-                    sqliteCmd.Dispose();
-                    sqliteConn.Close();
+        public int DeleteRecord(string strTable, Dictionary<string, string> whereDic) {
+            string strSQL = "delete from " + strTable + " where ";
+            if (whereDic != null) {
+                foreach (string key in whereDic.Keys) {
+                    strSQL += key + " = '" + whereDic[key] + "' and ";
                 }
-                records = new string[rowList.Count, count];
-                for (int i = 0; i < rowList.Count; i++) {
-                    for (int j = 0; j < count; j++) {
-                        records[i, j] = rowList[i][j];
-                    }
-                }
-                return records;
-            } catch (Exception ex) {
-                _log.TraceError("==> SQL ERROR: " + ex.Message);
             }
-            return records;
+            strSQL += "1 = 1";
+            return ExecuteNonQuery(strSQL);
         }
 
-        public int GetRecordCount(string strTable, Dictionary<string, string> whereDic) {
-            string strSQL = "select * from " + strTable + " where ";
-            foreach (string key in whereDic.Keys) {
-                strSQL += key + " = '" + whereDic[key] + "' and ";
-            }
-            strSQL = strSQL.Substring(0, strSQL.Length - 5);
-            _log.TraceInfo("==> SQL: " + strSQL);
-            string[,] strArr = SelectDB(strSQL);
-            if (strArr != null) {
-                return strArr.GetLength(0);
-            } else {
-                return -1;
-            }
-        }
-
-        public string[,] GetRecords(string strTable, Dictionary<string, string> whereDic) {
+        public void GetRecords(DataTable dt, Dictionary<string, string> whereDic) {
             string strSQL;
             if (whereDic == null) {
-                strSQL = "select * from " + strTable;
+                strSQL = "select * from " + dt.TableName;
             } else {
-                strSQL = "select * from " + strTable + " where ";
+                strSQL = "select * from " + dt.TableName + " where ";
                 foreach (string key in whereDic.Keys) {
                     strSQL += key + " = '" + whereDic[key] + "' and ";
                 }
                 strSQL = strSQL.Substring(0, strSQL.Length - 5);
             }
-            _log.TraceInfo("==> SQL: " + strSQL);
-            return SelectDB(strSQL);
+            Query(strSQL, dt);
         }
 
         public enum FilterTime : int {
@@ -304,33 +351,37 @@ namespace SH_OBD_Main {
             Month = 3
         }
 
-        public string[,] GetRecords(string strTable, string[] columns, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
+        public void GetRecordsFilterTime(DataTable dt, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
             string strSQL = "select ";
-            foreach (string col in columns) {
-                strSQL += col + ", ";
+            int lenBefore = strSQL.Length;
+            for (int i = 0; i < dt.Columns.Count; i++) {
+                strSQL += dt.Columns[i] + ", ";
             }
-            strSQL = strSQL.Substring(0, strSQL.Length - 2);
-            strSQL += " from " + strTable + " where ";
+            if (strSQL.Length == lenBefore) {
+                strSQL += "*";
+            } else {
+                strSQL = strSQL.Substring(0, strSQL.Length - 2);
+            }
+            strSQL += " from " + dt.TableName + " where ";
             foreach (string key in whereDic.Keys) {
                 strSQL += key + " = '" + whereDic[key] + "' and ";
             }
-            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyyMMdd");
+            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd");
             switch (time) {
             case FilterTime.Week:
-                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             case FilterTime.Month:
-                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             }
-            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
+            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by ID ";
-            strSQL += "offset " + ((pageNum - 1) * pageSize).ToString() + " rows fetch next " + pageSize.ToString() + " rows only";
-            _log.TraceInfo("==> SQL: " + strSQL);
-            return SelectDB(strSQL);
+            strSQL += "limit " + pageSize.ToString() + " offset " + ((pageNum - 1) * pageSize).ToString();
+            Query(strSQL, dt);
         }
 
-        public string[,] GetRecordsCount(string strTable, string[] columns, Dictionary<string, string> whereDic, FilterTime time) {
+        public object GetRecordsCount(string strTable, string[] columns, Dictionary<string, string> whereDic, FilterTime time) {
             string strSQL = "select count(distinct ";
             foreach (string col in columns) {
                 strSQL += col + ", ";
@@ -340,30 +391,30 @@ namespace SH_OBD_Main {
             foreach (string key in whereDic.Keys) {
                 strSQL += key + " = '" + whereDic[key] + "' and ";
             }
-            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyyMMdd");
+            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd");
             switch (time) {
             case FilterTime.Week:
-                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             case FilterTime.Month:
-                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             }
-            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
+            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "'";
-            _log.TraceInfo("==> SQL: " + strSQL);
-            return SelectDB(strSQL);
+            return QueryOne(strSQL);
         }
 
-        public bool ModifyDB(DataTable dt) {
+        public bool ModifyRecords(DataTable dt) {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 Dictionary<string, string> whereDic = new Dictionary<string, string> {
                     { "VIN", dt.Rows[i][0].ToString() },
                     { "ECU_ID", dt.Rows[i][1].ToString() }
                 };
                 string strSQL = "";
-                int count = GetRecordCount(dt.TableName, whereDic);
-                if (count > 0) {
+                DataTable dtTemp = new DataTable(dt.TableName);
+                GetRecords(dtTemp, whereDic);
+                if (dtTemp.Rows.Count > 0) {
                     strSQL = "update " + dt.TableName + " set ";
                     for (int j = 0; j < dt.Columns.Count; j++) {
                         strSQL += dt.Columns[j].ColumnName + " = '" + dt.Rows[i][j].ToString() + "', ";
@@ -373,7 +424,7 @@ namespace SH_OBD_Main {
                         strSQL += key + " = '" + whereDic[key] + "' and ";
                     }
                     strSQL = strSQL.Substring(0, strSQL.Length - 5);
-                } else if (count == 0) {
+                } else if (dtTemp.Rows.Count == 0) {
                     strSQL = "insert into " + dt.TableName + " (";
                     for (int j = 0; j < dt.Columns.Count; j++) {
                         strSQL += dt.Columns[j].ColumnName + ", ";
@@ -384,25 +435,24 @@ namespace SH_OBD_Main {
                         strSQL += dt.Rows[i][j].ToString() + "', '";
                     }
                     strSQL = strSQL.Substring(0, strSQL.Length - 3) + ")";
-                } else if (count < 0) {
+                } else if (dtTemp.Rows.Count < 0) {
                     return false;
                 }
-                RunSQL(strSQL);
+                ExecuteNonQuery(strSQL);
             }
             return true;
         }
 
         public int UpdateUpload(string strVIN, string strUpload) {
             string strSQL = "update OBDData set Upload = '" + strUpload + "' where VIN = '" + strVIN + "'";
-            return RunSQL(strSQL);
+            return ExecuteNonQuery(strSQL);
         }
 
         public string GetPassWord() {
             string strSQL = "select PassWord from OBDUser where UserName = 'admin'";
-            _log.TraceInfo("==> SQL: " + strSQL);
-            string[,] strArr = SelectDB(strSQL);
-            if (strArr != null) {
-                return strArr[0, 0];
+            object result = QueryOne(strSQL);
+            if (result != null) {
+                return result.ToString();
             } else {
                 return "";
             }
@@ -410,41 +460,35 @@ namespace SH_OBD_Main {
 
         public int SetPassWord(string strPwd) {
             string strSQL = "update OBDUser set PassWord = '" + strPwd + "' where UserName = 'admin'";
-            return RunSQL(strSQL);
+            return ExecuteNonQuery(strSQL);
         }
 
         public string GetSN() {
             string strSQL = "select SN from OBDUser where ID = '1'";
-            string[,] rets = SelectDB(strSQL);
-            string strRet;
-            if (rets == null || rets.GetLength(0) < 1) {
-                strRet = "";
+            object result = QueryOne(strSQL);
+            if (result != null) {
+                return result.ToString();
             } else {
-                strRet = rets[0, 0];
+                return "";
             }
-            return strRet;
         }
 
         public int SetSN(string strSN) {
             string strSQL = "update OBDUser set SN = '" + strSN + "' where ID = '1'";
-            return RunSQL(strSQL);
+            return ExecuteNonQuery(strSQL);
         }
 
-        public int DeleteDB(string strTable, string strID) {
-            string strSQL;
-            if (strID == null) {
-                strSQL = "delete from " + strTable;
-            } else {
-                strSQL = "delete from " + strTable + " where ID = '" + strID + "'";
-            }
-            _log.TraceInfo("==> SQL: " + strSQL);
-            return RunSQL(strSQL);
+        public int DeleteAllRecords(string strTable) {
+            return DeleteRecord(strTable, null);
+        }
+
+        public int DeleteRecordByID(string strTable, string strID) {
+            return DeleteRecords(strTable, "ID", new List<string>() { strID });
         }
 
         public int ResetTableID(string strTable, int iStart = 0) {
             string strSQL = "UPDATE sqlite_sequence SET seq ='" + iStart.ToString() + "' WHERE name = '" + strTable + "'";
-            _log.TraceInfo("==> SQL: " + strSQL);
-            return RunSQL(strSQL);
+            return ExecuteNonQuery(strSQL);
         }
 
         /// <summary>

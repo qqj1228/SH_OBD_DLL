@@ -19,8 +19,6 @@ namespace SH_OBD_Main {
         private readonly DataTable _dtIUPR;
         private bool _compIgn;
         private bool _CN6;
-        public readonly ModelSQLite _db;
-        public readonly ModelOracle _dbOracle;
         public event Action OBDTestStart;
         public event Action SetupColumnsDone;
         public event Action WriteDbStart;
@@ -30,6 +28,8 @@ namespace SH_OBD_Main {
         public event Action NotUploadData;
         public event EventHandler<SetDataTableColumnsErrorEventArgs> SetDataTableColumnsError;
 
+        public ModelSQLite DbNative { get; }
+        public ModelOracle DbMES { get; }
         public bool AdvancedMode { get; set; }
         public int AccessAdvancedMode { get; set; }
         public bool OBDResult { get; set; }
@@ -68,8 +68,8 @@ namespace SH_OBD_Main {
             StrVIN_ECU = "";
             StrVIN_IN = "";
             StrType_IN = "";
-            _db = new ModelSQLite(_obdIfEx.DBandMES, _obdIfEx.Log);
-            _dbOracle = new ModelOracle(_obdIfEx.DBandMES.OraMES, _obdIfEx.Log);
+            DbNative = new ModelSQLite(_obdIfEx.DBandMES, _obdIfEx.Log);
+            DbMES = new ModelOracle(_obdIfEx.DBandMES.OraMES, _obdIfEx.Log);
             Checks = new List<CheckResult>();
         }
 
@@ -637,8 +637,8 @@ namespace SH_OBD_Main {
             DataTable dtIUPR = new DataTable("OBDIUPR");
             SetDataTableIUPR(StrVIN_ECU, ref dtIUPR);
 
-            _db.ModifyDB(dt);
-            _db.ModifyDB(dtIUPR);
+            DbNative.ModifyRecords(dt);
+            DbNative.ModifyRecords(dtIUPR);
             WriteDbDone?.Invoke();
 
             try {
@@ -698,11 +698,11 @@ namespace SH_OBD_Main {
             dt.Rows.Add(dr);
             int iRet;
             try {
-                string[] strVals = _dbOracle.GetValue(dt.TableName, "ID", "VIN", strVIN);
+                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "VIN", strVIN);
                 if (strVals.Length == 0) {
-                    iRet = _dbOracle.InsertRecords(dt.TableName, dt);
+                    iRet = DbMES.InsertRecords(dt.TableName, dt);
                 } else {
-                    iRet = _dbOracle.UpdateRecords(dt.TableName, dt, "ID", strVals);
+                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
                 }
             } catch (Exception) {
                 throw;
@@ -746,11 +746,11 @@ namespace SH_OBD_Main {
             dt.Rows.Add(dr);
             int iRet;
             try {
-                string[] strVals = _dbOracle.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
+                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
                 if (strVals.Length == 0) {
-                    iRet = _dbOracle.InsertRecords(dt.TableName, dt);
+                    iRet = DbMES.InsertRecords(dt.TableName, dt);
                 } else {
-                    iRet = _dbOracle.UpdateRecords(dt.TableName, dt, "ID", strVals);
+                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
                 }
             } catch (Exception) {
                 throw;
@@ -786,11 +786,11 @@ namespace SH_OBD_Main {
             dt.Rows.Add(dr);
             int iRet;
             try {
-                string[] strVals = _dbOracle.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
+                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
                 if (strVals.Length == 0) {
-                    iRet = _dbOracle.InsertRecords(dt.TableName, dt);
+                    iRet = DbMES.InsertRecords(dt.TableName, dt);
                 } else {
-                    iRet = _dbOracle.UpdateRecords(dt.TableName, dt, "ID", strVals);
+                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
                 }
             } catch (Exception) {
                 throw;
@@ -852,11 +852,11 @@ namespace SH_OBD_Main {
             }
             int iRet;
             try {
-                string[] strVals = _dbOracle.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
+                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
                 if (strVals.Length == 0) {
-                    iRet = _dbOracle.InsertRecords(dt.TableName, dt);
+                    iRet = DbMES.InsertRecords(dt.TableName, dt);
                 } else {
-                    iRet = _dbOracle.UpdateRecords(dt.TableName, dt, "ID", strVals);
+                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
                 }
             } catch (Exception) {
                 throw;
@@ -875,12 +875,12 @@ namespace SH_OBD_Main {
             try {
                 _obdIfEx.DBandMES.ChangeWebService = false;
                 SetDataTable1Oracle(strVIN, dt1);
-                string strKeyID = _dbOracle.GetValue(dt1.TableName, "ID", "VIN", strVIN)[0];
+                string strKeyID = DbMES.GetValue(dt1.TableName, "ID", "VIN", strVIN)[0];
                 SetDataTable3Oracle(strKeyID, strOBDResult, dt3);
                 SetDataTable4Oracle(strKeyID, dt4, dtIn);
-                string strKeyID4 = _dbOracle.GetValue(dt4.TableName, "ID", "WQPF_ID", strKeyID)[0];
+                string strKeyID4 = DbMES.GetValue(dt4.TableName, "ID", "WQPF_ID", strKeyID)[0];
                 SetDataTable4AOracle(strKeyID, strKeyID4, dt4A, dtIn);
-                _db.UpdateUpload(strVIN, "1");
+                DbNative.UpdateUpload(strVIN, "1");
             } catch (Exception ex) {
                 errorMsg = "UploadDataOracle Error: " + ex.Message;
                 _obdIfEx.Log.TraceError("UploadDataOracle Error: " + ex.Message);
@@ -996,7 +996,7 @@ namespace SH_OBD_Main {
                         break;
                     }
                 }
-                dr["ECU_NAME"] = _dtECUInfo.Rows[1][i].ToString();
+                dr["ECU_NAME"] = _dtECUInfo.Rows[1][i].ToString().Replace("\n", ",");
                 dr["CAL_ID"] = _dtECUInfo.Rows[2][i].ToString().Replace("\n", ",");
                 dr["CVN"] = _dtECUInfo.Rows[3][i].ToString().Replace("\n", ",");
                 dr["Result"] = strOBDResult;
@@ -1153,7 +1153,7 @@ namespace SH_OBD_Main {
                 dtDisplay.Columns.Add(new DataColumn("NO", typeof(int)));
                 dtDisplay.Columns.Add(new DataColumn("Item", typeof(string)));
                 for (int i = 0; i < dtIn.Rows.Count; i++) {
-                    dtDisplay.Columns.Add(new DataColumn(dtIn.Rows[i][1].ToString(), typeof(string)));
+                    dtDisplay.Columns.Add(new DataColumn(dtIn.Rows[i]["ECU_ID"].ToString(), typeof(string)));
                 }
             } else {
                 SetDataTableColumnsErrorEventArgs args = new SetDataTableColumnsErrorEventArgs {
@@ -1319,18 +1319,18 @@ namespace SH_OBD_Main {
             errorMsg = "";
             DataTable dt = new DataTable("OBDData");
             SetDataTableResultColumns(ref dt);
-            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
+            Dictionary<string, int> ColsDic = DbNative.GetTableColumnsDic("OBDData");
             Dictionary<string, string> VINDic = new Dictionary<string, string> { { "VIN", strVIN } };
-            string[,] Results = _db.GetRecords("OBDData", VINDic);
-            SetDataTableResultFromDB(ColsDic, Results, dt);
+            DbNative.GetRecords(dt, VINDic);
+            //SetDataTableResultFromDB(ColsDic, Results, dt);
             SetDataTableColumnsFromDB(_dtInfo, dt);
             SetDataTableColumnsFromDB(_dtECUInfo, dt);
 
-            DataTable dtIUPR = new DataTable();
+            DataTable dtIUPR = new DataTable("OBDIUPR");
             SetDataTableIUPRColumns(ref dtIUPR);
-            ColsDic = _db.GetTableColumnsDic("OBDIUPR");
-            Results = _db.GetRecords("OBDIUPR", VINDic);
-            SetDataTableIUPRResultFromDB(ColsDic, Results, dtIUPR);
+            ColsDic = DbNative.GetTableColumnsDic("OBDIUPR");
+            DbNative.GetRecords(dtIUPR, VINDic);
+            //SetDataTableIUPRResultFromDB(ColsDic, Results, dtIUPR);
             SetDataTableColumnsFromDB(_dtIUPR, dtIUPR);
 
             SetupColumnsDone?.Invoke();
@@ -1374,20 +1374,20 @@ namespace SH_OBD_Main {
             return bRet;
         }
 
-        private List<string[,]> SplitResultsPerVIN(Dictionary<string, int> ColsDic, string[,] Results) {
-            int iRowCount = Results.GetLength(0);
-            int iColCount = Results.GetLength(1);
+        private List<string[,]> SplitResultsPerVIN(DataTable dtIn) {
+            int iRowCount = dtIn.Rows.Count;
+            int iColCount = dtIn.Columns.Count;
             string[] row;
             string[,] total;
             List<string[]> rowList = new List<string[]>();
             List<string[,]> totalList = new List<string[,]>();
-            string VIN = Results[0, ColsDic["VIN"]];
+            string VIN = dtIn.Rows[0]["VIN"].ToString();
             for (int iRow = 0; iRow < iRowCount; iRow++) {
                 row = new string[iColCount];
                 for (int iCol = 0; iCol < iColCount; iCol++) {
-                    row[iCol] = Results[iRow, iCol];
+                    row[iCol] = dtIn.Rows[iRow][iCol].ToString();
                 }
-                if (Results[iRow, ColsDic["VIN"]] != VIN) {
+                if (dtIn.Rows[iRow]["VIN"].ToString() != VIN) {
                     total = new string[rowList.Count, iColCount];
                     for (int m = 0; m < rowList.Count; m++) {
                         for (int n = 0; n < iColCount; n++) {
@@ -1397,7 +1397,7 @@ namespace SH_OBD_Main {
                     totalList.Add(total);
                     rowList.Clear();
                     rowList.Add(row);
-                    VIN = Results[iRow, ColsDic["VIN"]];
+                    VIN = dtIn.Rows[iRow]["VIN"].ToString();
                 } else {
                     rowList.Add(row);
                 }
@@ -1415,17 +1415,17 @@ namespace SH_OBD_Main {
         public bool UploadDataFromDBOnTime(out string errorMsg) {
             errorMsg = "";
             bool bRet = false;
-            DataTable dt = new DataTable();
+            DataTable dt = new DataTable("OBDData");
             SetDataTableResultColumns(ref dt);
 
-            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
+            Dictionary<string, int> ColsDic = DbNative.GetTableColumnsDic("OBDData");
             Dictionary<string, string> dic = new Dictionary<string, string> { { "Upload", "0" } };
-            string[,] Results = _db.GetRecords("OBDData", dic);
-            if (Results.GetLength(0) == 0) {
+            DbNative.GetRecords(dt, dic);
+            if (dt.Rows.Count <= 0) {
                 dt.Dispose();
                 return bRet;
             }
-            List<string[,]> ResultsList = SplitResultsPerVIN(ColsDic, Results);
+            List<string[,]> ResultsList = SplitResultsPerVIN(dt);
             for (int i = 0; i < ResultsList.Count; i++) {
                 SetDataTableResultFromDB(ColsDic, ResultsList[i], dt);
                 if (!_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
@@ -1572,18 +1572,24 @@ namespace SH_OBD_Main {
             byte status;
             List<byte> ls = new List<byte>();
             Dictionary<string, string> TypeDic = new Dictionary<string, string> { { "Type", strType }, { "ECU_ID", strECUID } };
-            string[,] Results = _db.GetRecords("VehicleType", TypeDic);
-            if (Results != null && Results.GetLength(0) > 0) {
-                for (int i = 0; i < Results.GetLength(0); i++) {
+            DataTable dt = new DataTable("VehicleType");
+            DbNative.GetRecords(dt, TypeDic);
+            if (dt.Rows.Count > 0) {
+                for (int i = 0; i < dt.Rows.Count; i++) {
                     status = 0;
-                    if (Results[i, 4] == strCALID) {
+                    if (dt.Rows[i]["CAL_ID"].ToString() == strCALID) {
                         status |= 0x01;
                     }
-                    if (Results[i, 5] == strCVN) {
+                    if (dt.Rows[i]["CVN"].ToString() == strCVN) {
                         status |= 0x02;
                     }
                     ls.Add(status);
-                    _obdIfEx.Log.TraceInfo("VehicleType data from database: [Type: " + Results[i, 2] + ", ECU_ID: " + Results[i, 3] + ", CAL_ID: " + Results[i, 4] + ", CVN: " + Results[i, 5] + "]");
+                    string strLog = "VehicleType data from database:";
+                    strLog += " [Type: " + dt.Rows[i]["Type"];
+                    strLog += ", ECU_ID: " + dt.Rows[i]["ECU_ID"];
+                    strLog += ", CAL_ID: " + dt.Rows[i]["CAL_ID"];
+                    strLog += ", CVN: " + dt.Rows[i]["CVN"] + "]";
+                    _obdIfEx.Log.TraceInfo(strLog);
                     if ((status & 0x03) == 3) {
                         break;
                     }

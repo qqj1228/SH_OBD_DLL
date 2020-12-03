@@ -10,9 +10,8 @@ using System.Windows.Forms;
 
 namespace SH_OBD_Main {
     public partial class StatisticForm : Form {
-        private readonly DataTable _dtContent;
-        private readonly string[] _columns;
         private readonly OBDTest _obdTest;
+        private readonly DataTable _dtContent;
         private int _allQty;
         private int _passedQty;
         private int _uploadedQty;
@@ -20,13 +19,12 @@ namespace SH_OBD_Main {
 
         public StatisticForm(OBDTest obdTest) {
             InitializeComponent();
-            _dtContent = new DataTable();
+            _dtContent = new DataTable("OBDData");
+            _dtContent.Columns.Add("WriteTime");
+            _dtContent.Columns.Add("VIN");
+            _dtContent.Columns.Add("Result");
+            _dtContent.Columns.Add("Upload");
             _obdTest = obdTest;
-            _columns = new string[4];
-            _columns[0] = "WriteTime";
-            _columns[1] = "VIN";
-            _columns[2] = "Result";
-            _columns[3] = "Upload";
             _allQty = 0;
             _passedQty = 0;
             _uploadedQty = 0;
@@ -39,15 +37,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void SetDataTableColumns<T>(DataTable dt, string[] columns) {
-            dt.Clear();
-            dt.Columns.Clear();
-            foreach (string col in columns) {
-                dt.Columns.Add(new DataColumn(col, typeof(T)));
-            }
-        }
-
-        private void SetDataTableRow(DataTable dt, string[] columns) {
+        private void SetDataTableRow(DataTable dt) {
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             if (this.cmbBoxResult.SelectedIndex > 0) {
                 if (this.cmbBoxResult.SelectedIndex == 1) {
@@ -74,39 +64,20 @@ namespace SH_OBD_Main {
             int max = (_allQty / _pageSize) + (_allQty % _pageSize > 0 ? 1 : 0);
             this.UpDownPage.Maximum = max > 0 ? max : 1;
             this.lblAllPage.Text = "页 / 共 " + this.UpDownPage.Maximum.ToString() + " 页";
-            string[,] results = _obdTest._db.GetRecords("OBDData", columns, whereDic, time, decimal.ToInt32(this.UpDownPage.Value), _pageSize);
-            if (results == null) {
-                return;
-            }
-            List<string> distinct = new List<string>();
-            for (int iRow = 0; iRow < results.GetLength(0); iRow++) {
-                if (distinct.Contains(results[iRow, 1])) {
-                    int index = distinct.IndexOf(results[iRow, 1]);
-                    for (int iCol = 0; iCol < results.GetLength(1); iCol++) {
-                        dt.Rows[index][iCol] = results[iRow, iCol];
-                    }
-                } else {
-                    distinct.Add(results[iRow, 1]);
-                    DataRow dr = dt.NewRow();
-                    for (int iCol = 0; iCol < results.GetLength(1); iCol++) {
-                        dr[iCol] = results[iRow, iCol];
-                    }
-                    dt.Rows.Add(dr);
-                }
-            }
+            _obdTest.DbNative.GetRecordsFilterTime(dt, whereDic, time, decimal.ToInt32(this.UpDownPage.Value), _pageSize);
         }
 
         private void SetDataTableContent() {
-            SetDataTableColumns<string>(_dtContent, _columns);
-            SetGridViewColumnsSortMode(this.GridContent, DataGridViewColumnSortMode.Programmatic);
-            SetDataTableRow(_dtContent, _columns);
+            SetGridViewColumnsSortMode(GridContent, DataGridViewColumnSortMode.Programmatic);
+            _dtContent.Clear();
+            SetDataTableRow(_dtContent);
         }
 
-        private void ShowResult(Label lbl, string[,] results, ref int qty) {
-            if (results != null && results.GetLength(0) > 0) {
-                int.TryParse(results[0, 0].ToString(), out qty);
+        private void ShowResult(Label lbl, object result, ref int qty) {
+            if (result != null) {
+                int.TryParse(result.ToString(), out qty);
                 if (qty < 10000) {
-                    lbl.Text = results[0, 0];
+                    lbl.Text = result.ToString();
                 } else {
                     lbl.Text = (qty / 10000.0).ToString("F2") + "万";
                 }
@@ -125,19 +96,20 @@ namespace SH_OBD_Main {
             } else if (this.radioBtnMonth.Checked) {
                 time = ModelSQLite.FilterTime.Month;
             }
+
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             string[] columns = { "VIN" };
-            string[,] results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblAllQty, results, ref _allQty);
+            object result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(this.lblAllQty, result, ref _allQty);
 
             whereDic = new Dictionary<string, string> { { "Result", "1" } };
-            results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblPassedQty, results, ref _passedQty);
+            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(this.lblPassedQty, result, ref _passedQty);
             this.lblPassedRate.Text = (_passedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
 
             whereDic = new Dictionary<string, string> { { "Upload", "1" } };
-            results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblUploadedQty, results, ref _uploadedQty);
+            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(this.lblUploadedQty, result, ref _uploadedQty);
             this.lblUploadedRate.Text = (_uploadedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
         }
 

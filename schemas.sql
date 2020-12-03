@@ -17,7 +17,7 @@ INSERT INTO OBDUser
 
 -- OBD数据表
 CREATE TABLE IF NOT EXISTS OBDData (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, -- 主键ID   
+    ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, -- 主键ID
     WriteTime datetime NOT NULL default(datetime('now', 'localtime')), -- 写入时间
     VIN varchar(17) NOT NULL, -- 车辆VIN号，0902
     ECU_ID varchar(8) NOT NULL, -- 与排放相关的ECU Response ID
