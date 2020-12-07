@@ -31,7 +31,7 @@ namespace SH_OBD_Main {
                     schema = sqliteConn.GetSchema("Columns", new string[] { null, null, strTable });
                     schema.DefaultView.Sort = "ORDINAL_POSITION";
                     schema = schema.DefaultView.ToTable();
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Get columns schema from table: " + strTable + " error");
                     _log.TraceError(ex.Message);
                     throw;
@@ -85,7 +85,7 @@ namespace SH_OBD_Main {
                         sqliteTrans.Commit();
                     }
                     dt.Clear();
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -110,7 +110,7 @@ namespace SH_OBD_Main {
                     SQLiteCommand sqliteCmd = new SQLiteCommand(strSQL, sqliteConn);
                     val = sqliteCmd.ExecuteNonQuery();
                     sqliteCmd.Parameters.Clear();
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -134,7 +134,7 @@ namespace SH_OBD_Main {
                     sqliteConn.Open();
                     SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, sqliteConn);
                     adapter.Fill(dt);
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -162,7 +162,7 @@ namespace SH_OBD_Main {
                         } else {
                             return obj;
                         }
-                    } catch (SQLiteException ex) {
+                    } catch (Exception ex) {
                         _log.TraceError("Error SQL: " + strSQL);
                         _log.TraceError(ex.Message);
                         throw;
@@ -198,13 +198,14 @@ namespace SH_OBD_Main {
                             sqliteCmd.CommandText = strSQL;
                             for (int i = 0; i < dt.Rows.Count; i++) {
                                 strDisplaySQL = strSQL;
-                                for (int j = 0; j < dt.Columns.Count; j++) {
-                                    if (primaryKey != dt.Columns[j].ColumnName) {
+                                for (int j = 0; j < schema.Rows.Count; j++) {
+                                    string strColumnsName = schema.Rows[j]["COLUMN_NAME"].ToString();
+                                    if (primaryKey != strColumnsName) {
                                         DbType dbType = SqlDbTypeToDbType(schema.Rows[j]["DATA_TYPE"].ToString());
                                         int length = Convert.ToInt32(schema.Rows[j]["CHARACTER_MAXIMUM_LENGTH"]);
-                                        string strParaName = "@" + dt.Columns[j].ColumnName;
+                                        string strParaName = "@" + strColumnsName;
                                         sqliteCmd.Parameters.Add(strParaName, dbType, length);
-                                        sqliteCmd.Parameters[strParaName].Value = dt.Rows[i][j].ToString();
+                                        sqliteCmd.Parameters[strParaName].Value = dt.Rows[i][strColumnsName].ToString();
                                         strDisplaySQL = strDisplaySQL.Replace(strParaName, sqliteCmd.Parameters[strParaName].Value.ToString());
                                     }
                                 }
@@ -213,7 +214,7 @@ namespace SH_OBD_Main {
                         }
                         sqliteTrans.Commit();
                     }
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strDisplaySQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -264,7 +265,7 @@ namespace SH_OBD_Main {
                         }
                         sqliteTrans.Commit();
                     }
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strDisplaySQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -306,7 +307,7 @@ namespace SH_OBD_Main {
                         }
                         sqliteTrans.Commit();
                     }
-                } catch (SQLiteException ex) {
+                } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strDisplaySQL);
                     _log.TraceError(ex.Message);
                     throw;
@@ -331,16 +332,23 @@ namespace SH_OBD_Main {
         }
 
         public void GetRecords(DataTable dt, Dictionary<string, string> whereDic) {
-            string strSQL;
-            if (whereDic == null) {
-                strSQL = "select * from " + dt.TableName;
+            string strSQL = "select ";
+            int lenBefore = strSQL.Length;
+            for (int i = 0; i < dt.Columns.Count; i++) {
+                strSQL += dt.Columns[i] + ", ";
+            }
+            if (strSQL.Length == lenBefore) {
+                strSQL += "*";
             } else {
-                strSQL = "select * from " + dt.TableName + " where ";
+                strSQL = strSQL.Substring(0, strSQL.Length - 2);
+            }
+            strSQL += " from " + dt.TableName + " where ";
+            if (whereDic != null) {
                 foreach (string key in whereDic.Keys) {
                     strSQL += key + " = '" + whereDic[key] + "' and ";
                 }
-                strSQL = strSQL.Substring(0, strSQL.Length - 5);
             }
+            strSQL += "1 = 1";
             Query(strSQL, dt);
         }
 

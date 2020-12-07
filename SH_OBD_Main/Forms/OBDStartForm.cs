@@ -44,7 +44,7 @@ namespace SH_OBD_Main {
             _obdTest = new OBDTest(_obdIfEx);
             _backColor = lblVIN.BackColor;
             if (_obdIfEx.ScannerPortOpened) {
-                _obdIfEx._sp.DataReceived += new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
+                _obdIfEx.ScannerSP.DataReceived += new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
             }
             _obdTest.OBDTestStart += new Action(OnOBDTestStart);
             _obdTest.SetupColumnsDone += new Action(OnSetupColumnsDone);
@@ -59,9 +59,18 @@ namespace SH_OBD_Main {
             Task.Factory.StartNew(TestNativeDatabase);
 
             // 定时上传以前上传失败的数据
-            _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 60 * 1000);
+#if DEBUG
+            // debug版：使用秒作为单位，结束后不自动开始
+            _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 1000) {
+                AutoReset = false
+            };
+#else
+            // release版：正常功能
+            _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 60 * 1000) {
+                AutoReset = true
+            };
+#endif
             _timer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimeUpload);
-            _timer.AutoReset = true;
             _timer.Enabled = true;
         }
 

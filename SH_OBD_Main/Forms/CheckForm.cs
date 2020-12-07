@@ -16,12 +16,14 @@ namespace SH_OBD_Main {
         private readonly ModelSQLite _dbNative;
         private readonly DataTable _dtContent;
         private readonly Logger _log;
+        private readonly string _strSort; 
 
         public CheckForm(ModelSQLite dbNative, Logger log) {
             InitializeComponent();
             _dtContent = new DataTable("VehicleType");
             _dbNative = dbNative;
             _log = log;
+            _strSort = "Project ASC,Type ASC,ECU_ID ASC,CAL_ID ASC,CVN ASC";
         }
 
         private void CheckForm_Resize(object sender, EventArgs e) {
@@ -45,6 +47,7 @@ namespace SH_OBD_Main {
 
         private void SetDataTableContent() {
             _dbNative.GetEmptyTable(_dtContent);
+            _dtContent.DefaultView.Sort = "ID ASC";
             if (GridContent.Columns.Count > 0) {
                 SetGridViewColumnsSortMode(GridContent, DataGridViewColumnSortMode.NotSortable);
             }
@@ -55,8 +58,9 @@ namespace SH_OBD_Main {
             if (dt.Rows.Count <= 0) {
                 return;
             }
+            string[] strColumns = strSort.Replace(" ASC", "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             dt.DefaultView.Sort = strSort;
-            dt = dt.DefaultView.ToTable();
+            dt = dt.DefaultView.ToTable(true, strColumns);
             _dbNative.DeleteAllRecords("VehicleType");
             _dbNative.ResetTableID("VehicleType");
             try {
@@ -143,18 +147,21 @@ namespace SH_OBD_Main {
         private void BtnRemove_Click(object sender, EventArgs e) {
             int selectedCount = GridContent.SelectedRows.Count;
             if (selectedCount > 0) {
-                int deletedCount = 0;
                 List<string> IDs = new List<string>(selectedCount);
                 for (int i = 0; i < selectedCount; i++) {
                     if ((DataRowView)GridContent.SelectedRows[i].DataBoundItem is DataRowView rowView) {
                         IDs.Add(rowView.Row["ID"].ToString());
                     }
                 }
-                deletedCount = _dbNative.DeleteRecords("VehicleType", "ID", IDs);
+                int deletedCount = _dbNative.DeleteRecords("VehicleType", "ID", IDs);
                 SetDataTableContent();
                 if (deletedCount != selectedCount) {
                     _log.TraceError("Remove error, removed count: " + deletedCount.ToString() + ", selected item count: " + selectedCount.ToString());
                     MessageBox.Show("删除数据出错，删除行数：" + deletedCount.ToString(), "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                if (_dtContent.Rows.Count > 0) {
+                    ArrangeRecords(_dtContent, _strSort);
+                    SetDataTableContent();
                 }
             }
         }
@@ -191,7 +198,7 @@ namespace SH_OBD_Main {
                     _dbNative.InsertRecords(dtImport);
                     _dbNative.GetRecords(_dtContent, null);
                     if (_dtContent.Rows.Count > 0) {
-                        ArrangeRecords(_dtContent, "Project ASC,Type ASC,ECU_ID ASC,CAL_ID ASC,CVN ASC");
+                        ArrangeRecords(_dtContent, _strSort);
                         SetDataTableContent();
                         MessageBox.Show("导入Excel数据完成", "导入数据");
                     }
@@ -268,7 +275,7 @@ namespace SH_OBD_Main {
         }
 
         private void MenuItemArrange_Click(object sender, EventArgs e) {
-            ArrangeRecords(_dtContent, "Project ASC,Type ASC,ECU_ID ASC,CAL_ID ASC,CVN ASC");
+            ArrangeRecords(_dtContent, _strSort);
             SetDataTableContent();
         }
     }

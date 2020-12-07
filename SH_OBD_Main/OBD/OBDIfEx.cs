@@ -14,7 +14,7 @@ namespace SH_OBD_Main {
         private const string _dbandMES_xml = ".\\Configs\\dbandMES.xml";
         private const string _obdResultSetting_xml = ".\\Configs\\obdResultSetting.xml";
         private int _configResult;
-        public readonly SerialPortClass _sp;
+        public SerialPortClass ScannerSP { get; }
         public SH_OBD_Dll OBDDll { get; private set; }
         public OBDInterface OBDIf { get; private set; }
         public Logger Log { get; private set; }
@@ -49,7 +49,7 @@ namespace SH_OBD_Main {
             }
             ScannerPortOpened = false;
             if (MainSettings.UseSerialScanner) {
-                _sp = new SerialPortClass(
+                ScannerSP = new SerialPortClass(
                     MainSettings.ScannerPortName,
                     MainSettings.ScannerBaudRate,
                     Parity.None,
@@ -57,7 +57,7 @@ namespace SH_OBD_Main {
                     StopBits.One
                 );
                 try {
-                    _sp.OpenPort();
+                    ScannerSP.OpenPort();
                     ScannerPortOpened = true;
                 } catch (Exception ex) {
                     Log.TraceError("打开扫码枪串口出错: " + ex.Message);

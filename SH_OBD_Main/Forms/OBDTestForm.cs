@@ -160,7 +160,7 @@ namespace SH_OBD_Main {
             GridViewECUInfo.DataSource = _obdTest.GetDataTable(DataTableType.dtECUInfo);
             GridViewIUPR.DataSource = _obdTest.GetDataTable(DataTableType.dtIUPR);
             if (_obdIfEx.ScannerPortOpened) {
-                _obdIfEx._sp.DataReceived += new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
+                _obdIfEx.ScannerSP.DataReceived += new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
             }
             _obdTest.OBDTestStart += new Action(OnOBDTestStart);
             _obdTest.SetupColumnsDone += new Action(OnSetupColumnsDone);
@@ -371,7 +371,7 @@ namespace SH_OBD_Main {
 
         private void OBDTestForm_FormClosing(object sender, FormClosingEventArgs e) {
             if (_obdIfEx.ScannerPortOpened) {
-                _obdIfEx._sp.DataReceived -= new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
+                _obdIfEx.ScannerSP.DataReceived -= new SerialPortClass.SerialPortDataReceiveEventArgs(SerialDataReceived);
             }
             _obdTest.AdvancedMode = false;
             _obdTest.OBDTestStart -= new Action(OnOBDTestStart);
