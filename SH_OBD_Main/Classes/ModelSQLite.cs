@@ -360,7 +360,7 @@ namespace SH_OBD_Main {
         }
 
         public void GetRecordsFilterTime(DataTable dt, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
-            string strSQL = "select ";
+            string strSQL = "select distinct ";
             int lenBefore = strSQL.Length;
             for (int i = 0; i < dt.Columns.Count; i++) {
                 strSQL += dt.Columns[i] + ", ";

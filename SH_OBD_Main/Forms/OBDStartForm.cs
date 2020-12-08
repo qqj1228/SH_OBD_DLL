@@ -257,6 +257,8 @@ namespace SH_OBD_Main {
                     if (_obdTest.VehicleTypeExist && _obdTest.CALIDCheckResult && _obdTest.CVNCheckResult) {
                         lblResult.Text = "OBD检测结果：不合格";
                     } else {
+                        lblCALIDCVN.BackColor = Color.Red;
+                        lblCALIDCVN.ForeColor = Color.Black;
                         lblResult.Text = "结果：";
                     }
                     if (!_obdTest.VehicleTypeExist) {

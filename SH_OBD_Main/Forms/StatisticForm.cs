@@ -123,8 +123,6 @@ namespace SH_OBD_Main {
             this.lblUploadedRate.Text = "0%";
             this.cmbBoxResult.SelectedIndex = 1;
             this.cmbBoxUpload.SelectedIndex = 1;
-            //Task.Factory.StartNew(SetDataTableContent);
-            //SetDataTableContent();
         }
 
         private void StatisticForm_FormClosing(object sender, FormClosingEventArgs e) {
