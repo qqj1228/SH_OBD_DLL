@@ -105,11 +105,9 @@ namespace SH_OBD_Main {
                 dr["CAL_ID"] = txtBoxCALID.Text;
                 dr["CVN"] = txtBoxCVN.Text;
                 dtModify.Rows.Add(dr);
-                Dictionary<string, string> whereDic = new Dictionary<string, string> {
-                    { "ID", _dtContent.Rows[index]["ID"].ToString() }
-                };
+                List<string> whereVals = new List<string>() { _dtContent.Rows[index]["ID"].ToString() };
                 try {
-                    _dbNative.UpdateRecords(dtModify, whereDic);
+                    _dbNative.UpdateRecords(dtModify, "ID", whereVals);
                     SetDataTableContent();
                     GridContent.Rows[index].Selected = true;
                     GridContent.CurrentCell = GridContent.Rows[index].Cells[0];

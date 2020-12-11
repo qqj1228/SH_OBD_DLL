@@ -61,7 +61,7 @@ namespace SH_OBD_Main {
             // 定时上传以前上传失败的数据
 #if DEBUG
             // debug版：使用秒作为单位，结束后不自动开始
-            _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 1000) {
+            _timer = new System.Timers.Timer(_obdIfEx.OBDResultSetting.UploadInterval * 60 * 1000) {
                 AutoReset = false
             };
 #else

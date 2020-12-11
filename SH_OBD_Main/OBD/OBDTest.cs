@@ -677,43 +677,28 @@ namespace SH_OBD_Main {
 
         private void SetDataTable1Oracle(string strVIN, DataTable dt) {
             dt.Columns.Add("ID", typeof(string));
-
-            dt.Columns.Add("VEHICLEMODEL", typeof(string));
             dt.Columns.Add("VIN", typeof(string));
-            dt.Columns.Add("XXGKBH", typeof(string));
-            dt.Columns.Add("SB", typeof(string));
-            dt.Columns.Add("SCCDZ", typeof(string));
-            dt.Columns.Add("SCDATE", typeof(string));
-            dt.Columns.Add("FDJH", typeof(string));
-            dt.Columns.Add("FDJSB", typeof(string));
-            dt.Columns.Add("FDJSCCDZ", typeof(string));
-            dt.Columns.Add("SCCMC", typeof(string));
-
             dt.Columns.Add("CREATIONTIME", typeof(DateTime));
             dt.Columns.Add("CREATOR", typeof(string));
-            dt.Columns.Add("LASTMODIFICATIONTIME", typeof(DateTime));
-            dt.Columns.Add("LASTMODIFIER", typeof(string));
-            dt.Columns.Add("DELETIONTIME", typeof(DateTime));
             dt.Columns.Add("ISDELETED", typeof(string));
-            dt.Columns.Add("DELETER", typeof(string));
 
             DataRow dr = dt.NewRow();
+            dr["ID"] = DbMES.IDValue;
             dr["VIN"] = strVIN;
-
             dr["CREATIONTIME"] = DateTime.Now.ToLocalTime();
             dr["CREATOR"] = _obdIfEx.MainSettings.TesterName;
             dr["ISDELETED"] = "0";
             dt.Rows.Add(dr);
             int iRet;
-            try {
-                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "VIN", strVIN);
-                if (strVals.Length == 0) {
-                    iRet = DbMES.InsertRecords(dt.TableName, dt);
-                } else {
-                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
-                }
-            } catch (Exception) {
-                throw;
+
+            DataTable dtID = dt.Clone();
+            DbMES.GetRecords(dtID, new Dictionary<string, string>() { { "VIN", strVIN } });
+            if (dtID.Rows.Count > 0) {
+                List<string> whereVals = new List<string>() { dtID.Rows[dtID.Rows.Count - 1]["ID"].ToString() };
+                dt.Columns.Remove("ID");
+                iRet = DbMES.UpdateRecords(dt, "ID", whereVals);
+            } else {
+                iRet = DbMES.InsertRecords(dt, true);
             }
             if (iRet <= 0) {
                 throw new Exception("插入或更新 MES 数据出错，返回的影响行数: " + iRet.ToString());
@@ -723,45 +708,35 @@ namespace SH_OBD_Main {
         private void SetDataTable3Oracle(string strKeyID, string strOBDResult, DataTable dt) {
             dt.Columns.Add("ID", typeof(string));
             dt.Columns.Add("WQPF_ID", typeof(string));
-
             dt.Columns.Add("TESTTYPE", typeof(string));
-            dt.Columns.Add("TESTNO", typeof(string));
-            dt.Columns.Add("TESTDATE", typeof(string));
-            dt.Columns.Add("APASS", typeof(string));
             dt.Columns.Add("OPASS", typeof(string));
             dt.Columns.Add("OTESTDATE", typeof(string));
-            dt.Columns.Add("EPASS", typeof(string));
             dt.Columns.Add("RESULT", typeof(string));
-
             dt.Columns.Add("CREATIONTIME", typeof(DateTime));
             dt.Columns.Add("CREATOR", typeof(string));
-            dt.Columns.Add("LASTMODIFICATIONTIME", typeof(DateTime));
-            dt.Columns.Add("LASTMODIFIER", typeof(string));
-            dt.Columns.Add("DELETIONTIME", typeof(DateTime));
             dt.Columns.Add("ISDELETED", typeof(string));
-            dt.Columns.Add("DELETER", typeof(string));
 
             DataRow dr = dt.NewRow();
+            dr["ID"] = DbMES.IDValue;
             dr["WQPF_ID"] = strKeyID;
             dr["TESTTYPE"] = "0";
             dr["OPASS"] = strOBDResult;
             dr["OTESTDATE"] = DateTime.Now.ToLocalTime().ToString("yyyyMMdd");
             dr["RESULT"] = strOBDResult;
-
             dr["CREATIONTIME"] = DateTime.Now.ToLocalTime();
             dr["CREATOR"] = _obdIfEx.MainSettings.TesterName;
             dr["ISDELETED"] = "0";
             dt.Rows.Add(dr);
             int iRet;
-            try {
-                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
-                if (strVals.Length == 0) {
-                    iRet = DbMES.InsertRecords(dt.TableName, dt);
-                } else {
-                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
-                }
-            } catch (Exception) {
-                throw;
+
+            DataTable dtID = dt.Clone();
+            DbMES.GetRecords(dtID, new Dictionary<string, string>() { { "WQPF_ID", strKeyID } });
+            if (dtID.Rows.Count > 0) {
+                List<string> whereVals = new List<string>() { dtID.Rows[dtID.Rows.Count - 1]["ID"].ToString() };
+                dt.Columns.Remove("ID");
+                iRet = DbMES.UpdateRecords(dt, "ID", whereVals);
+            } else {
+                iRet = DbMES.InsertRecords(dt, true);
             }
             if (iRet <= 0) {
                 throw new Exception("插入或更新 MES 数据出错，返回的影响行数: " + iRet.ToString());
@@ -771,37 +746,31 @@ namespace SH_OBD_Main {
         private void SetDataTable4Oracle(string strKeyID, DataTable dt, DataTable dtResult) {
             dt.Columns.Add("ID", typeof(string));
             dt.Columns.Add("WQPF_ID", typeof(string));
-
             dt.Columns.Add("OBD", typeof(string));
             dt.Columns.Add("ODO", typeof(string));
-
             dt.Columns.Add("CREATIONTIME", typeof(DateTime));
             dt.Columns.Add("CREATOR", typeof(string));
-            dt.Columns.Add("LASTMODIFICATIONTIME", typeof(DateTime));
-            dt.Columns.Add("LASTMODIFIER", typeof(string));
-            dt.Columns.Add("DELETIONTIME", typeof(DateTime));
             dt.Columns.Add("ISDELETED", typeof(string));
-            dt.Columns.Add("DELETER", typeof(string));
 
             DataRow dr = dt.NewRow();
+            dr["ID"] = DbMES.IDValue;
             dr["WQPF_ID"] = strKeyID;
             dr["OBD"] = dtResult.Rows[0]["OBD_SUP"].ToString().Split(',')[0];
             dr["ODO"] = dtResult.Rows[0]["ODO"].ToString().Replace("不适用", "");
-
             dr["CREATIONTIME"] = DateTime.Now.ToLocalTime();
             dr["CREATOR"] = _obdIfEx.MainSettings.TesterName;
             dr["ISDELETED"] = "0";
             dt.Rows.Add(dr);
             int iRet;
-            try {
-                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
-                if (strVals.Length == 0) {
-                    iRet = DbMES.InsertRecords(dt.TableName, dt);
-                } else {
-                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
-                }
-            } catch (Exception) {
-                throw;
+
+            DataTable dtID = dt.Clone();
+            DbMES.GetRecords(dtID, new Dictionary<string, string>() { { "WQPF_ID", strKeyID } });
+            if (dtID.Rows.Count > 0) {
+                List<string> whereVals = new List<string>() { dtID.Rows[dtID.Rows.Count - 1]["ID"].ToString() };
+                dt.Columns.Remove("ID");
+                iRet = DbMES.UpdateRecords(dt, "ID", whereVals);
+            } else {
+                iRet = DbMES.InsertRecords(dt, true);
             }
             if (iRet <= 0) {
                 throw new Exception("插入或更新 MES 数据出错，返回的影响行数: " + iRet.ToString());
@@ -812,29 +781,23 @@ namespace SH_OBD_Main {
             dt.Columns.Add("ID", typeof(string));
             dt.Columns.Add("WQPF_ID", typeof(string));
             dt.Columns.Add("WQPF4_ID", typeof(string));
-
             dt.Columns.Add("MODULEID", typeof(string));
             dt.Columns.Add("CALID", typeof(string));
             dt.Columns.Add("CVN", typeof(string));
-
             dt.Columns.Add("CREATIONTIME", typeof(DateTime));
             dt.Columns.Add("CREATOR", typeof(string));
-            dt.Columns.Add("LASTMODIFICATIONTIME", typeof(DateTime));
-            dt.Columns.Add("LASTMODIFIER", typeof(string));
-            dt.Columns.Add("DELETIONTIME", typeof(DateTime));
             dt.Columns.Add("ISDELETED", typeof(string));
-            dt.Columns.Add("DELETER", typeof(string));
 
             string[] CALIDArray = dtResult.Rows[0]["CAL_ID"].ToString().Split(',');
             string[] CVNArray = dtResult.Rows[0]["CVN"].ToString().Split(',');
             for (int i = 0; i < 2; i++) {
                 DataRow dr = dt.NewRow();
+                dr["ID"] = DbMES.IDValue;
                 dr["WQPF_ID"] = strKeyID;
                 dr["WQPF4_ID"] = strKeyID4;
                 dr["MODULEID"] = dtResult.Rows[0]["ECU_ID"];
                 dr["CALID"] = CALIDArray.Length > i ? CALIDArray[i] : "-";
                 dr["CVN"] = CVNArray.Length > i ? CVNArray[i] : "-";
-
                 dr["CREATIONTIME"] = DateTime.Now.ToLocalTime();
                 dr["CREATOR"] = _obdIfEx.MainSettings.TesterName;
                 dr["ISDELETED"] = "0";
@@ -846,28 +809,31 @@ namespace SH_OBD_Main {
                 CVNArray = dtResult.Rows[iRow]["CVN"].ToString().Split(',');
                 for (int i = 0; i < CALIDArray.Length; i++) {
                     DataRow dr = dt.NewRow();
-                    dr[1] = strKeyID;
-                    dr[2] = strKeyID4;
-                    dr[3] = dtResult.Rows[iRow]["ECU_ID"];
-                    dr[4] = CALIDArray[i];
-                    dr[5] = CVNArray.Length > i ? CVNArray[i] : "";
-
-                    dr[6] = DateTime.Now.ToLocalTime();
-                    dr[7] = _obdIfEx.MainSettings.TesterName;
-                    dr[11] = "0";
+                    dr["ID"] = DbMES.IDValue;
+                    dr["WQPF_ID"] = strKeyID;
+                    dr["WQPF4_ID"] = strKeyID4;
+                    dr["MODULEID"] = dtResult.Rows[iRow]["ECU_ID"];
+                    dr["CALID"] = CALIDArray[i];
+                    dr["CVN"] = CVNArray.Length > i ? CVNArray[i] : "";
+                    dr["CREATIONTIME"] = DateTime.Now.ToLocalTime();
+                    dr["CREATOR"] = _obdIfEx.MainSettings.TesterName;
+                    dr["ISDELETED"] = "0";
                     dt.Rows.Add(dr);
                 }
             }
             int iRet;
-            try {
-                string[] strVals = DbMES.GetValue(dt.TableName, "ID", "WQPF_ID", strKeyID);
-                if (strVals.Length == 0) {
-                    iRet = DbMES.InsertRecords(dt.TableName, dt);
-                } else {
-                    iRet = DbMES.UpdateRecords(dt.TableName, dt, "ID", strVals);
+
+            DataTable dtID = dt.Clone();
+            DbMES.GetRecords(dtID, new Dictionary<string, string>() { { "WQPF_ID", strKeyID } });
+            if (dtID.Rows.Count > 0) {
+                List<string> whereVals = new List<string>();
+                for (int i = 0; i < dtID.Rows.Count; i++) {
+                    whereVals.Add(dtID.Rows[i]["ID"].ToString());
                 }
-            } catch (Exception) {
-                throw;
+                dt.Columns.Remove("ID");
+                iRet = DbMES.UpdateRecords(dt, "ID", whereVals);
+            } else {
+                iRet = DbMES.InsertRecords(dt, true);
             }
             if (iRet <= 0) {
                 throw new Exception("插入或更新 MES 数据出错，返回的影响行数: " + iRet.ToString());
@@ -883,10 +849,18 @@ namespace SH_OBD_Main {
             try {
                 _obdIfEx.DBandMES.ChangeWebService = false;
                 SetDataTable1Oracle(strVIN, dt1);
-                string strKeyID = DbMES.GetValue(dt1.TableName, "ID", "VIN", strVIN)[0];
+                dt1.Columns.Clear();
+                dt1.Rows.Clear();
+                dt1.Columns.Add("ID");
+                DbMES.GetRecords(dt1, new Dictionary<string, string> { { "VIN", strVIN } });
+                string strKeyID = dt1.Rows[0]["ID"].ToString();
                 SetDataTable3Oracle(strKeyID, strOBDResult, dt3);
                 SetDataTable4Oracle(strKeyID, dt4, dtIn);
-                string strKeyID4 = DbMES.GetValue(dt4.TableName, "ID", "WQPF_ID", strKeyID)[0];
+                dt4.Columns.Clear();
+                dt4.Rows.Clear();
+                dt4.Columns.Add("ID");
+                DbMES.GetRecords(dt4, new Dictionary<string, string> { { "WQPF_ID", strKeyID } });
+                string strKeyID4 = dt4.Rows[0]["ID"].ToString();
                 SetDataTable4AOracle(strKeyID, strKeyID4, dt4A, dtIn);
                 DbNative.UpdateUpload(strVIN, "1");
             } catch (Exception ex) {

@@ -1,4 +1,5 @@
-﻿using SH_OBD_DLL;
+﻿using LibBase;
+using SH_OBD_DLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,29 +9,26 @@ using System.Linq;
 using System.Text;
 
 namespace SH_OBD_Main {
-    public class Model {
-        public string StrConn { get; set; }
-        private readonly Logger _log;
+    public class ModelSQLServer : ModelBase {
         private readonly DBandMES _dbandMES;
 
-        public Model(DBandMES dbandMES, Logger log) {
-            _log = log;
+        public ModelSQLServer(DBandMES dbandMES, Logger log) {
             _dbandMES = dbandMES;
-            StrConn = "";
-            ReadConfig();
-        }
-
-        void ReadConfig() {
-            StrConn = "user id=" + _dbandMES.UserName + ";";
-            StrConn += "password=" + _dbandMES.PassWord + ";";
-            StrConn += "database=" + _dbandMES.DBName + ";";
-            StrConn += "data source=" + _dbandMES.IP + "," + _dbandMES.Port;
+            ModelParameter dbParam = new ModelParameter {
+                DataBaseType = DataBaseType.SQLServer,
+                UserName = _dbandMES.UserName,
+                PassWord = _dbandMES.PassWord,
+                Host = _dbandMES.IP,
+                Port = _dbandMES.Port,
+                DBorService = _dbandMES.DBName
+            };
+            InitDataBase(dbParam, log);
         }
 
         public void ShowDB(string strTable) {
             string strSQL = "select * from " + strTable;
 
-            using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+            using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                 sqlConn.Open();
                 SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                 SqlDataReader sqlData = sqlCmd.ExecuteReader();
@@ -55,7 +53,7 @@ namespace SH_OBD_Main {
         }
 
         public string[] GetTableColumns(string strTable) {
-            using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+            using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                 try {
                     sqlConn.Open();
                     DataTable schema = sqlConn.GetSchema("Columns", new string[] { null, null, strTable });
@@ -111,7 +109,7 @@ namespace SH_OBD_Main {
                 row = row.Substring(0, row.Length - 2) + ")";
                 string strSQL = "insert into " + dt.TableName + columns + row;
 
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
@@ -141,7 +139,7 @@ namespace SH_OBD_Main {
                 }
                 strSQL = strSQL.Substring(0, strSQL.Length - 5);
 
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
@@ -165,7 +163,7 @@ namespace SH_OBD_Main {
                 return -1;
             }
             try {
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
@@ -190,7 +188,7 @@ namespace SH_OBD_Main {
             try {
                 int count = 0;
                 List<string[]> rowList;
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     sqlConn.Open();
                     SqlDataReader sqlData = sqlCmd.ExecuteReader();
