@@ -17,7 +17,7 @@ namespace SH_OBD_Main {
         public static bool _bCanOBDTest;
         private readonly OBDIfEx _obdIfEx;
         private readonly OBDTest _obdTest;
-        private MainForm f_MainForm;
+        private AdvancedForm f_MainForm;
         private readonly Color _backColor;
         private float _lastHeight;
         private string _serialRecvBuf;
@@ -204,19 +204,16 @@ namespace SH_OBD_Main {
             tokenSource.Cancel();
 
             string errorMsg = "";
-            int VINCount = 0;
             bool bNoTestRecord = false;
             bool bTestException = false;
             try {
                 _obdTest.StartOBDTest(out errorMsg);
-#if DEBUG
-                MessageBox.Show(errorMsg, WSHelper.GetMethodName(0));
-#endif
 
                 // 江铃股份操作工反应会有少量车辆漏检，故加入二次检查被测车辆是否已经检测过
                 Dictionary<string, string> whereDic = new Dictionary<string, string> { { "VIN", _obdTest.StrVIN_ECU } };
-                VINCount = _obdTest.DbNative.GetRecordCount("OBDData", whereDic);
-                if (VINCount == 0) {
+                DataTable dt = new DataTable("OBDData");
+                _obdTest.DbNative.GetRecords(dt, whereDic);
+                if (dt.Rows.Count <= 0) {
                     _obdIfEx.Log.TraceError("No test record of this vehicle: " + _obdTest.StrVIN_ECU);
                     _obdTest.OBDResult = false;
                     bNoTestRecord = true;
@@ -330,7 +327,7 @@ namespace SH_OBD_Main {
             passWordForm.ShowDialog();
             if (_obdTest.AccessAdvanceMode > 0) {
                 _obdTest.AdvanceMode = true;
-                f_MainForm = new MainForm(_obdIfEx, _obdTest);
+                f_MainForm = new AdvancedForm(_obdIfEx, _obdTest);
                 f_MainForm.Show();
             } else if (_obdTest.AccessAdvanceMode < 0) {
                 MessageBox.Show("密码错误！", "拒绝访问", MessageBoxButtons.OK, MessageBoxIcon.Error);

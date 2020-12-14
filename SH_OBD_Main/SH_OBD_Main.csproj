@@ -135,11 +135,11 @@
     <Compile Include="Classes\ModelOracle.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\WebService.cs" />
-    <Compile Include="Forms\MainForm.cs">
+    <Compile Include="Forms\AdvancedForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Forms\AdvancedForm.Designer.cs">
+      <DependentUpon>AdvancedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OBDStartForm.cs">
       <SubType>Form</SubType>
@@ -175,8 +175,8 @@
     <Compile Include="Forms\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AdvancedForm.resx">
+      <DependentUpon>AdvancedForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OBDStartForm.resx">
       <DependentUpon>OBDStartForm.cs</DependentUpon>

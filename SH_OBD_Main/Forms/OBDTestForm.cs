@@ -238,9 +238,6 @@ namespace SH_OBD_Main {
             });
             try {
                 _obdTest.UploadDataFromDB(_obdTest.StrVIN_IN, out string errorMsg, chkBoxShowData.Checked);
-#if DEBUG
-                MessageBox.Show(errorMsg, WSHelper.GetMethodName(0));
-#endif
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "手动上传数据出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -291,9 +288,6 @@ namespace SH_OBD_Main {
             string errorMsg = "";
             try {
                 _obdTest.StartOBDTest(out errorMsg);
-#if DEBUG
-                MessageBox.Show(errorMsg, WSHelper.GetMethodName(0));
-#endif
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("OBD test occurred error: " + errorMsg + ", " + ex.Message);
                 MessageBox.Show(ex.Message, "OBD检测出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -473,7 +467,7 @@ namespace SH_OBD_Main {
                             }
                             dtImport.Rows.Add(dr);
                         }
-                        _obdTest.DbNative.ModifyDB(dtImport);
+                        _obdTest.DbNative.ModifyRecords(dtImport);
                     }
                 }
                 Invoke((EventHandler)delegate {

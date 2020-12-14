@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SH_OBD_Main {
-    public partial class MainForm : Form {
+    public partial class AdvancedForm : Form {
         private Dictionary<string, Form> dicSubForms;
         private OBDTestForm f_OBDTest;
         private readonly OBDIfEx _obdIfEx;
@@ -19,7 +19,7 @@ namespace SH_OBD_Main {
         private readonly Font _boldFont;
         private readonly Font _originFont;
 
-        public MainForm(OBDIfEx obdIfEX, OBDTest obdTest) {
+        public AdvancedForm(OBDIfEx obdIfEX, OBDTest obdTest) {
             InitializeComponent();
             _obdIfEx = obdIfEX;
             _obdTest = obdTest;
@@ -48,7 +48,7 @@ namespace SH_OBD_Main {
             this.Text = "SH_OBD - Ver " + MainFileVersion.AssemblyVersion;
         }
 
-        ~MainForm() { f_OBDTest.Close(); }
+        ~AdvancedForm() { f_OBDTest.Close(); }
 
         void InitSubForm() {
             dicSubForms = new Dictionary<string, Form>();

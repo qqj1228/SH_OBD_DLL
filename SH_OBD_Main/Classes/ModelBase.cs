@@ -146,19 +146,8 @@ namespace LibBase {
             using (DbConnection_IT dbConn = new DbConnection_IT(_param.DataBaseType, _strConn)) {
                 try {
                     dbConn.DbConnection.Open();
-                    if (_param.DataBaseType == DataBaseType.SQLServer) {
-                        using (TransactionScope dbTransScope = new TransactionScope()) {
-                            using (DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn)) {
-                                adapter.DbDataAdapter.Fill(dt);
-                            }
-                        }
-                    } else {
-                        using (DbTransaction dbTrans = dbConn.DbConnection.BeginTransaction()) {
-                            using (DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn)) {
-                                adapter.DbDataAdapter.Fill(dt);
-                            }
-                            dbTrans.Commit();
-                        }
+                    using (DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn)) {
+                        adapter.DbDataAdapter.Fill(dt);
                     }
                     dt.Clear();
                 } catch (Exception ex) {
@@ -183,9 +172,10 @@ namespace LibBase {
                 int val = 0;
                 try {
                     dbConn.DbConnection.Open();
-                    DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn);
-                    val = dbCmd.DbCommand.ExecuteNonQuery();
-                    dbCmd.DbCommand.Parameters.Clear();
+                    using (DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn)) {
+                        val = dbCmd.DbCommand.ExecuteNonQuery();
+                        dbCmd.DbCommand.Parameters.Clear();
+                    }
                 } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
@@ -208,8 +198,9 @@ namespace LibBase {
             using (DbConnection_IT dbConn = new DbConnection_IT(_param.DataBaseType, _strConn)) {
                 try {
                     dbConn.DbConnection.Open();
-                    DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn);
-                    adapter.DbDataAdapter.Fill(dt);
+                    using (DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn)) {
+                        adapter.DbDataAdapter.Fill(dt);
+                    }
                 } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
@@ -330,6 +321,9 @@ namespace LibBase {
                                         }
                                     }
                                 }
+                                if (_param.DataBaseType == DataBaseType.SQLServer) {
+                                    dbCmd.DbCommand.Transaction = dbTrans;
+                                }
                                 count += dbCmd.DbCommand.ExecuteNonQuery();
                             }
                         }
@@ -417,6 +411,9 @@ namespace LibBase {
                                         }
                                     }
                                 }
+                                if (_param.DataBaseType == DataBaseType.SQLServer) {
+                                    dbCmd.DbCommand.Transaction = dbTrans;
+                                }
                                 count += dbCmd.DbCommand.ExecuteNonQuery();
                             }
                         }
@@ -499,6 +496,9 @@ namespace LibBase {
                                         strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + sqliteCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
                                         break;
                                     }
+                                }
+                                if (_param.DataBaseType == DataBaseType.SQLServer) {
+                                    dbCmd.DbCommand.Transaction = dbTrans;
                                 }
                                 count += dbCmd.DbCommand.ExecuteNonQuery();
                             }

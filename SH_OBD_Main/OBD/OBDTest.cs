@@ -806,8 +806,8 @@ namespace SH_OBD_Main {
             dtIUPR.Columns.Remove("WriteTime");
             SetDataTableResultIUPR(StrVIN_ECU, dtIUPR);
 
-            DbNative.ModifyDB(dt);
-            DbNative.ModifyDB(dtIUPR);
+            DbNative.ModifyRecords(dt);
+            DbNative.ModifyRecords(dtIUPR);
             WriteDbDone?.Invoke();
 
             try {

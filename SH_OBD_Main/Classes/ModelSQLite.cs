@@ -52,7 +52,7 @@ namespace SH_OBD_Main {
                 break;
             }
             string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
-            strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by ID ";
+            strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by WriteTime ";
             strSQL += "limit " + pageSize.ToString() + " offset " + ((pageNum - 1) * pageSize).ToString();
             Query(strSQL, dt);
         }
@@ -84,8 +84,8 @@ namespace SH_OBD_Main {
         public bool ModifyRecords(DataTable dt) {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 Dictionary<string, string> whereDic = new Dictionary<string, string> {
-                    { "VIN", dt.Rows[i][0].ToString() },
-                    { "ECU_ID", dt.Rows[i][1].ToString() }
+                    { "VIN", dt.Rows[i]["VIN"].ToString() },
+                    { "ECU_ID", dt.Rows[i]["ECU_ID"].ToString() }
                 };
                 string strSQL = "";
                 DataTable dtTemp = new DataTable(dt.TableName);
