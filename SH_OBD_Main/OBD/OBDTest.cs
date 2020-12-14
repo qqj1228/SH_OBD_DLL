@@ -1269,16 +1269,16 @@ namespace SH_OBD_Main {
             }
             if (dt.Rows.Count > 0) {
                 try {
-                    bRet = UploadDataOracle(strVIN, dt.Rows[0][28].ToString(), dt, ref errorMsg);
+                    bRet = UploadDataOracle(strVIN, dt.Rows[0]["Result"].ToString(), dt, ref errorMsg);
                 } catch (Exception) {
-                    string strMsg = "Wrong record: VIN = " + strVIN + ", OBDResult = " + dt.Rows[0][28].ToString() + ", ";
+                    string strMsg = "Wrong record: VIN = " + strVIN + ", OBDResult = " + dt.Rows[0]["Result"].ToString() + ", ";
                     for (int i = 0; i < dt.Rows.Count; i++) {
-                        strMsg += "ECU_ID = " + dt.Rows[i][1] + ", ";
-                        strMsg += "OBD_SUP = " + dt.Rows[i][4] + ", ";
-                        strMsg += "ODO = " + dt.Rows[i][5] + ", ";
-                        strMsg += "ECU_NAME = " + dt.Rows[i][25] + ", ";
-                        strMsg += "CAL_ID = " + dt.Rows[i][26] + ", ";
-                        strMsg += "CVN = " + dt.Rows[i][27] + " || ";
+                        strMsg += "ECU_ID = " + dt.Rows[i]["ECU_ID"] + ", ";
+                        strMsg += "OBD_SUP = " + dt.Rows[i]["OBD_SUP"] + ", ";
+                        strMsg += "ODO = " + dt.Rows[i]["ODO"] + ", ";
+                        strMsg += "ECU_NAME = " + dt.Rows[i]["ECU_NAME"] + ", ";
+                        strMsg += "CAL_ID = " + dt.Rows[i]["CAL_ID"] + ", ";
+                        strMsg += "CVN = " + dt.Rows[i]["CVN"] + " || ";
                     }
                     strMsg = strMsg.Substring(0, strMsg.Length - 4);
                     _obdIfEx.Log.TraceError("Manual Upload Data Failed: " + errorMsg);
@@ -1347,16 +1347,16 @@ namespace SH_OBD_Main {
                     continue;
                 }
                 try {
-                    bRet = UploadDataOracle(dts[i].Rows[0][0].ToString(), dts[i].Rows[0][28].ToString(), dts[i], ref errorMsg);
+                    bRet = UploadDataOracle(dts[i].Rows[0]["VIN"].ToString(), dts[i].Rows[0]["Result"].ToString(), dts[i], ref errorMsg);
                 } catch (Exception ex) {
-                    string strMsg = "Wrong record: VIN = " + dts[i].Rows[0][0].ToString() + ", OBDResult = " + dts[i].Rows[0][28].ToString() + " [";
+                    string strMsg = "Wrong record: VIN = " + dts[i].Rows[0]["VIN"].ToString() + ", OBDResult = " + dts[i].Rows[0]["Result"].ToString() + " [";
                     for (int j = 0; j < dts[i].Rows.Count; j++) {
-                        strMsg += "ECU_ID = " + dts[i].Rows[j][1] + ", ";
-                        strMsg += "OBD_SUP = " + dts[i].Rows[j][4] + ", ";
-                        strMsg += "ODO = " + dts[i].Rows[j][5] + ", ";
-                        strMsg += "ECU_NAME = " + dts[i].Rows[j][25] + ", ";
-                        strMsg += "CAL_ID = " + dts[i].Rows[j][26] + ", ";
-                        strMsg += "CVN = " + dts[i].Rows[j][27] + " || ";
+                        strMsg += "ECU_ID = " + dts[i].Rows[j]["ECU_ID"] + ", ";
+                        strMsg += "OBD_SUP = " + dts[i].Rows[j]["OBD_SUP"] + ", ";
+                        strMsg += "ODO = " + dts[i].Rows[j]["ODO"] + ", ";
+                        strMsg += "ECU_NAME = " + dts[i].Rows[j]["ECU_NAME"] + ", ";
+                        strMsg += "CAL_ID = " + dts[i].Rows[j]["CAL_ID"] + ", ";
+                        strMsg += "CVN = " + dts[i].Rows[j]["CVN"] + " || ";
                     }
                     strMsg = strMsg.Substring(0, strMsg.Length - 4) + "]";
                     _obdIfEx.Log.TraceError("Upload Data OnTime Failed: " + errorMsg + ", " + ex.Message);
@@ -1370,13 +1370,13 @@ namespace SH_OBD_Main {
 
         private bool GetCompIgn(DataTable dtIn) {
             bool compIgn = true;
-            compIgn = compIgn && dtIn.Rows[0][12].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][13].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][14].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][15].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][16].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][17].ToString() == "不适用";
-            compIgn = compIgn && dtIn.Rows[0][18].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["CAT_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["HCAT_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["EVAP_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["AIR_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["ACRF_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["O2S_RDY"].ToString() == "不适用";
+            compIgn = compIgn && dtIn.Rows[0]["HTR_RDY"].ToString() == "不适用";
             return compIgn;
         }
 
@@ -1446,22 +1446,22 @@ namespace SH_OBD_Main {
             using (ExcelPackage package = new ExcelPackage(fileInfo, true)) {
                 ExcelWorksheet worksheet1 = package.Workbook.Worksheets[0];
                 // VIN
-                worksheet1.Cells["B2"].Value = dt.Rows[0][0].ToString();
+                worksheet1.Cells["B2"].Value = dt.Rows[0]["VIN"].ToString();
 
                 // CALID, CVN
-                string[] CALIDArray = dt.Rows[0][26].ToString().Split(',');
-                string[] CVNArray = dt.Rows[0][27].ToString().Split(',');
+                string[] CALIDArray = dt.Rows[0]["CAL_ID"].ToString().Split(',');
+                string[] CVNArray = dt.Rows[0]["CVN"].ToString().Split(',');
                 for (int i = 0; i < 2; i++) {
                     worksheet1.Cells[3 + i, 2].Value = CALIDArray.Length > i ? CALIDArray[i] : "";
                     worksheet1.Cells[3 + i, 4].Value = CVNArray.Length > i ? CVNArray[i] : "";
                 }
                 for (int i = 1; i < dt.Rows.Count; i++) {
-                    worksheet1.Cells["B5"].Value = dt.Rows[i][26].ToString().Replace(",", "\n");
-                    worksheet1.Cells["D5"].Value = dt.Rows[i][27].ToString().Replace(",", "\n");
+                    worksheet1.Cells["B5"].Value = dt.Rows[i]["CAL_ID"].ToString().Replace(",", "\n");
+                    worksheet1.Cells["D5"].Value = dt.Rows[i]["CVN"].ToString().Replace(",", "\n");
                 }
 
                 // moduleID
-                string moduleID = GetModuleID(dt.Rows[0][25].ToString().Split('-')[0], dt.Rows[0][1].ToString());
+                string moduleID = GetModuleID(dt.Rows[0]["ECU_NAME"].ToString().Split('-')[0], dt.Rows[0]["ECU_ID"].ToString());
                 worksheet1.Cells["E3"].Value = moduleID;
                 worksheet1.Cells["B4"].Value += "";
                 worksheet1.Cells["D4"].Value += "";
@@ -1474,7 +1474,7 @@ namespace SH_OBD_Main {
                 }
                 string OtherID = "";
                 for (int i = 1; i < dt.Rows.Count; i++) {
-                    moduleID = GetModuleID(dt.Rows[i][25].ToString().Split('-')[0], dt.Rows[i][1].ToString());
+                    moduleID = GetModuleID(dt.Rows[i]["ECU_NAME"].ToString().Split('-')[0], dt.Rows[i][1].ToString());
                     OtherID += "," + moduleID;
                 }
                 worksheet1.Cells["E5"].Value = OtherID.Trim(',');
