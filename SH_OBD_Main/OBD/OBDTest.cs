@@ -643,7 +643,7 @@ namespace SH_OBD_Main {
             DbNative.GetEmptyTable(dtIUPR);
             dtIUPR.Columns.Remove("ID");
             dtIUPR.Columns.Remove("WriteTime");
-            SetDataTableIUPR(StrVIN_ECU, dtIUPR);
+            SetDataTableResultIUPR(StrVIN_ECU, dtIUPR);
 
             DbNative.ModifyRecords(dt);
             DbNative.ModifyRecords(dtIUPR);
@@ -954,7 +954,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void SetDataTableIUPR(string strVIN, DataTable dtOut) {
+        private void SetDataTableResultIUPR(string strVIN, DataTable dtOut) {
             for (int i = 2; i < _dtIUPR.Columns.Count; i++) {
                 DataRow dr = dtOut.NewRow();
                 dr["VIN"] = strVIN;

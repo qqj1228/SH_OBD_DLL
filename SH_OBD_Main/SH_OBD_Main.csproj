@@ -127,7 +127,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\ModelSQLServer.cs" />
     <Compile Include="Classes\ModelBase.cs" />
     <Compile Include="Classes\ModelOracle.cs" />
     <Compile Include="Classes\ModelSQLite.cs" />
