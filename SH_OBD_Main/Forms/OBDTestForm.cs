@@ -473,7 +473,7 @@ namespace SH_OBD_Main {
                             }
                             dtImport.Rows.Add(dr);
                         }
-                        _obdTest._db.ModifyDB(dtImport);
+                        _obdTest.DbNative.ModifyDB(dtImport);
                     }
                 }
                 Invoke((EventHandler)delegate {

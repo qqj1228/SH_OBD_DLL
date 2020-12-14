@@ -147,7 +147,7 @@ namespace SH_OBD_Main {
         private void ToolStripBtnSettings_Click(object sender, EventArgs e) {
             DllSettings dllSettings = _obdIfEx.OBDIf.DllSettings;
             MainSettings mainSettings = _obdIfEx.MainSettings;
-            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest._db);
+            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest.DbNative);
             settingsForm.ShowDialog();
             _obdIfEx.SaveDllSettings(dllSettings);
             _obdIfEx.SaveMainSettings(mainSettings);

@@ -18,7 +18,6 @@ namespace SH_OBD_Main {
         private readonly DataTable _dtIUPR;
         private bool _compIgn;
         private bool _CN6;
-        public readonly Model _db;
         public event Action OBDTestStart;
         public event Action SetupColumnsDone;
         public event Action WriteDbStart;
@@ -28,6 +27,7 @@ namespace SH_OBD_Main {
         public event Action NotUploadData;
         public event EventHandler<SetDataTableColumnsErrorEventArgs> SetDataTableColumnsError;
 
+        public ModelSQLServer DbNative { get; set; }
         public bool AdvanceMode { get; set; }
         public int AccessAdvanceMode { get; set; }
         public bool OBDResult { get; set; }
@@ -58,12 +58,12 @@ namespace SH_OBD_Main {
             CALIDCVNAllEmpty = false;
             CALIDUnmeaningResult = true;
             OBDSUPResult = true;
-            _db = new Model(_obdIfEx.DBandMES, _obdIfEx.Log);
+            DbNative = new ModelSQLServer(_obdIfEx.DBandMES, _obdIfEx.Log);
         }
 
         private int GetSN(string strNowDate) {
             int iRet;
-            string strSN = _db.GetSN();
+            string strSN = DbNative.GetSN();
             if (strSN.Length == 0) {
                 iRet = _obdIfEx.OBDResultSetting.StartSN;
             } else if (strSN.Split(',')[0] != strNowDate) {
@@ -86,7 +86,7 @@ namespace SH_OBD_Main {
                 --iSN;
             }
             iSN %= 10000;
-            _db.SetSN(strNowDateTime + "," + iSN.ToString());
+            DbNative.SetSN(strNowDateTime + "," + iSN.ToString());
         }
 
         public DataTable GetDataTable(DataTableType dtType) {
@@ -220,7 +220,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void SetReadinessDataRow(int lineNO, string strItem, DataTable dt, List<OBDParameterValue> valueList, int bitIndex, int bitOffset, ref int errorCount) {
+        private void SetReadinessDataRow(int lineNO, string strItem, DataTable dt, List<OBDParameterValue> valueList, string sigName, ref int errorCount) {
             DataRow dr = dt.NewRow();
             dr[0] = lineNO;
             dr[1] = strItem;
@@ -233,14 +233,14 @@ namespace SH_OBD_Main {
                 }
                 for (int i = 2; i < dt.Columns.Count; i++) {
                     if (dt.Columns[i].ColumnName == value.ECUResponseID) {
-                        if (value.GetBitFlag(bitIndex)) {
-                            if (value.GetBitFlag(bitIndex + bitOffset)) {
-                                dr[i] = "未完成";
-                            } else {
-                                dr[i] = "完成";
-                            }
+                        if (sigName == "不适用") {
+                            dr[i] = sigName;
                         } else {
-                            dr[i] = "不适用";
+                            foreach (string name in value.Message.Signals.Keys) {
+                                if (name == sigName) {
+                                    dr[i] = value.Message.Signals[name].DisplayString;
+                                }
+                            }
                         }
                     }
                 }
@@ -346,6 +346,7 @@ namespace SH_OBD_Main {
                         OBDRequest = "22F401",
                         Service = 0x22,
                         Parameter = 0xF401,
+                        SignalName = "MIL",
                         ValueTypes = (int)OBDParameter.EnumValueTypes.Bool
                     };
                     HByte = 0xF400;
@@ -354,6 +355,7 @@ namespace SH_OBD_Main {
                         OBDRequest = "0101",
                         Service = 1,
                         Parameter = 1,
+                        SignalName = "MIL",
                         ValueTypes = (int)OBDParameter.EnumValueTypes.Bool
                     };
                 } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
@@ -367,6 +369,7 @@ namespace SH_OBD_Main {
             if (_obdIfEx.OBDResultSetting.MIL) {
                 if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                     param.Parameter = HByte + 0x21;
+                    param.SignalName = "MIL_DIST";
                     param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
                 } else {
                     param = new OBDParameter();
@@ -381,7 +384,8 @@ namespace SH_OBD_Main {
                     OBDRequest = "22F41C",
                     Service = 0x22,
                     Parameter = 0xF41C,
-                    ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
+                    SignalName = "OBDSUP",
+                ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
                 };
                 HByte = 0xF400;
             } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
@@ -389,6 +393,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "011C",
                     Service = 1,
                     Parameter = 0x1C,
+                    SignalName = "OBDSUP",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
                 };
             } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
@@ -396,6 +401,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "00FECE",
                     Service = 0,
                     Parameter = 0xFECE,
+                    SignalName = "OBDSUP",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString
                 };
             }
@@ -417,6 +423,7 @@ namespace SH_OBD_Main {
 
             if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                 param.Parameter = HByte + 0xA6;
+                param.SignalName = "ODO";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             } else {
                 param = new OBDParameter();
@@ -508,9 +515,9 @@ namespace SH_OBD_Main {
             } else {
                 valueList = _obdIfEx.OBDIf.GetValueList(param);
             }
-            SetReadinessDataRow(++NO, "失火监测", dt, valueList, 15, -4, ref errorCount);      // 7
-            SetReadinessDataRow(++NO, "燃油系统监测", dt, valueList, 14, -4, ref errorCount);  // 8
-            SetReadinessDataRow(++NO, "综合组件监测", dt, valueList, 13, -4, ref errorCount);  // 9
+            SetReadinessDataRow(++NO, "失火监测", dt, valueList, "MIS_RDY", ref errorCount);      // 7
+            SetReadinessDataRow(++NO, "燃油系统监测", dt, valueList, "FUEL_RDY", ref errorCount); // 8
+            SetReadinessDataRow(++NO, "综合组件监测", dt, valueList, "CCM_RDY", ref errorCount);  // 9
 
             if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939 && !_obdIfEx.OBDResultSetting.Readiness) {
                 foreach (OBDParameterValue value in valueList) {
@@ -522,22 +529,23 @@ namespace SH_OBD_Main {
             }
             if (_compIgn) {
                 // 压缩点火
-                SetReadinessDataRow(++NO, "NMHC催化剂监测", dt, valueList, 23, 8, ref errorCount);     // 10
-                SetReadinessDataRow(++NO, "NOx/SCR后处理监测", dt, valueList, 22, 8, ref errorCount);  // 11
-                SetReadinessDataRow(++NO, "增压系统监测", dt, valueList, 20, 8, ref errorCount);       // 12
-                SetReadinessDataRow(++NO, "排气传感器监测", dt, valueList, 18, 8, ref errorCount);     // 13
-                SetReadinessDataRow(++NO, "PM过滤器监测", dt, valueList, 17, 8, ref errorCount);       // 14
+                SetReadinessDataRow(++NO, "NMHC催化剂监测", dt, valueList, "HCCATRDY", ref errorCount);             // 10
+                SetReadinessDataRow(++NO, "NOx/SCR后处理监测", dt, valueList, "NCAT_RDY", ref errorCount);          // 11
+                SetReadinessDataRow(++NO, "增压系统监测", dt, valueList, "BP_RDY", ref errorCount);                 // 12
+                SetReadinessDataRow(++NO, "排气传感器监测", dt, valueList, "EGS_RDY", ref errorCount);              // 13
+                SetReadinessDataRow(++NO, "PM过滤器监测", dt, valueList, "PM_RDY", ref errorCount);                 // 14
+                SetReadinessDataRow(++NO, "EGR/VVT系统监测", dt, valueList, "EGR_RDY_compression", ref errorCount); // 15
             } else {
                 // 火花点火
-                SetReadinessDataRow(++NO, "催化剂监测", dt, valueList, 23, 8, ref errorCount);         // 10
-                SetReadinessDataRow(++NO, "加热催化剂监测", dt, valueList, 22, 8, ref errorCount);     // 11
-                SetReadinessDataRow(++NO, "燃油蒸发系统监测", dt, valueList, 21, 8, ref errorCount);   // 12
-                SetReadinessDataRow(++NO, "二次空气系统监测", dt, valueList, 20, 8, ref errorCount);   // 13
-                SetReadinessDataRow(++NO, "空调系统制冷剂监测", dt, valueList, 19, 8, ref errorCount); // 14
-                SetReadinessDataRow(++NO, "氧气传感器监测", dt, valueList, 18, 8, ref errorCount);     // 15
-                SetReadinessDataRow(++NO, "加热氧气传感器监测", dt, valueList, 17, 8, ref errorCount); // 16
+                SetReadinessDataRow(++NO, "催化剂监测", dt, valueList, "CAT_RDY", ref errorCount);               // 10
+                SetReadinessDataRow(++NO, "加热催化剂监测", dt, valueList, "HCAT_RDY", ref errorCount);          // 11
+                SetReadinessDataRow(++NO, "燃油蒸发系统监测", dt, valueList, "EVAP_RDY", ref errorCount);        // 12
+                SetReadinessDataRow(++NO, "二次空气系统监测", dt, valueList, "AIR_RDY", ref errorCount);         // 13
+                SetReadinessDataRow(++NO, "空调系统制冷剂监测", dt, valueList, "不适用", ref errorCount);         // 14
+                SetReadinessDataRow(++NO, "氧气传感器监测", dt, valueList, "O2S_RDY", ref errorCount);           // 15
+                SetReadinessDataRow(++NO, "加热氧气传感器监测", dt, valueList, "HTR_RDY", ref errorCount);       // 16
+                SetReadinessDataRow(++NO, "EGR/VVT系统监测", dt, valueList, "EGR_RDY_spark", ref errorCount);   // 17
             }
-            SetReadinessDataRow(++NO, "EGR/VVT系统监测", dt, valueList, 16, 8, ref errorCount);        // 15 / 17
             if (_obdIfEx.OBDResultSetting.Readiness && errorCount > 2) {
                 ReadinessResult = false;
             }
@@ -554,6 +562,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "22F802",
                     Service = 0x22,
                     Parameter = 0xF802,
+                    SignalName = "VIN",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
                 HByte = 0xF800;
@@ -562,6 +571,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "0902",
                     Service = 9,
                     Parameter = 2,
+                    SignalName = "VIN",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
             } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
@@ -569,7 +579,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "00FEEC",
                     Service = 0,
                     Parameter = 0xFEEC,
-                    SignalName = "VIN", // 因"00FEEC"只会返回VIN故可以不设置"SignalName"
+                    SignalName = "VIN",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
             }
@@ -596,9 +606,11 @@ namespace SH_OBD_Main {
 
             if (_obdIfEx.OBDIf.STDType == StandardType.ISO_27145) {
                 param.OBDRequest = "22F804";
+                param.SignalName = "CAL_ID";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
             } else if (_obdIfEx.OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "0904";
+                param.SignalName = "CAL_ID";
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
             } else if (_obdIfEx.OBDIf.STDType == StandardType.SAE_J1939) {
                 param = new OBDParameter {
@@ -613,6 +625,7 @@ namespace SH_OBD_Main {
 
             if (_obdIfEx.OBDIf.STDType != StandardType.SAE_J1939) {
                 param.Parameter = HByte + 6;
+                param.SignalName = "CVN";
             } else {
                 param = new OBDParameter {
                     OBDRequest = "00D300",
@@ -775,21 +788,26 @@ namespace SH_OBD_Main {
             string strOBDResult = OBDResult ? "1" : "0";
 
             DataTable dt = new DataTable("OBDData");
-            SetDataTableResultColumns(ref dt);
+            DbNative.GetEmptyTable(dt);
+            dt.Columns.Remove("ID");
+            dt.Columns.Remove("WriteTime");
             try {
-                SetDataTableResult(StrVIN_ECU, strOBDResult, ref dt);
+                SetDataTableResult(StrVIN_ECU, strOBDResult, dt);
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("Result DataTable Error: " + ex.Message);
                 dt.Dispose();
                 WriteDbDone?.Invoke();
-                throw new Exception("生成 Result DataTable 出错");
+                throw new Exception("生成 Result DataTable 出错: " + ex.Message);
             }
 
             DataTable dtIUPR = new DataTable("OBDIUPR");
-            SetDataTableIUPR(StrVIN_ECU, ref dtIUPR);
+            DbNative.GetEmptyTable(dtIUPR);
+            dtIUPR.Columns.Remove("ID");
+            dtIUPR.Columns.Remove("WriteTime");
+            SetDataTableResultIUPR(StrVIN_ECU, dtIUPR);
 
-            _db.ModifyDB(dt);
-            _db.ModifyDB(dtIUPR);
+            DbNative.ModifyDB(dt);
+            DbNative.ModifyDB(dtIUPR);
             WriteDbDone?.Invoke();
 
             try {
@@ -868,7 +886,7 @@ namespace SH_OBD_Main {
             if (count < 4) {
                 // 上传数据接口返回成功信息
                 _obdIfEx.Log.TraceInfo("Upload data success, VIN = " + strVIN);
-                _db.UpdateUpload(strVIN, "1");
+                DbNative.UpdateUpload(strVIN, "1");
                 if (bShowMsg) {
                     UploadDataDone?.Invoke();
                 }
@@ -887,40 +905,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void SetDataTableResultColumns(ref DataTable dtOut) {
-            dtOut.Columns.Add("VIN", typeof(string));       // 0
-            dtOut.Columns.Add("ECU_ID", typeof(string));    // 1
-            dtOut.Columns.Add("MIL", typeof(string));       // 2
-            dtOut.Columns.Add("MIL_DIST", typeof(string));  // 3
-            dtOut.Columns.Add("OBD_SUP", typeof(string));   // 4
-            dtOut.Columns.Add("ODO", typeof(string));       // 5
-            dtOut.Columns.Add("DTC03", typeof(string));     // 6
-            dtOut.Columns.Add("DTC07", typeof(string));     // 7
-            dtOut.Columns.Add("DTC0A", typeof(string));     // 8
-            dtOut.Columns.Add("MIS_RDY", typeof(string));   // 9
-            dtOut.Columns.Add("FUEL_RDY", typeof(string));  // 10
-            dtOut.Columns.Add("CCM_RDY", typeof(string));   // 11
-            dtOut.Columns.Add("CAT_RDY", typeof(string));   // 12
-            dtOut.Columns.Add("HCAT_RDY", typeof(string));  // 13
-            dtOut.Columns.Add("EVAP_RDY", typeof(string));  // 14
-            dtOut.Columns.Add("AIR_RDY", typeof(string));   // 15
-            dtOut.Columns.Add("ACRF_RDY", typeof(string));  // 16
-            dtOut.Columns.Add("O2S_RDY", typeof(string));   // 17
-            dtOut.Columns.Add("HTR_RDY", typeof(string));   // 18
-            dtOut.Columns.Add("EGR_RDY", typeof(string));   // 19
-            dtOut.Columns.Add("HCCAT_RDY", typeof(string)); // 20
-            dtOut.Columns.Add("NCAT_RDY", typeof(string));  // 21
-            dtOut.Columns.Add("BP_RDY", typeof(string));    // 22
-            dtOut.Columns.Add("EGS_RDY", typeof(string));   // 23
-            dtOut.Columns.Add("PM_RDY", typeof(string));    // 24
-            dtOut.Columns.Add("ECU_NAME", typeof(string));  // 25
-            dtOut.Columns.Add("CAL_ID", typeof(string));    // 26
-            dtOut.Columns.Add("CVN", typeof(string));       // 27
-            dtOut.Columns.Add("Result", typeof(string));    // 28
-            dtOut.Columns.Add("Upload", typeof(string));    // 29
-        }
-
-        private void SetDataTableResult(string strVIN, string strOBDResult, ref DataTable dtOut) {
+        private void SetDataTableResult(string strVIN, string strOBDResult, DataTable dtOut) {
             string strDTCTemp;
             for (int i = 2; i < _dtECUInfo.Columns.Count; i++) {
                 DataRow dr = dtOut.NewRow();
@@ -997,49 +982,7 @@ namespace SH_OBD_Main {
             }
         }
 
-        private void SetDataTableIUPRColumns(ref DataTable dtOut) {
-            dtOut.Columns.Add("VIN", typeof(string));
-            dtOut.Columns.Add("ECU_ID", typeof(string));
-            dtOut.Columns.Add("CATCOMP1", typeof(string));
-            dtOut.Columns.Add("CATCOND1", typeof(string));
-            dtOut.Columns.Add("CATCOMP2", typeof(string));
-            dtOut.Columns.Add("CATCOND2", typeof(string));
-            dtOut.Columns.Add("O2SCOMP1", typeof(string));
-            dtOut.Columns.Add("O2SCOND1", typeof(string));
-            dtOut.Columns.Add("O2SCOMP2", typeof(string));
-            dtOut.Columns.Add("O2SCOND2", typeof(string));
-            dtOut.Columns.Add("SO2SCOMP1", typeof(string));
-            dtOut.Columns.Add("SO2SCOND1", typeof(string));
-            dtOut.Columns.Add("SO2SCOMP2", typeof(string));
-            dtOut.Columns.Add("SO2SCOND2", typeof(string));
-            dtOut.Columns.Add("EVAPCOMP", typeof(string));
-            dtOut.Columns.Add("EVAPCOND", typeof(string));
-            dtOut.Columns.Add("EGRCOMP_08", typeof(string));
-            dtOut.Columns.Add("EGRCOND_08", typeof(string));
-            dtOut.Columns.Add("PFCOMP1", typeof(string));
-            dtOut.Columns.Add("PFCOND1", typeof(string));
-            dtOut.Columns.Add("PFCOMP2", typeof(string));
-            dtOut.Columns.Add("PFCOND2", typeof(string));
-            dtOut.Columns.Add("AIRCOMP", typeof(string));
-            dtOut.Columns.Add("AIRCOND", typeof(string));
-            dtOut.Columns.Add("HCCATCOMP", typeof(string));
-            dtOut.Columns.Add("HCCATCOND", typeof(string));
-            dtOut.Columns.Add("NCATCOMP", typeof(string));
-            dtOut.Columns.Add("NCATCOND", typeof(string));
-            dtOut.Columns.Add("NADSCOMP", typeof(string));
-            dtOut.Columns.Add("NADSCOND", typeof(string));
-            dtOut.Columns.Add("PMCOMP", typeof(string));
-            dtOut.Columns.Add("PMCOND", typeof(string));
-            dtOut.Columns.Add("EGSCOMP", typeof(string));
-            dtOut.Columns.Add("EGSCOND", typeof(string));
-            dtOut.Columns.Add("EGRCOMP_0B", typeof(string));
-            dtOut.Columns.Add("EGRCOND_0B", typeof(string));
-            dtOut.Columns.Add("BPCOMP", typeof(string));
-            dtOut.Columns.Add("BPCOND", typeof(string));
-        }
-
-        private void SetDataTableIUPR(string strVIN, ref DataTable dtOut) {
-            SetDataTableIUPRColumns(ref dtOut);
+        private void SetDataTableResultIUPR(string strVIN, DataTable dtOut) {
             for (int i = 2; i < _dtIUPR.Columns.Count; i++) {
                 DataRow dr = dtOut.NewRow();
                 dr["VIN"] = strVIN;
@@ -1302,7 +1245,7 @@ namespace SH_OBD_Main {
             ++iSN;
             iSN %= 10000;
             dr["TestNo"] = "XC" + NormalizeCompanyCode(_obdIfEx.OBDResultSetting.CompanyCode) + strNowDateTime + iSN.ToString("d4");
-            _db.SetSN(strNowDateTime + "," + iSN.ToString());
+            DbNative.SetSN(strNowDateTime + "," + iSN.ToString());
             dr["TestType"] = "0";
             dr["APASS"] = "1";
             dr["OPASS"] = strOBDResult;
@@ -1446,9 +1389,15 @@ namespace SH_OBD_Main {
             _dtECUInfo.Rows.Add(dr);
         }
 
-        private void SetDataRowIUPRFromDB(int lineNO, string strItem, int padTotal, int padNum, DataTable dtIn, int colIndex) {
+        private void SetDataRowIUPRFromDB(int lineNO, string strItem, int padTotal, int padNum, DataTable dtIn, bool bCompIgn) {
             double[] nums = new double[dtIn.Rows.Count];
             double[] dens = new double[dtIn.Rows.Count];
+            int colIndex;
+            if (bCompIgn) {
+                colIndex = (lineNO + 11) * 2;
+            } else {
+                colIndex = lineNO * 2;
+            }
             DataRow dr = _dtIUPR.NewRow();
             dr[0] = lineNO;
             if (dr[1].ToString().Length == 0) {
@@ -1496,32 +1445,32 @@ namespace SH_OBD_Main {
                 return;
             }
             int NO = 0;
-            SetDataRowInfoFromDB(++NO, "MIL状态", dtIn);                // 0
-            SetDataRowInfoFromDB(++NO, "MIL亮后行驶里程（km）", dtIn);   // 1
-            SetDataRowInfoFromDB(++NO, "OBD型式检验类型", dtIn);         // 2
-            SetDataRowInfoFromDB(++NO, "总累积里程ODO（km）", dtIn);     // 3
-            SetDataRowInfoFromDB(++NO, "存储DTC", dtIn);                // 4
-            SetDataRowInfoFromDB(++NO, "未决DTC", dtIn);                // 5
-            SetDataRowInfoFromDB(++NO, "永久DTC", dtIn);                // 6
-            SetDataRowInfoFromDB(++NO, "失火监测", dtIn);               // 7
-            SetDataRowInfoFromDB(++NO, "燃油系统监测", dtIn);           // 8
-            SetDataRowInfoFromDB(++NO, "综合组件监测", dtIn);           // 9
+            SetDataRowInfoFromDB(++NO, "MIL状态", dtIn);                // 1,2
+            SetDataRowInfoFromDB(++NO, "MIL亮后行驶里程（km）", dtIn);   // 2,3
+            SetDataRowInfoFromDB(++NO, "OBD型式检验类型", dtIn);         // 3,4
+            SetDataRowInfoFromDB(++NO, "总累积里程ODO（km）", dtIn);     // 4,5
+            SetDataRowInfoFromDB(++NO, "存储DTC", dtIn);                // 5,6
+            SetDataRowInfoFromDB(++NO, "未决DTC", dtIn);                // 6,7
+            SetDataRowInfoFromDB(++NO, "永久DTC", dtIn);                // 7,8
+            SetDataRowInfoFromDB(++NO, "失火监测", dtIn);               // 8,9
+            SetDataRowInfoFromDB(++NO, "燃油系统监测", dtIn);           // 9,10
+            SetDataRowInfoFromDB(++NO, "综合组件监测", dtIn);           // 10,11
             if (GetCompIgn(dtIn)) {
-                SetDataRowInfoFromDB(++NO, "NMHC催化剂监测", dtIn);     // 10
-                SetDataRowInfoFromDB(++NO, "NOx/SCR后处理监测", dtIn);  // 11
-                SetDataRowInfoFromDB(++NO, "增压系统监测", dtIn);       // 12
-                SetDataRowInfoFromDB(++NO, "排气传感器监测", dtIn);     // 13
-                SetDataRowInfoFromDB(++NO, "PM过滤器监测", dtIn);       // 14
+                SetDataRowInfoFromDB(++NO, "NMHC催化剂监测", dtIn);     // 11,20
+                SetDataRowInfoFromDB(++NO, "NOx/SCR后处理监测", dtIn);  // 12,21
+                SetDataRowInfoFromDB(++NO, "增压系统监测", dtIn);       // 13,22
+                SetDataRowInfoFromDB(++NO, "排气传感器监测", dtIn);     // 14,23
+                SetDataRowInfoFromDB(++NO, "PM过滤器监测", dtIn);       // 15,24
             } else {
-                SetDataRowInfoFromDB(++NO, "催化剂监测", dtIn);         // 10
-                SetDataRowInfoFromDB(++NO, "加热催化剂监测", dtIn);     // 11
-                SetDataRowInfoFromDB(++NO, "燃油蒸发系统监测", dtIn);   // 12
-                SetDataRowInfoFromDB(++NO, "二次空气系统监测", dtIn);   // 13
-                SetDataRowInfoFromDB(++NO, "空调系统制冷剂监测", dtIn); // 14
-                SetDataRowInfoFromDB(++NO, "氧气传感器监测", dtIn);     // 15
-                SetDataRowInfoFromDB(++NO, "加热氧气传感器监测", dtIn); // 16
+                SetDataRowInfoFromDB(++NO, "催化剂监测", dtIn);         // 11,12
+                SetDataRowInfoFromDB(++NO, "加热催化剂监测", dtIn);     // 12,13
+                SetDataRowInfoFromDB(++NO, "燃油蒸发系统监测", dtIn);   // 13,14
+                SetDataRowInfoFromDB(++NO, "二次空气系统监测", dtIn);   // 14,15
+                SetDataRowInfoFromDB(++NO, "空调系统制冷剂监测", dtIn); // 15,16
+                SetDataRowInfoFromDB(++NO, "氧气传感器监测", dtIn);     // 16,17
+                SetDataRowInfoFromDB(++NO, "加热氧气传感器监测", dtIn); // 17,18
             }
-            SetDataRowInfoFromDB(++NO, "EGR/VVT系统监测", dtIn);       // 15 / 17
+            SetDataRowInfoFromDB(++NO, "EGR/VVT系统监测", dtIn);       // 16,19 / 18,19
         }
 
         private void SetDataTableECUInfoFromDB(DataTable dtIn) {
@@ -1529,67 +1478,66 @@ namespace SH_OBD_Main {
                 return;
             }
             int NO = 0;
-            SetDataRowECUInfoFromDB(++NO, "VIN", dtIn);               // 0
-            SetDataRowECUInfoFromDB(++NO, "ECU名称", dtIn);           // 1
-            SetDataRowECUInfoFromDB(++NO, "CAL_ID", dtIn);            // 2
-            SetDataRowECUInfoFromDB(++NO, "CVN", dtIn);               // 3
+            SetDataRowECUInfoFromDB(++NO, "VIN", dtIn);               // 1,0
+            SetDataRowECUInfoFromDB(++NO, "ECU名称", dtIn);           // 2,25
+            SetDataRowECUInfoFromDB(++NO, "CAL_ID", dtIn);            // 3,26
+            SetDataRowECUInfoFromDB(++NO, "CVN", dtIn);               // 4,27
         }
 
-        private void SetDataTableIUPRFromDB(DataTable dtIn, Dictionary<string, int> colsDic) {
+        private void SetDataTableIUPRFromDB(DataTable dtIn) {
             if (_dtIUPR.Columns.Count <= 0) {
                 return;
             }
             int NO = 0;
-            if (GetCompIgnIUPR(dtIn)) {
+            bool bCompIgnIUPR = GetCompIgnIUPR(dtIn);
+            if (bCompIgnIUPR) {
                 // 压缩点火
-                SetDataRowIUPRFromDB(++NO, "NMHC催化器", 18, 12, dtIn, colsDic["HCCATCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "NOx催化器", 18, 11, dtIn, colsDic["NCATCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "NOx吸附器", 18, 11, dtIn, colsDic["NADSCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "PM捕集器", 18, 10, dtIn, colsDic["PMCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "废气传感器", 18, 12, dtIn, colsDic["EGSCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "EGR和VVT", 18, 10, dtIn, colsDic["EGRCOMP_0B"] - 2);
-                SetDataRowIUPRFromDB(++NO, "增压压力", 18, 10, dtIn, colsDic["BPCOMP"] - 2);
+                SetDataRowIUPRFromDB(++NO, "NMHC催化器", 18, 12, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "NOx催化器", 18, 11, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "NOx吸附器", 18, 11, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "PM捕集器", 18, 10, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "废气传感器", 18, 12, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "EGR和VVT", 18, 10, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "增压压力", 18, 10, dtIn, bCompIgnIUPR);
             } else {
                 // 火花点火
                 NO = 0;
-                SetDataRowIUPRFromDB(++NO, "催化器 组1", 18, 12, dtIn, colsDic["CATCOMP1"] - 2);
-                SetDataRowIUPRFromDB(++NO, "催化器 组2", 18, 12, dtIn, colsDic["CATCOMP2"] - 2);
-                SetDataRowIUPRFromDB(++NO, "前氧传感器 组1", 18, 16, dtIn, colsDic["O2SCOMP1"] - 2);
-                SetDataRowIUPRFromDB(++NO, "前氧传感器 组2", 18, 16, dtIn, colsDic["O2SCOMP2"] - 2);
-                SetDataRowIUPRFromDB(++NO, "后氧传感器 组1", 18, 16, dtIn, colsDic["SO2SCOMP1"] - 2);
-                SetDataRowIUPRFromDB(++NO, "后氧传感器 组2", 18, 16, dtIn, colsDic["SO2SCOMP2"] - 2);
-                SetDataRowIUPRFromDB(++NO, "EVAP", 18, 6, dtIn, colsDic["EVAPCOMP"] - 2);
-                SetDataRowIUPRFromDB(++NO, "EGR和VVT", 18, 10, dtIn, colsDic["EGRCOMP_08"] - 2);
-                SetDataRowIUPRFromDB(++NO, "GPF 组1", 18, 9, dtIn, colsDic["PFCOMP1"] - 2);
-                SetDataRowIUPRFromDB(++NO, "GPF 组2", 18, 9, dtIn, colsDic["PFCOMP2"] - 2);
-                SetDataRowIUPRFromDB(++NO, "二次空气喷射系统", 18, 18, dtIn, colsDic["AIRCOMP"] - 2);
+                SetDataRowIUPRFromDB(++NO, "催化器 组1", 18, 12, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "催化器 组2", 18, 12, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "前氧传感器 组1", 18, 16, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "前氧传感器 组2", 18, 16, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "后氧传感器 组1", 18, 16, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "后氧传感器 组2", 18, 16, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "EVAP", 18, 6, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "EGR和VVT", 18, 10, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "GPF 组1", 18, 9, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "GPF 组2", 18, 9, dtIn, bCompIgnIUPR);
+                SetDataRowIUPRFromDB(++NO, "二次空气喷射系统", 18, 18, dtIn, bCompIgnIUPR);
             }
         }
 
         public void UploadDataFromDB(string strVIN, out string errorMsg, bool bOnlyShowData) {
             errorMsg = "";
             DataTable dt = new DataTable("OBDData");
-            SetDataTableResultColumns(ref dt);
-
-            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
-            Dictionary<string, string> VINDic = new Dictionary<string, string> { { "VIN", strVIN } };
-            string[,] Results = _db.GetRecords("OBDData", VINDic);
-
-            SetDataTableResultFromDB(ColsDic, Results, dt);
+            DbNative.GetEmptyTable(dt);
+            dt.Columns.Remove("ID");
+            dt.Columns.Remove("WriteTime");
+            Dictionary<string, string> whereDic = new Dictionary<string, string> { { "VIN", strVIN } };
+            DbNative.GetRecords(dt, whereDic);
             SetDataTableColumnsFromDB(_dtInfo, dt);
             SetDataTableColumnsFromDB(_dtECUInfo, dt);
 
-            DataTable dtIUPR = new DataTable();
-            SetDataTableIUPRColumns(ref dtIUPR);
-            ColsDic = _db.GetTableColumnsDic("OBDIUPR");
-            Results = _db.GetRecords("OBDIUPR", VINDic);
-            SetDataTableIUPRResultFromDB(ColsDic, Results, dtIUPR);
+            DataTable dtIUPR = new DataTable("OBDIUPR");
+            DbNative.GetEmptyTable(dtIUPR);
+            dtIUPR.Columns.Remove("ID");
+            dtIUPR.Columns.Remove("WriteTime");
+            DbNative.GetRecords(dtIUPR, whereDic);
             SetDataTableColumnsFromDB(_dtIUPR, dtIUPR);
 
             SetupColumnsDone?.Invoke();
             SetDataTableInfoFromDB(dt);
             SetDataTableECUInfoFromDB(dt);
-            SetDataTableIUPRFromDB(dtIUPR, ColsDic);
+            SetDataTableIUPRFromDB(dtIUPR);
             if (bOnlyShowData) {
                 _obdIfEx.Log.TraceInfo("Only show data from database");
                 NotUploadData?.Invoke();
@@ -1625,73 +1573,71 @@ namespace SH_OBD_Main {
             dt.Dispose();
         }
 
-        private List<string[,]> SplitResultsPerVIN(Dictionary<string, int> ColsDic, string[,] Results) {
-            int iRowCount = Results.GetLength(0);
-            int iColCount = Results.GetLength(1);
-            string[] row;
-            string[,] total;
-            List<string[]> rowList = new List<string[]>();
-            List<string[,]> totalList = new List<string[,]>();
-            string VIN = Results[0, ColsDic["VIN"]];
-            for (int iRow = 0; iRow < iRowCount; iRow++) {
-                row = new string[iColCount];
-                for (int iCol = 0; iCol < iColCount; iCol++) {
-                    row[iCol] = Results[iRow, iCol];
-                }
-                if (Results[iRow, ColsDic["VIN"]] != VIN) {
-                    total = new string[rowList.Count, iColCount];
-                    for (int m = 0; m < rowList.Count; m++) {
-                        for (int n = 0; n < iColCount; n++) {
-                            total[m, n] = rowList[m][n];
-                        }
+        private void CopyTableColumns(DataTable dtOut, DataTable dtIn) {
+            for (int i = 0; i < dtIn.Columns.Count; i++) {
+                dtOut.Columns.Add(dtIn.Columns[i].ColumnName, dtIn.Columns[i].DataType);
+            }
+        }
+
+        private List<DataTable> SplitResultsPerVIN(DataTable dtIn) {
+            List<DataTable> rets = new List<DataTable>();
+            DataTable dtTemp = new DataTable("__");
+            CopyTableColumns(dtTemp, dtIn);
+            string VIN = string.Empty;
+            for (int i = 0; i < dtIn.Rows.Count; i++) {
+                if (dtIn.Rows[i]["VIN"].ToString() == VIN) {
+                    DataRow dr = dtTemp.NewRow();
+                    for (int j = 0; j < dtIn.Columns.Count; j++) {
+                        dr[j] = dtIn.Rows[i][j];
                     }
-                    totalList.Add(total);
-                    rowList.Clear();
-                    rowList.Add(row);
-                    VIN = Results[iRow, ColsDic["VIN"]];
+                    dtTemp.Rows.Add(dr);
                 } else {
-                    rowList.Add(row);
+                    VIN = dtIn.Rows[i]["VIN"].ToString();
+                    if (dtTemp.TableName != "__") {
+                        rets.Add(dtTemp);
+                    }
+                    dtTemp = new DataTable(dtIn.TableName);
+                    CopyTableColumns(dtTemp, dtIn);
+                    DataRow dr = dtTemp.NewRow();
+                    for (int j = 0; j < dtIn.Columns.Count; j++) {
+                        dr[j] = dtIn.Rows[i][j];
+                    }
+                    dtTemp.Rows.Add(dr);
                 }
             }
-            total = new string[rowList.Count, iColCount];
-            for (int m = 0; m < rowList.Count; m++) {
-                for (int n = 0; n < iColCount; n++) {
-                    total[m, n] = rowList[m][n];
-                }
-            }
-            totalList.Add(total);
-            return totalList;
+            rets.Add(dtTemp);
+            return rets;
         }
 
         public void UploadDataFromDBOnTime(out string errorMsg) {
             errorMsg = "";
-            DataTable dt = new DataTable();
-            SetDataTableResultColumns(ref dt);
+            DataTable dtTemp = new DataTable("OBDData");
+            DbNative.GetEmptyTable(dtTemp);
+            dtTemp.Columns.Remove("ID");
+            dtTemp.Columns.Remove("WriteTime");
 
-            Dictionary<string, int> ColsDic = _db.GetTableColumnsDic("OBDData");
-            Dictionary<string, string> dic = new Dictionary<string, string> { { "Upload", "0" } };
-            string[,] Results = _db.GetRecords("OBDData", dic);
-            if (Results.GetLength(0) == 0) {
-                dt.Dispose();
+            Dictionary<string, string> whereDic = new Dictionary<string, string> { { "Upload", "0" } };
+            DbNative.GetRecords(dtTemp, whereDic);
+            if (dtTemp.Rows.Count <= 0) {
+                dtTemp.Dispose();
                 return;
             }
-            List<string[,]> ResultsList = SplitResultsPerVIN(ColsDic, Results);
-            for (int i = 0; i < ResultsList.Count; i++) {
-                SetDataTableResultFromDB(ColsDic, ResultsList[i], dt);
-                if (!_obdIfEx.OBDResultSetting.UploadWhenever && dt.Rows[0]["Result"].ToString() != "1") {
+            List<DataTable> dts = SplitResultsPerVIN(dtTemp);
+            for (int i = 0; i < dts.Count; i++) {
+                if (!_obdIfEx.OBDResultSetting.UploadWhenever && dts[i].Rows[0]["Result"].ToString() != "1") {
                     continue;
                 }
                 try {
-                    UploadData(dt.Rows[0]["VIN"].ToString(), dt.Rows[0]["Result"].ToString(), dt, ref errorMsg, false);
+                    UploadData(dts[i].Rows[0]["VIN"].ToString(), dts[i].Rows[0]["Result"].ToString(), dts[i], ref errorMsg, false);
                 } catch (Exception ex) {
-                    string strMsg = "Wrong record: VIN = " + dt.Rows[0][0].ToString() + ", OBDResult = " + dt.Rows[0]["Result"].ToString() + " [";
-                    for (int j = 0; j < dt.Rows.Count; j++) {
-                        strMsg += "ECU_ID = " + dt.Rows[j]["ECU_ID"] + ", ";
-                        strMsg += "OBD_SUP = " + dt.Rows[j]["OBD_SUP"] + ", ";
-                        strMsg += "ODO = " + dt.Rows[j]["ODO"] + ", ";
-                        strMsg += "ECU_NAME = " + dt.Rows[j]["ECU_NAME"] + ", ";
-                        strMsg += "CAL_ID = " + dt.Rows[j]["CAL_ID"] + ", ";
-                        strMsg += "CVN = " + dt.Rows[j]["CVN"] + " || ";
+                    string strMsg = "Wrong record: VIN = " + dts[i].Rows[0][0].ToString() + ", OBDResult = " + dts[i].Rows[0]["Result"].ToString() + " [";
+                    for (int j = 0; j < dts[i].Rows.Count; j++) {
+                        strMsg += "ECU_ID = " + dts[i].Rows[j]["ECU_ID"] + ", ";
+                        strMsg += "OBD_SUP = " + dts[i].Rows[j]["OBD_SUP"] + ", ";
+                        strMsg += "ODO = " + dts[i].Rows[j]["ODO"] + ", ";
+                        strMsg += "ECU_NAME = " + dts[i].Rows[j]["ECU_NAME"] + ", ";
+                        strMsg += "CAL_ID = " + dts[i].Rows[j]["CAL_ID"] + ", ";
+                        strMsg += "CVN = " + dts[i].Rows[j]["CVN"] + " || ";
                     }
                     strMsg = strMsg.Substring(0, strMsg.Length - 4) + "]";
                     _obdIfEx.Log.TraceError("Upload Data OnTime Failed: " + ex.Message + (errorMsg.Length > 0 ? ", " + errorMsg : ""));
@@ -1699,7 +1645,7 @@ namespace SH_OBD_Main {
                     continue;
                 }
             }
-            dt.Dispose();
+            dtTemp.Dispose();
         }
 
         private bool GetCompIgn(DataTable dtIn) {
@@ -1724,96 +1670,6 @@ namespace SH_OBD_Main {
             compIgnIUPR = compIgnIUPR && dtIn.Rows[0]["EGRCOMP_0B"].ToString() == "-1";
             compIgnIUPR = compIgnIUPR && dtIn.Rows[0]["BPCOMP"].ToString() == "-1";
             return !compIgnIUPR;
-        }
-
-        private void SetDataTableResultFromDB(Dictionary<string, int> ColsDic, string[,] Results, DataTable dtOut) {
-            dtOut.Clear();
-            if (ColsDic.Count > 0 && Results != null) {
-                int rowCount = Results.GetLength(0);
-                for (int i = 0; i < rowCount; i++) {
-                    DataRow dr = dtOut.NewRow();
-                    dr["VIN"] = Results[i, ColsDic["VIN"]];
-                    dr["ECU_ID"] = Results[i, ColsDic["ECU_ID"]];
-                    dr["MIL"] = Results[i, ColsDic["MIL"]];
-                    dr["MIL_DIST"] = Results[i, ColsDic["MIL_DIST"]];
-                    dr["OBD_SUP"] = Results[i, ColsDic["OBD_SUP"]];
-                    dr["ODO"] = Results[i, ColsDic["ODO"]];
-                    dr["DTC03"] = Results[i, ColsDic["DTC03"]];
-                    dr["DTC07"] = Results[i, ColsDic["DTC07"]];
-                    dr["DTC0A"] = Results[i, ColsDic["DTC0A"]];
-                    dr["MIS_RDY"] = Results[i, ColsDic["MIS_RDY"]];
-                    dr["FUEL_RDY"] = Results[i, ColsDic["FUEL_RDY"]];
-                    dr["CCM_RDY"] = Results[i, ColsDic["CCM_RDY"]];
-                    dr["CAT_RDY"] = Results[i, ColsDic["CAT_RDY"]];
-                    dr["HCAT_RDY"] = Results[i, ColsDic["HCAT_RDY"]];
-                    dr["EVAP_RDY"] = Results[i, ColsDic["EVAP_RDY"]];
-                    dr["AIR_RDY"] = Results[i, ColsDic["AIR_RDY"]];
-                    dr["ACRF_RDY"] = Results[i, ColsDic["ACRF_RDY"]];
-                    dr["O2S_RDY"] = Results[i, ColsDic["O2S_RDY"]];
-                    dr["HTR_RDY"] = Results[i, ColsDic["HTR_RDY"]];
-                    dr["EGR_RDY"] = Results[i, ColsDic["EGR_RDY"]];
-                    dr["HCCAT_RDY"] = Results[i, ColsDic["HCCAT_RDY"]];
-                    dr["NCAT_RDY"] = Results[i, ColsDic["NCAT_RDY"]];
-                    dr["BP_RDY"] = Results[i, ColsDic["BP_RDY"]];
-                    dr["EGS_RDY"] = Results[i, ColsDic["EGS_RDY"]];
-                    dr["PM_RDY"] = Results[i, ColsDic["PM_RDY"]];
-                    dr["ECU_NAME"] = Results[i, ColsDic["ECU_NAME"]];
-                    dr["CAL_ID"] = Results[i, ColsDic["CAL_ID"]];
-                    dr["CVN"] = Results[i, ColsDic["CVN"]];
-                    dr["Result"] = Results[i, ColsDic["Result"]];
-                    dr["Upload"] = Results[i, ColsDic["Upload"]];
-                    dtOut.Rows.Add(dr);
-                }
-            }
-        }
-
-        private void SetDataTableIUPRResultFromDB(Dictionary<string, int> ColsDic, string[,] Results, DataTable dtOut) {
-            dtOut.Clear();
-            if (ColsDic.Count > 0 && Results != null) {
-                int rowCount = Results.GetLength(0);
-                for (int i = 0; i < rowCount; i++) {
-                    DataRow dr = dtOut.NewRow();
-                    dr["VIN"] = Results[i, ColsDic["VIN"]];
-                    dr["ECU_ID"] = Results[i, ColsDic["ECU_ID"]];
-                    dr["CATCOMP1"] = Results[i, ColsDic["CATCOMP1"]];
-                    dr["CATCOND1"] = Results[i, ColsDic["CATCOND1"]];
-                    dr["CATCOMP2"] = Results[i, ColsDic["CATCOMP2"]];
-                    dr["CATCOND2"] = Results[i, ColsDic["CATCOND2"]];
-                    dr["O2SCOMP1"] = Results[i, ColsDic["O2SCOMP1"]];
-                    dr["O2SCOND1"] = Results[i, ColsDic["O2SCOND1"]];
-                    dr["O2SCOMP2"] = Results[i, ColsDic["O2SCOMP2"]];
-                    dr["O2SCOND2"] = Results[i, ColsDic["O2SCOND2"]];
-                    dr["SO2SCOMP1"] = Results[i, ColsDic["SO2SCOMP1"]];
-                    dr["SO2SCOND1"] = Results[i, ColsDic["SO2SCOND1"]];
-                    dr["SO2SCOMP2"] = Results[i, ColsDic["SO2SCOMP2"]];
-                    dr["SO2SCOND2"] = Results[i, ColsDic["SO2SCOND2"]];
-                    dr["EVAPCOMP"] = Results[i, ColsDic["EVAPCOMP"]];
-                    dr["EVAPCOND"] = Results[i, ColsDic["EVAPCOND"]];
-                    dr["EGRCOMP_08"] = Results[i, ColsDic["EGRCOMP_08"]];
-                    dr["EGRCOND_08"] = Results[i, ColsDic["EGRCOND_08"]];
-                    dr["PFCOMP1"] = Results[i, ColsDic["PFCOMP1"]];
-                    dr["PFCOND1"] = Results[i, ColsDic["PFCOND1"]];
-                    dr["PFCOMP2"] = Results[i, ColsDic["PFCOMP2"]];
-                    dr["PFCOND2"] = Results[i, ColsDic["PFCOND2"]];
-                    dr["AIRCOMP"] = Results[i, ColsDic["AIRCOMP"]];
-                    dr["AIRCOND"] = Results[i, ColsDic["AIRCOND"]];
-                    dr["HCCATCOMP"] = Results[i, ColsDic["HCCATCOMP"]];
-                    dr["HCCATCOND"] = Results[i, ColsDic["HCCATCOND"]];
-                    dr["NCATCOMP"] = Results[i, ColsDic["NCATCOMP"]];
-                    dr["NCATCOND"] = Results[i, ColsDic["NCATCOND"]];
-                    dr["NADSCOMP"] = Results[i, ColsDic["NADSCOMP"]];
-                    dr["NADSCOND"] = Results[i, ColsDic["NADSCOND"]];
-                    dr["PMCOMP"] = Results[i, ColsDic["PMCOMP"]];
-                    dr["PMCOND"] = Results[i, ColsDic["PMCOND"]];
-                    dr["EGSCOMP"] = Results[i, ColsDic["EGSCOMP"]];
-                    dr["EGSCOND"] = Results[i, ColsDic["EGSCOND"]];
-                    dr["EGRCOMP_0B"] = Results[i, ColsDic["EGRCOMP_0B"]];
-                    dr["EGRCOND_0B"] = Results[i, ColsDic["EGRCOND_0B"]];
-                    dr["BPCOMP"] = Results[i, ColsDic["BPCOMP"]];
-                    dr["BPCOND"] = Results[i, ColsDic["BPCOND"]];
-                    dtOut.Rows.Add(dr);
-                }
-            }
         }
 
         private void ExportResultFile(DataTable dt) {

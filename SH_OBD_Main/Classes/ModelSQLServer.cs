@@ -1,4 +1,5 @@
-﻿using SH_OBD_DLL;
+﻿using LibBase;
+using SH_OBD_DLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,153 +9,20 @@ using System.Linq;
 using System.Text;
 
 namespace SH_OBD_Main {
-    public class Model {
-        public string StrConn { get; set; }
-        public readonly Logger _log;
-        public DBandMES _dbandMES;
+    public class ModelSQLServer : ModelBase {
+        private readonly DBandMES _dbandMES;
 
-        public Model(DBandMES dbandMES, Logger log) {
-            _log = log;
+        public ModelSQLServer(DBandMES dbandMES, Logger log) {
             _dbandMES = dbandMES;
-            this.StrConn = "";
-            ReadConfig();
-        }
-
-        void ReadConfig() {
-            StrConn = "user id=" + _dbandMES.UserName + ";";
-            StrConn += "password=" + _dbandMES.PassWord + ";";
-            StrConn += "database=" + _dbandMES.DBName + ";";
-            StrConn += "data source=" + _dbandMES.IP + "," + _dbandMES.Port;
-        }
-
-        public void ShowDB(string strTable) {
-            string strSQL = "select * from " + strTable;
-
-            using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
-                sqlConn.Open();
-                SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
-                SqlDataReader sqlData = sqlCmd.ExecuteReader();
-                string str = "";
-                int c = sqlData.FieldCount;
-                while (sqlData.Read()) {
-                    for (int i = 0; i < c; i++) {
-                        object obj = sqlData.GetValue(i);
-                        if (obj.GetType() == typeof(DateTime)) {
-                            str += ((DateTime)obj).ToString("yyyy-MM-dd HH:mm:ss") + "\t";
-                        } else {
-                            str += obj.ToString() + "\t";
-                        }
-                    }
-                    str += "\n";
-                }
-                str = str.Trim('\n');
-                _log.TraceInfo(str);
-                sqlCmd.Dispose();
-                sqlConn.Close();
-            }
-        }
-
-        public string[] GetTableColumns(string strTable) {
-            using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
-                try {
-                    sqlConn.Open();
-                    DataTable schema = sqlConn.GetSchema("Columns", new string[] { null, null, strTable });
-                    schema.DefaultView.Sort = "ORDINAL_POSITION";
-                    schema = schema.DefaultView.ToTable();
-                    int count = schema.Rows.Count;
-                    string[] columns = new string[count];
-                    for (int i = 0; i < count; i++) {
-                        DataRow row = schema.Rows[i];
-                        foreach (DataColumn col in schema.Columns) {
-                            if (col.Caption == "COLUMN_NAME") {
-                                if (col.DataType.Equals(typeof(DateTime))) {
-                                    columns[i] = string.Format("{0:d}", row[col]);
-                                } else if (col.DataType.Equals(typeof(decimal))) {
-                                    columns[i] = string.Format("{0:C}", row[col]);
-                                } else {
-                                    columns[i] = string.Format("{0}", row[col]);
-                                }
-                            }
-                        }
-                    }
-                    return columns;
-                } catch (Exception ex) {
-                    _log.TraceError("==> SQL ERROR: " + ex.Message);
-                } finally {
-                    sqlConn.Close();
-                }
-            }
-            return new string[] { };
-        }
-
-        public Dictionary<string, int> GetTableColumnsDic(string strTable) {
-            Dictionary<string, int> colDic = new Dictionary<string, int>();
-            string[] cols = GetTableColumns(strTable);
-            for (int i = 0; i < cols.Length; i++) {
-                colDic.Add(cols[i], i);
-            }
-            return colDic;
-        }
-
-        public void InsertDB(DataTable dt) {
-            string columns = " (";
-            for (int i = 0; i < dt.Columns.Count; i++) {
-                columns += dt.Columns[i].ColumnName + ",";
-            }
-            columns = columns.Substring(0, columns.Length - 1) + ")";
-
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                string row = " values ('";
-                for (int j = 0; j < dt.Columns.Count; j++) {
-                    row += dt.Rows[i][j].ToString() + "','";
-                }
-                row = row.Substring(0, row.Length - 2) + ")";
-                string strSQL = "insert into " + dt.TableName + columns + row;
-
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
-                    SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
-                    try {
-                        sqlConn.Open();
-                        _log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
-                        _log.TraceInfo(string.Format("==> Insert {0} record(s)", sqlCmd.ExecuteNonQuery()));
-                    } catch (Exception ex) {
-                        _log.TraceError("==> SQL ERROR: " + ex.Message);
-                    } finally {
-                        sqlCmd.Dispose();
-                        sqlConn.Close();
-                    }
-                }
-            }
-        }
-
-        public void UpdateDB(DataTable dt, Dictionary<string, string> whereDic) {
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                string strSQL = "update " + dt.TableName + " set ";
-                for (int j = 0; j < dt.Columns.Count; j++) {
-                    strSQL += dt.Columns[j].ColumnName + " = '" + dt.Rows[i][j].ToString() + "', ";
-                }
-                strSQL = strSQL.Substring(0, strSQL.Length - 2);
-                strSQL += " where ";
-                foreach (string key in whereDic.Keys) {
-                    strSQL += key + " = '" + whereDic[key] + "' and ";
-                }
-                strSQL = strSQL.Substring(0, strSQL.Length - 5);
-
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
-                    SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
-                    try {
-                        sqlConn.Open();
-                        _log.TraceInfo(string.Format("==> T-SQL: {0}", strSQL));
-                        _log.TraceInfo(string.Format("==> Update {0} record(s)", sqlCmd.ExecuteNonQuery()));
-                    } catch (Exception ex) {
-                        _log.TraceError("==> SQL ERROR: " + ex.Message);
-                    } finally {
-                        sqlCmd.Dispose();
-                        sqlConn.Close();
-                    }
-                }
-
-            }
+            ModelParameter dbParam = new ModelParameter {
+                DataBaseType = DataBaseType.SQLServer,
+                UserName = _dbandMES.UserName,
+                PassWord = _dbandMES.PassWord,
+                Host = _dbandMES.IP,
+                Port = _dbandMES.Port,
+                DBorService = _dbandMES.DBName
+            };
+            InitDataBase(dbParam, log);
         }
 
         int RunSQL(string strSQL) {
@@ -163,7 +31,7 @@ namespace SH_OBD_Main {
                 return -1;
             }
             try {
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     try {
                         sqlConn.Open();
@@ -188,7 +56,7 @@ namespace SH_OBD_Main {
             try {
                 int count = 0;
                 List<string[]> rowList;
-                using (SqlConnection sqlConn = new SqlConnection(StrConn)) {
+                using (SqlConnection sqlConn = new SqlConnection(_strConn)) {
                     SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn);
                     sqlConn.Open();
                     SqlDataReader sqlData = sqlCmd.ExecuteReader();
@@ -237,21 +105,6 @@ namespace SH_OBD_Main {
             }
         }
 
-        public string[,] GetRecords(string strTable, Dictionary<string, string> whereDic) {
-            string strSQL;
-            if (whereDic == null) {
-                strSQL = "select * from " + strTable;
-            } else {
-                strSQL = "select * from " + strTable + " where ";
-                foreach (string key in whereDic.Keys) {
-                    strSQL += key + " = '" + whereDic[key] + "' and ";
-                }
-                strSQL = strSQL.Substring(0, strSQL.Length - 5);
-            }
-            _log.TraceInfo("==> T-SQL: " + strSQL);
-            return SelectDB(strSQL);
-        }
-
         public enum FilterTime : int {
             NoFilter = 0,
             Day = 1,
@@ -259,7 +112,7 @@ namespace SH_OBD_Main {
             Month = 3
         }
 
-        public string[,] GetRecords(string strTable, string[] columns, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
+        public string[,] GetRecordsFilterTime(string strTable, string[] columns, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
             string strSQL = "select ";
             foreach (string col in columns) {
                 strSQL += col + ", ";

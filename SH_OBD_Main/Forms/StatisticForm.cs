@@ -63,18 +63,18 @@ namespace SH_OBD_Main {
                     whereDic.Add("Upload", "0");
                 }
             }
-            Model.FilterTime time = Model.FilterTime.NoFilter;
+            ModelSQLServer.FilterTime time = ModelSQLServer.FilterTime.NoFilter;
             if (this.radioBtnDay.Checked) {
-                time = Model.FilterTime.Day;
+                time = ModelSQLServer.FilterTime.Day;
             } else if (this.radioBtnWeek.Checked) {
-                time = Model.FilterTime.Week;
+                time = ModelSQLServer.FilterTime.Week;
             } else if (this.radioBtnMonth.Checked) {
-                time = Model.FilterTime.Month;
+                time = ModelSQLServer.FilterTime.Month;
             }
             int max = (_allQty / _pageSize) + (_allQty % _pageSize > 0 ? 1 : 0);
             this.UpDownPage.Maximum = max > 0 ? max : 1;
             this.lblAllPage.Text = "页 / 共 " + this.UpDownPage.Maximum.ToString() + " 页";
-            string[,] results = _obdTest._db.GetRecords("OBDData", columns, whereDic, time, decimal.ToInt32(this.UpDownPage.Value), _pageSize);
+            string[,] results = _obdTest.DbNative.GetRecordsFilterTime("OBDData", columns, whereDic, time, decimal.ToInt32(this.UpDownPage.Value), _pageSize);
             if (results == null) {
                 return;
             }
@@ -117,26 +117,26 @@ namespace SH_OBD_Main {
         }
 
         private void GetQty() {
-            Model.FilterTime time = Model.FilterTime.Day;
+            ModelSQLServer.FilterTime time = ModelSQLServer.FilterTime.Day;
             if (this.radioBtnDay.Checked) {
-                time = Model.FilterTime.Day;
+                time = ModelSQLServer.FilterTime.Day;
             } else if (this.radioBtnWeek.Checked) {
-                time = Model.FilterTime.Week;
+                time = ModelSQLServer.FilterTime.Week;
             } else if (this.radioBtnMonth.Checked) {
-                time = Model.FilterTime.Month;
+                time = ModelSQLServer.FilterTime.Month;
             }
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             string[] columns = { "VIN" };
-            string[,] results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
+            string[,] results = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(this.lblAllQty, results, ref _allQty);
 
             whereDic = new Dictionary<string, string> { { "Result", "1" } };
-            results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
+            results = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(this.lblPassedQty, results, ref _passedQty);
             this.lblPassedRate.Text = (_passedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
 
             whereDic = new Dictionary<string, string> { { "Upload", "1" } };
-            results = _obdTest._db.GetRecordsCount("OBDData", columns, whereDic, time);
+            results = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(this.lblUploadedQty, results, ref _uploadedQty);
             this.lblUploadedRate.Text = (_uploadedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
         }
@@ -151,8 +151,6 @@ namespace SH_OBD_Main {
             this.lblUploadedRate.Text = "0%";
             this.cmbBoxResult.SelectedIndex = 1;
             this.cmbBoxUpload.SelectedIndex = 1;
-            //Task.Factory.StartNew(SetDataTableContent);
-            //SetDataTableContent();
         }
 
         private void StatisticForm_FormClosing(object sender, FormClosingEventArgs e) {
