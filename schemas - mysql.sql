@@ -124,7 +124,7 @@ UPDATE SH_OBD.OBDData SET ECU_ID = '7E8' WHERE VIN = 'testvincode012345';
 # 测试: 查询数据
 SELECT VIN, ECU_ID FROM SH_OBD.OBDData;
 
-# 车型表用于存储对应车型含有的CAL_ID和CVN
+# IUPR表
 Create TABLE SH_OBD.OBDIUPR (
     ID int AUTO_INCREMENT PRIMARY KEY NOT NULL, # ID, 自增, 主键
     WriteTime datetime NOT NULL DEFAULT now(), # 写入时间
