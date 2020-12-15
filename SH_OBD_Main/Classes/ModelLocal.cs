@@ -3,19 +3,18 @@ using SH_OBD_DLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SH_OBD_Main {
-    public class ModelSQLServer : ModelBase {
+    public class ModelLocal : ModelBase {
         private readonly DBandMES _dbandMES;
 
-        public ModelSQLServer(DBandMES dbandMES, Logger log) {
+        public ModelLocal(DBandMES dbandMES, DataBaseType type, Logger log) {
             _dbandMES = dbandMES;
             ModelParameter dbParam = new ModelParameter {
-                DataBaseType = DataBaseType.SQLServer,
+                DataBaseType = type,
                 UserName = _dbandMES.UserName,
                 PassWord = _dbandMES.PassWord,
                 Host = _dbandMES.IP,
@@ -23,13 +22,6 @@ namespace SH_OBD_Main {
                 DBorService = _dbandMES.DBName
             };
             InitDataBase(dbParam, log);
-        }
-
-        public enum FilterTime : int {
-            NoFilter = 0,
-            Day = 1,
-            Week = 2,
-            Month = 3
         }
 
         public void GetRecordsFilterTime(DataTable dt, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
@@ -47,18 +39,22 @@ namespace SH_OBD_Main {
             foreach (string key in whereDic.Keys) {
                 strSQL += key + " = '" + whereDic[key] + "' and ";
             }
-            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyyMMdd");
+            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd");
             switch (time) {
             case FilterTime.Week:
-                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             case FilterTime.Month:
-                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             }
-            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
+            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by WriteTime ";
-            strSQL += "offset " + ((pageNum - 1) * pageSize).ToString() + " rows fetch next " + pageSize.ToString() + " rows only";
+            if (_param.DataBaseType == DataBaseType.SQLServer) {
+                strSQL += "offset " + ((pageNum - 1) * pageSize).ToString() + " rows fetch next " + pageSize.ToString() + " rows only";
+            } else {
+                strSQL += "limit " + pageSize.ToString() + " offset " + ((pageNum - 1) * pageSize).ToString();
+            }
             Query(strSQL, dt);
         }
 
@@ -72,16 +68,16 @@ namespace SH_OBD_Main {
             foreach (string key in whereDic.Keys) {
                 strSQL += key + " = '" + whereDic[key] + "' and ";
             }
-            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyyMMdd");
+            string strTimeStart = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd");
             switch (time) {
             case FilterTime.Week:
-                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-6).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             case FilterTime.Month:
-                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyyMMdd");
+                strTimeStart = DateTime.Now.AddDays(-29).ToLocalTime().ToString("yyyy-MM-dd");
                 break;
             }
-            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyyMMdd");
+            string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "'";
             return QueryOne(strSQL);
         }
@@ -106,7 +102,7 @@ namespace SH_OBD_Main {
                     }
                     strSQL = strSQL.Substring(0, strSQL.Length - 5);
                 } else if (dtTemp.Rows.Count == 0) {
-                    strSQL = "insert " + dt.TableName + " (";
+                    strSQL = "insert into " + dt.TableName + " (";
                     for (int j = 0; j < dt.Columns.Count; j++) {
                         strSQL += dt.Columns[j].ColumnName + ", ";
                     }
@@ -167,8 +163,19 @@ namespace SH_OBD_Main {
             return DeleteRecords(strTable, "ID", new List<string>() { strID });
         }
 
-        public int ResetTableID(string strTable, int iStart = 0) {
-            string strSQL = "DBCC CHECKIDENT('" + strTable + "', RESEED, " + iStart.ToString() + ")";
+        public int ResetTableID(string strTable) {
+            string strSQL = string.Empty;
+            switch (_param.DataBaseType) {
+            case DataBaseType.SQLServer:
+                strSQL = "DBCC CHECKIDENT('" + strTable + "', RESEED, 0)";
+                break;
+            case DataBaseType.MySQL:
+                strSQL = "ALTER TABLE '" + strTable + "' AUTO_INCREMENT = 1";
+                break;
+            case DataBaseType.SQLite:
+                strSQL = "UPDATE sqlite_sequence SET seq ='0' WHERE name = '" + strTable + "'";
+                break;
+            }
             return ExecuteNonQuery(strSQL);
         }
 

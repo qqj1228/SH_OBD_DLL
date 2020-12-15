@@ -75,7 +75,7 @@ namespace SH_OBD_Main {
 
         private void TestNativeDatabase() {
             try {
-                _obdTest.DbNative.GetPassWord();
+                _obdTest.DbLocal.GetPassWord();
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("Access native database failed: " + ex.Message);
                 MessageBox.Show("检测到本地数据库通讯异常，请排查相关故障：\n" + ex.Message, "本地数据库通讯异常", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -212,7 +212,7 @@ namespace SH_OBD_Main {
                 // 江铃股份操作工反应会有少量车辆漏检，故加入二次检查被测车辆是否已经检测过
                 Dictionary<string, string> whereDic = new Dictionary<string, string> { { "VIN", _obdTest.StrVIN_ECU } };
                 DataTable dt = new DataTable("OBDData");
-                _obdTest.DbNative.GetRecords(dt, whereDic);
+                _obdTest.DbLocal.GetRecords(dt, whereDic);
                 if (dt.Rows.Count <= 0) {
                     _obdIfEx.Log.TraceError("No test record of this vehicle: " + _obdTest.StrVIN_ECU);
                     _obdTest.OBDResult = false;

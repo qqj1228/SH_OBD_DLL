@@ -27,7 +27,7 @@ namespace SH_OBD_Main {
         public event Action NotUploadData;
         public event EventHandler<SetDataTableColumnsErrorEventArgs> SetDataTableColumnsError;
 
-        public ModelSQLServer DbNative { get; set; }
+        public ModelLocal DbLocal { get; set; }
         public bool AdvanceMode { get; set; }
         public int AccessAdvanceMode { get; set; }
         public bool OBDResult { get; set; }
@@ -58,12 +58,12 @@ namespace SH_OBD_Main {
             CALIDCVNAllEmpty = false;
             CALIDUnmeaningResult = true;
             OBDSUPResult = true;
-            DbNative = new ModelSQLServer(_obdIfEx.DBandMES, _obdIfEx.Log);
+            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.MySQL, _obdIfEx.Log);
         }
 
         private int GetSN(string strNowDate) {
             int iRet;
-            string strSN = DbNative.GetSN();
+            string strSN = DbLocal.GetSN();
             if (strSN.Length == 0) {
                 iRet = _obdIfEx.OBDResultSetting.StartSN;
             } else if (strSN.Split(',')[0] != strNowDate) {
@@ -86,7 +86,7 @@ namespace SH_OBD_Main {
                 --iSN;
             }
             iSN %= 10000;
-            DbNative.SetSN(strNowDateTime + "," + iSN.ToString());
+            DbLocal.SetSN(strNowDateTime + "," + iSN.ToString());
         }
 
         public DataTable GetDataTable(DataTableType dtType) {
@@ -788,7 +788,7 @@ namespace SH_OBD_Main {
             string strOBDResult = OBDResult ? "1" : "0";
 
             DataTable dt = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dt);
+            DbLocal.GetEmptyTable(dt);
             dt.Columns.Remove("ID");
             dt.Columns.Remove("WriteTime");
             try {
@@ -801,13 +801,13 @@ namespace SH_OBD_Main {
             }
 
             DataTable dtIUPR = new DataTable("OBDIUPR");
-            DbNative.GetEmptyTable(dtIUPR);
+            DbLocal.GetEmptyTable(dtIUPR);
             dtIUPR.Columns.Remove("ID");
             dtIUPR.Columns.Remove("WriteTime");
             SetDataTableResultIUPR(StrVIN_ECU, dtIUPR);
 
-            DbNative.ModifyRecords(dt);
-            DbNative.ModifyRecords(dtIUPR);
+            DbLocal.ModifyRecords(dt);
+            DbLocal.ModifyRecords(dtIUPR);
             WriteDbDone?.Invoke();
 
             try {
@@ -886,7 +886,7 @@ namespace SH_OBD_Main {
             if (count < 4) {
                 // 上传数据接口返回成功信息
                 _obdIfEx.Log.TraceInfo("Upload data success, VIN = " + strVIN);
-                DbNative.UpdateUpload(strVIN, "1");
+                DbLocal.UpdateUpload(strVIN, "1");
                 if (bShowMsg) {
                     UploadDataDone?.Invoke();
                 }
@@ -1245,7 +1245,7 @@ namespace SH_OBD_Main {
             ++iSN;
             iSN %= 10000;
             dr["TestNo"] = "XC" + NormalizeCompanyCode(_obdIfEx.OBDResultSetting.CompanyCode) + strNowDateTime + iSN.ToString("d4");
-            DbNative.SetSN(strNowDateTime + "," + iSN.ToString());
+            DbLocal.SetSN(strNowDateTime + "," + iSN.ToString());
             dr["TestType"] = "0";
             dr["APASS"] = "1";
             dr["OPASS"] = strOBDResult;
@@ -1519,19 +1519,19 @@ namespace SH_OBD_Main {
         public void UploadDataFromDB(string strVIN, out string errorMsg, bool bOnlyShowData) {
             errorMsg = "";
             DataTable dt = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dt);
+            DbLocal.GetEmptyTable(dt);
             dt.Columns.Remove("ID");
             dt.Columns.Remove("WriteTime");
             Dictionary<string, string> whereDic = new Dictionary<string, string> { { "VIN", strVIN } };
-            DbNative.GetRecords(dt, whereDic);
+            DbLocal.GetRecords(dt, whereDic);
             SetDataTableColumnsFromDB(_dtInfo, dt);
             SetDataTableColumnsFromDB(_dtECUInfo, dt);
 
             DataTable dtIUPR = new DataTable("OBDIUPR");
-            DbNative.GetEmptyTable(dtIUPR);
+            DbLocal.GetEmptyTable(dtIUPR);
             dtIUPR.Columns.Remove("ID");
             dtIUPR.Columns.Remove("WriteTime");
-            DbNative.GetRecords(dtIUPR, whereDic);
+            DbLocal.GetRecords(dtIUPR, whereDic);
             SetDataTableColumnsFromDB(_dtIUPR, dtIUPR);
 
             SetupColumnsDone?.Invoke();
@@ -1612,12 +1612,12 @@ namespace SH_OBD_Main {
         public void UploadDataFromDBOnTime(out string errorMsg) {
             errorMsg = "";
             DataTable dtTemp = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dtTemp);
+            DbLocal.GetEmptyTable(dtTemp);
             dtTemp.Columns.Remove("ID");
             dtTemp.Columns.Remove("WriteTime");
 
             Dictionary<string, string> whereDic = new Dictionary<string, string> { { "Upload", "0" } };
-            DbNative.GetRecords(dtTemp, whereDic);
+            DbLocal.GetRecords(dtTemp, whereDic);
             if (dtTemp.Rows.Count <= 0) {
                 dtTemp.Dispose();
                 return;

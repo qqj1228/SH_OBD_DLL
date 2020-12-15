@@ -53,18 +53,18 @@ namespace SH_OBD_Main {
                     whereDic.Add("Upload", "0");
                 }
             }
-            ModelSQLServer.FilterTime time = ModelSQLServer.FilterTime.NoFilter;
+            FilterTime time = FilterTime.NoFilter;
             if (radioBtnDay.Checked) {
-                time = ModelSQLServer.FilterTime.Day;
+                time = FilterTime.Day;
             } else if (radioBtnWeek.Checked) {
-                time = ModelSQLServer.FilterTime.Week;
+                time = FilterTime.Week;
             } else if (radioBtnMonth.Checked) {
-                time = ModelSQLServer.FilterTime.Month;
+                time = FilterTime.Month;
             }
             int max = (_allQty / _pageSize) + (_allQty % _pageSize > 0 ? 1 : 0);
             UpDownPage.Maximum = max > 0 ? max : 1;
             lblAllPage.Text = "页 / 共 " + UpDownPage.Maximum.ToString() + " 页";
-            _obdTest.DbNative.GetRecordsFilterTime(dt, whereDic, time, decimal.ToInt32(UpDownPage.Value), _pageSize);
+            _obdTest.DbLocal.GetRecordsFilterTime(dt, whereDic, time, decimal.ToInt32(UpDownPage.Value), _pageSize);
         }
 
         private void SetDataTableContent() {
@@ -88,26 +88,26 @@ namespace SH_OBD_Main {
         }
 
         private void GetQty() {
-            ModelSQLServer.FilterTime time = ModelSQLServer.FilterTime.Day;
+            FilterTime time = FilterTime.Day;
             if (radioBtnDay.Checked) {
-                time = ModelSQLServer.FilterTime.Day;
+                time = FilterTime.Day;
             } else if (radioBtnWeek.Checked) {
-                time = ModelSQLServer.FilterTime.Week;
+                time = FilterTime.Week;
             } else if (radioBtnMonth.Checked) {
-                time = ModelSQLServer.FilterTime.Month;
+                time = FilterTime.Month;
             }
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             string[] columns = { "VIN" };
-            object result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            object result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(lblAllQty, result, ref _allQty);
 
             whereDic = new Dictionary<string, string> { { "Result", "1" } };
-            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(lblPassedQty, result, ref _passedQty);
             lblPassedRate.Text = (_passedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
 
             whereDic = new Dictionary<string, string> { { "Upload", "1" } };
-            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
+            result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
             ShowResult(lblUploadedQty, result, ref _uploadedQty);
             lblUploadedRate.Text = (_uploadedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
         }

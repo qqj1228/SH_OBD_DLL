@@ -216,7 +216,7 @@ namespace SH_OBD_Main {
             grpBoxIUPR.Location = new Point(grpBoxInfo.Location.X + grpBoxInfo.Width + margin, grpBoxInfo.Location.Y);
             grpBoxIUPR.Width = grpBoxInfo.Width;
             grpBoxIUPR.Height = ClientSize.Height - (btnStartOBDTest.Location.Y + btnStartOBDTest.Height) - margin * 2;
-            labelMESInfo.Location = new Point(grpBoxECUInfo.Location.X + grpBoxECUInfo.Width / 3, labelInfo.Location.Y);
+            labelMESInfo.Location = new Point(grpBoxIUPR.Location.X + grpBoxIUPR.Width / 3, labelInfo.Location.Y);
         }
 
         private void OBDTestForm_VisibleChanged(object sender, EventArgs e) {
@@ -467,7 +467,7 @@ namespace SH_OBD_Main {
                             }
                             dtImport.Rows.Add(dr);
                         }
-                        _obdTest.DbNative.ModifyRecords(dtImport);
+                        _obdTest.DbLocal.ModifyRecords(dtImport);
                     }
                 }
                 Invoke((EventHandler)delegate {

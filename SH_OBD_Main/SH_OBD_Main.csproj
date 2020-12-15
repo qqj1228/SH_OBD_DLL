@@ -130,8 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ModelBase.cs" />
-    <Compile Include="Classes\ModelSQLite.cs" />
-    <Compile Include="Classes\ModelSQLServer.cs" />
+    <Compile Include="Classes\ModelLocal.cs" />
     <Compile Include="Classes\ModelOracle.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\WebService.cs" />
