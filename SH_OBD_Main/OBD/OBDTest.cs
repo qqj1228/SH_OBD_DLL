@@ -28,7 +28,7 @@ namespace SH_OBD_Main {
         public event Action NotUploadData;
         public event EventHandler<SetDataTableColumnsErrorEventArgs> SetDataTableColumnsError;
 
-        public ModelSQLite DbNative { get; }
+        public ModelLocal DbLocal { get; }
         public ModelOracle DbMES { get; }
         public bool AdvancedMode { get; set; }
         public int AccessAdvancedMode { get; set; }
@@ -68,7 +68,7 @@ namespace SH_OBD_Main {
             StrVIN_ECU = "";
             StrVIN_IN = "";
             StrType_IN = "";
-            DbNative = new ModelSQLite(_obdIfEx.DBandMES, _obdIfEx.Log);
+            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.SQLServer, _obdIfEx.Log);
             DbMES = new ModelOracle(_obdIfEx.DBandMES.OraMES, _obdIfEx.Log);
             Checks = new List<CheckResult>();
         }
@@ -627,7 +627,7 @@ namespace SH_OBD_Main {
             string strOBDResult = OBDResult ? "1" : "0";
 
             DataTable dt = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dt);
+            DbLocal.GetEmptyTable(dt);
             dt.Columns.Remove("ID");
             dt.Columns.Remove("WriteTime");
             try {
@@ -640,13 +640,13 @@ namespace SH_OBD_Main {
             }
 
             DataTable dtIUPR = new DataTable("OBDIUPR");
-            DbNative.GetEmptyTable(dtIUPR);
+            DbLocal.GetEmptyTable(dtIUPR);
             dtIUPR.Columns.Remove("ID");
             dtIUPR.Columns.Remove("WriteTime");
             SetDataTableResultIUPR(StrVIN_ECU, dtIUPR);
 
-            DbNative.ModifyRecords(dt);
-            DbNative.ModifyRecords(dtIUPR);
+            DbLocal.ModifyRecords(dt);
+            DbLocal.ModifyRecords(dtIUPR);
             WriteDbDone?.Invoke();
 
             try {
@@ -862,7 +862,7 @@ namespace SH_OBD_Main {
                 DbMES.GetRecords(dt4, new Dictionary<string, string> { { "WQPF_ID", strKeyID } });
                 string strKeyID4 = dt4.Rows[0]["ID"].ToString();
                 SetDataTable4AOracle(strKeyID, strKeyID4, dt4A, dtIn);
-                DbNative.UpdateUpload(strVIN, "1");
+                DbLocal.UpdateUpload(strVIN, "1");
             } catch (Exception ex) {
                 errorMsg = "UploadDataOracle Error: " + ex.Message;
                 _obdIfEx.Log.TraceError("UploadDataOracle Error: " + ex.Message);
@@ -1235,19 +1235,19 @@ namespace SH_OBD_Main {
         public bool UploadDataFromDB(string strVIN, out string errorMsg, bool bOnlyShowData) {
             errorMsg = "";
             DataTable dt = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dt);
+            DbLocal.GetEmptyTable(dt);
             dt.Columns.Remove("ID");
             dt.Columns.Remove("WriteTime");
             Dictionary<string, string> whereDic = new Dictionary<string, string> { { "VIN", strVIN } };
-            DbNative.GetRecords(dt, whereDic);
+            DbLocal.GetRecords(dt, whereDic);
             SetDataTableColumnsFromDB(_dtInfo, dt);
             SetDataTableColumnsFromDB(_dtECUInfo, dt);
 
             DataTable dtIUPR = new DataTable("OBDIUPR");
-            DbNative.GetEmptyTable(dtIUPR);
+            DbLocal.GetEmptyTable(dtIUPR);
             dtIUPR.Columns.Remove("ID");
             dtIUPR.Columns.Remove("WriteTime");
-            DbNative.GetRecords(dtIUPR, whereDic);
+            DbLocal.GetRecords(dtIUPR, whereDic);
             SetDataTableColumnsFromDB(_dtIUPR, dtIUPR);
 
             SetupColumnsDone?.Invoke();
@@ -1331,12 +1331,12 @@ namespace SH_OBD_Main {
             errorMsg = "";
             bool bRet = false;
             DataTable dtTemp = new DataTable("OBDData");
-            DbNative.GetEmptyTable(dtTemp);
+            DbLocal.GetEmptyTable(dtTemp);
             dtTemp.Columns.Remove("ID");
             dtTemp.Columns.Remove("WriteTime");
 
             Dictionary<string, string> whereDic = new Dictionary<string, string> { { "Upload", "0" } };
-            DbNative.GetRecords(dtTemp, whereDic);
+            DbLocal.GetRecords(dtTemp, whereDic);
             if (dtTemp.Rows.Count <= 0) {
                 dtTemp.Dispose();
                 return bRet;
@@ -1398,7 +1398,7 @@ namespace SH_OBD_Main {
             List<byte> ls = new List<byte>();
             Dictionary<string, string> TypeDic = new Dictionary<string, string> { { "Type", strType }, { "ECU_ID", strECUID } };
             DataTable dt = new DataTable("VehicleType");
-            DbNative.GetRecords(dt, TypeDic);
+            DbLocal.GetRecords(dt, TypeDic);
             if (dt.Rows.Count > 0) {
                 for (int i = 0; i < dt.Rows.Count; i++) {
                     status = 0;

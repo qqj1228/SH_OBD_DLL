@@ -3,28 +3,25 @@ using SH_OBD_DLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SH_OBD_Main {
-    public class ModelSQLite : ModelBase {
+    public class ModelLocal : ModelBase {
         private readonly DBandMES _dbandMES;
 
-        public ModelSQLite(DBandMES dbandMES, Logger log) {
+        public ModelLocal(DBandMES dbandMES, DataBaseType type, Logger log) {
             _dbandMES = dbandMES;
             ModelParameter dbParam = new ModelParameter {
-                DataBaseType = DataBaseType.SQLite,
+                DataBaseType = type,
+                UserName = _dbandMES.UserName,
+                PassWord = _dbandMES.PassWord,
+                Host = _dbandMES.IP,
+                Port = _dbandMES.Port,
                 DBorService = _dbandMES.DBName
             };
             InitDataBase(dbParam, log);
-        }
-
-        public enum FilterTime : int {
-            NoFilter = 0,
-            Day = 1,
-            Week = 2,
-            Month = 3
         }
 
         public void GetRecordsFilterTime(DataTable dt, Dictionary<string, string> whereDic, FilterTime time, int pageNum, int pageSize) {
@@ -53,7 +50,11 @@ namespace SH_OBD_Main {
             }
             string strTimeEnd = DateTime.Now.AddDays(1).ToLocalTime().ToString("yyyy-MM-dd");
             strSQL += "WriteTime > '" + strTimeStart + "' and WriteTime < '" + strTimeEnd + "' order by WriteTime ";
-            strSQL += "limit " + pageSize.ToString() + " offset " + ((pageNum - 1) * pageSize).ToString();
+            if (_param.DataBaseType == DataBaseType.SQLServer) {
+                strSQL += "offset " + ((pageNum - 1) * pageSize).ToString() + " rows fetch next " + pageSize.ToString() + " rows only";
+            } else {
+                strSQL += "limit " + pageSize.ToString() + " offset " + ((pageNum - 1) * pageSize).ToString();
+            }
             Query(strSQL, dt);
         }
 
@@ -87,7 +88,7 @@ namespace SH_OBD_Main {
                     { "VIN", dt.Rows[i]["VIN"].ToString() },
                     { "ECU_ID", dt.Rows[i]["ECU_ID"].ToString() }
                 };
-                string strSQL = "";
+                string strSQL = string.Empty;
                 DataTable dtTemp = new DataTable(dt.TableName);
                 GetRecords(dtTemp, whereDic);
                 if (dtTemp.Rows.Count > 0) {
@@ -162,8 +163,19 @@ namespace SH_OBD_Main {
             return DeleteRecords(strTable, "ID", new List<string>() { strID });
         }
 
-        public int ResetTableID(string strTable, int iStart = 0) {
-            string strSQL = "UPDATE sqlite_sequence SET seq ='" + iStart.ToString() + "' WHERE name = '" + strTable + "'";
+        public int ResetTableID(string strTable) {
+            string strSQL = string.Empty;
+            switch (_param.DataBaseType) {
+            case DataBaseType.SQLServer:
+                strSQL = "DBCC CHECKIDENT('" + strTable + "', RESEED, 0)";
+                break;
+            case DataBaseType.MySQL:
+                strSQL = "ALTER TABLE `" + strTable + "` AUTO_INCREMENT = 1";
+                break;
+            case DataBaseType.SQLite:
+                strSQL = "UPDATE sqlite_sequence SET seq ='0' WHERE name = '" + strTable + "'";
+                break;
+            }
             return ExecuteNonQuery(strSQL);
         }
 

@@ -150,4 +150,11 @@ namespace SH_OBD_Main {
         }
     }
 
+    public enum FilterTime : int {
+        NoFilter = 0,
+        Day = 1,
+        Week = 2,
+        Month = 3
+    }
+
 }

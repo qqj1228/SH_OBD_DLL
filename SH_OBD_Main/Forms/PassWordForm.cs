@@ -21,7 +21,7 @@ namespace SH_OBD_Main {
             MD5 md5 = new MD5CryptoServiceProvider();
             byte[] output = md5.ComputeHash(Encoding.Default.GetBytes(this.txtBoxPassWord.Text.Trim()));
             string strValue = BitConverter.ToString(output).Replace("-", "");
-            if (strValue == _obdTest.DbNative.GetPassWord()) {
+            if (strValue == _obdTest.DbLocal.GetPassWord()) {
                 _obdTest.AccessAdvancedMode = 1;
             } else {
                 _obdTest.AccessAdvancedMode = -1;

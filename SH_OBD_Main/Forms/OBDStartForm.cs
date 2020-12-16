@@ -85,7 +85,7 @@ namespace SH_OBD_Main {
 
         private void TestNativeDatabase() {
             try {
-                _obdTest.DbNative.GetPassWord();
+                _obdTest.DbLocal.GetPassWord();
             } catch (Exception ex) {
                 _obdIfEx.Log.TraceError("Access native database failed: " + ex.Message);
                 MessageBox.Show("检测到本地数据库通讯异常，请排查相关故障：\n" + ex.Message, "本地数据库通讯异常", MessageBoxButtons.OK, MessageBoxIcon.Error);

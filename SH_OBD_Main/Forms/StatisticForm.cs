@@ -39,32 +39,32 @@ namespace SH_OBD_Main {
 
         private void SetDataTableRow(DataTable dt) {
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
-            if (this.cmbBoxResult.SelectedIndex > 0) {
-                if (this.cmbBoxResult.SelectedIndex == 1) {
+            if (cmbBoxResult.SelectedIndex > 0) {
+                if (cmbBoxResult.SelectedIndex == 1) {
                     whereDic.Add("Result", "1");
-                } else if (this.cmbBoxResult.SelectedIndex == 2) {
+                } else if (cmbBoxResult.SelectedIndex == 2) {
                     whereDic.Add("Result", "0");
                 }
             }
-            if (this.cmbBoxUpload.SelectedIndex > 0) {
-                if (this.cmbBoxUpload.SelectedIndex == 1) {
+            if (cmbBoxUpload.SelectedIndex > 0) {
+                if (cmbBoxUpload.SelectedIndex == 1) {
                     whereDic.Add("Upload", "1");
-                } else if (this.cmbBoxUpload.SelectedIndex == 2) {
+                } else if (cmbBoxUpload.SelectedIndex == 2) {
                     whereDic.Add("Upload", "0");
                 }
             }
-            ModelSQLite.FilterTime time = ModelSQLite.FilterTime.NoFilter;
-            if (this.radioBtnDay.Checked) {
-                time = ModelSQLite.FilterTime.Day;
-            } else if (this.radioBtnWeek.Checked) {
-                time = ModelSQLite.FilterTime.Week;
-            } else if (this.radioBtnMonth.Checked) {
-                time = ModelSQLite.FilterTime.Month;
+            FilterTime time = FilterTime.NoFilter;
+            if (radioBtnDay.Checked) {
+                time = FilterTime.Day;
+            } else if (radioBtnWeek.Checked) {
+                time = FilterTime.Week;
+            } else if (radioBtnMonth.Checked) {
+                time = FilterTime.Month;
             }
             int max = (_allQty / _pageSize) + (_allQty % _pageSize > 0 ? 1 : 0);
-            this.UpDownPage.Maximum = max > 0 ? max : 1;
-            this.lblAllPage.Text = "页 / 共 " + this.UpDownPage.Maximum.ToString() + " 页";
-            _obdTest.DbNative.GetRecordsFilterTime(dt, whereDic, time, decimal.ToInt32(this.UpDownPage.Value), _pageSize);
+            UpDownPage.Maximum = max > 0 ? max : 1;
+            lblAllPage.Text = "页 / 共 " + UpDownPage.Maximum.ToString() + " 页";
+            _obdTest.DbLocal.GetRecordsFilterTime(dt, whereDic, time, decimal.ToInt32(UpDownPage.Value), _pageSize);
         }
 
         private void SetDataTableContent() {
@@ -88,41 +88,41 @@ namespace SH_OBD_Main {
         }
 
         private void GetQty() {
-            ModelSQLite.FilterTime time = ModelSQLite.FilterTime.Day;
-            if (this.radioBtnDay.Checked) {
-                time = ModelSQLite.FilterTime.Day;
-            } else if (this.radioBtnWeek.Checked) {
-                time = ModelSQLite.FilterTime.Week;
-            } else if (this.radioBtnMonth.Checked) {
-                time = ModelSQLite.FilterTime.Month;
+            FilterTime time = FilterTime.Day;
+            if (radioBtnDay.Checked) {
+                time = FilterTime.Day;
+            } else if (radioBtnWeek.Checked) {
+                time = FilterTime.Week;
+            } else if (radioBtnMonth.Checked) {
+                time = FilterTime.Month;
             }
 
             Dictionary<string, string> whereDic = new Dictionary<string, string>();
             string[] columns = { "VIN" };
-            object result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblAllQty, result, ref _allQty);
+            object result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(lblAllQty, result, ref _allQty);
 
             whereDic = new Dictionary<string, string> { { "Result", "1" } };
-            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblPassedQty, result, ref _passedQty);
-            this.lblPassedRate.Text = (_passedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
+            result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(lblPassedQty, result, ref _passedQty);
+            lblPassedRate.Text = (_passedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
 
             whereDic = new Dictionary<string, string> { { "Upload", "1" } };
-            result = _obdTest.DbNative.GetRecordsCount("OBDData", columns, whereDic, time);
-            ShowResult(this.lblUploadedQty, result, ref _uploadedQty);
-            this.lblUploadedRate.Text = (_uploadedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
+            result = _obdTest.DbLocal.GetRecordsCount("OBDData", columns, whereDic, time);
+            ShowResult(lblUploadedQty, result, ref _uploadedQty);
+            lblUploadedRate.Text = (_uploadedQty * 100.0 / (float)_allQty).ToString("F2") + "%";
         }
 
         private void StatisticForm_Load(object sender, EventArgs e) {
-            this.GridContent.DataSource = _dtContent;
-            this.radioBtnDay.Checked = true;
-            this.lblAllQty.Text = _allQty.ToString();
-            this.lblPassedQty.Text = _passedQty.ToString();
-            this.lblPassedRate.Text = "0%";
-            this.lblUploadedQty.Text = _uploadedQty.ToString();
-            this.lblUploadedRate.Text = "0%";
-            this.cmbBoxResult.SelectedIndex = 1;
-            this.cmbBoxUpload.SelectedIndex = 1;
+            GridContent.DataSource = _dtContent;
+            radioBtnDay.Checked = true;
+            lblAllQty.Text = _allQty.ToString();
+            lblPassedQty.Text = _passedQty.ToString();
+            lblPassedRate.Text = "0%";
+            lblUploadedQty.Text = _uploadedQty.ToString();
+            lblUploadedRate.Text = "0%";
+            cmbBoxResult.SelectedIndex = 1;
+            cmbBoxUpload.SelectedIndex = 1;
         }
 
         private void StatisticForm_FormClosing(object sender, FormClosingEventArgs e) {

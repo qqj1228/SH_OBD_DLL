@@ -55,7 +55,7 @@ namespace SH_OBD_Main {
             dicSubForms = new Dictionary<string, Form>();
 
             f_OBDTest = new OBDTestForm(_obdIfEx, _obdTest);
-            f_Check = new CheckForm(_obdTest.DbNative, _obdIfEx.Log);
+            f_Check = new CheckForm(_obdTest.DbLocal, _obdIfEx.Log);
 
             buttonOBDTest.Text = Properties.Resources.buttonName_OBDTest;
             buttonCheck.Text = Properties.Resources.buttonName_Check;
@@ -151,7 +151,7 @@ namespace SH_OBD_Main {
         private void ToolStripBtnSettings_Click(object sender, EventArgs e) {
             DllSettings dllSettings = _obdIfEx.OBDIf.DllSettings;
             MainSettings mainSettings = _obdIfEx.MainSettings;
-            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest.DbNative);
+            SettingsForm settingsForm = new SettingsForm(dllSettings, mainSettings, _obdTest.DbLocal);
             settingsForm.ShowDialog();
             _obdIfEx.SaveDllSettings(dllSettings);
             _obdIfEx.SaveMainSettings(mainSettings);

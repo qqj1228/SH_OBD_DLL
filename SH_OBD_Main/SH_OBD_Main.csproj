@@ -128,8 +128,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ModelBase.cs" />
+    <Compile Include="Classes\ModelLocal.cs" />
     <Compile Include="Classes\ModelOracle.cs" />
-    <Compile Include="Classes\ModelSQLite.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Forms\CheckForm.cs">
       <SubType>Form</SubType>

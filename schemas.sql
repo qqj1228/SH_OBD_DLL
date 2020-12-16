@@ -97,7 +97,7 @@ SELECT VIN, ECU_ID
     FROM OBDData
     ;
 
--- 车型表用于存储对应车型含有的CAL_ID和CVN
+-- IUPR表
 Create TABLE IF NOT EXISTS OBDIUPR (
     ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, -- 主键ID
     WriteTime datetime NOT NULL default(datetime('now', 'localtime')), -- 写入时间
