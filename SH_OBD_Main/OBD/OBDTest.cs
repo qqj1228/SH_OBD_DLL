@@ -58,7 +58,7 @@ namespace SH_OBD_Main {
             CALIDCVNAllEmpty = false;
             CALIDUnmeaningResult = true;
             OBDSUPResult = true;
-            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.MySQL, _obdIfEx.Log);
+            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.SQLServer, _obdIfEx.Log);
         }
 
         private int GetSN(string strNowDate) {
