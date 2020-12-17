@@ -9,7 +9,6 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
-using System.Transactions;
 
 namespace LibBase {
     public abstract class ModelBase {
@@ -140,8 +139,6 @@ namespace LibBase {
             case DataBaseType.SQLite:
                 strSQL += " limit 1";
                 break;
-            default:
-                break;
             }
             using (DbConnection_IT dbConn = new DbConnection_IT(_param.DataBaseType, _strConn)) {
                 try {
@@ -172,10 +169,9 @@ namespace LibBase {
                 int val = 0;
                 try {
                     dbConn.DbConnection.Open();
-                    using (DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn)) {
-                        val = dbCmd.DbCommand.ExecuteNonQuery();
-                        dbCmd.DbCommand.Parameters.Clear();
-                    }
+                    DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn);
+                    val = dbCmd.DbCommand.ExecuteNonQuery();
+                    dbCmd.DbCommand.Parameters.Clear();
                 } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
@@ -198,9 +194,8 @@ namespace LibBase {
             using (DbConnection_IT dbConn = new DbConnection_IT(_param.DataBaseType, _strConn)) {
                 try {
                     dbConn.DbConnection.Open();
-                    using (DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn)) {
-                        adapter.DbDataAdapter.Fill(dt);
-                    }
+                    DbDataAdapter_IT adapter = new DbDataAdapter_IT(_param.DataBaseType, strSQL, dbConn);
+                    adapter.DbDataAdapter.Fill(dt);
                 } catch (Exception ex) {
                     _log.TraceError("Error SQL: " + strSQL);
                     _log.TraceError(ex.Message);
@@ -278,11 +273,13 @@ namespace LibBase {
                                     for (int k = 0; k < schema.Rows.Count; k++) {
                                         if (dt.Columns[j].ColumnName == schema.Rows[k]["COLUMN_NAME"].ToString()) {
                                             int length = 0;
+                                            object lenObj;
                                             string strParaName = _prefixParam + dt.Columns[j].ColumnName;
                                             if (primaryKey != dt.Columns[j].ColumnName) {
                                                 switch (_param.DataBaseType) {
                                                 case DataBaseType.SQLServer:
-                                                    length = Convert.ToInt32(schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"]);
+                                                    lenObj = schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"];
+                                                    length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
                                                     SqlCommand sqlCmd = dbCmd.DbCommand as SqlCommand;
                                                     SqlDbType sqldbType = SqlTypeToSqlDbType(schema.Rows[k]["DATA_TYPE"].ToString());
                                                     sqlCmd.Parameters.Add(strParaName, sqldbType, length);
@@ -298,7 +295,8 @@ namespace LibBase {
                                                     strDisplaySQL = strDisplaySQL.Replace(strParaName, "'" + oraCmd.Parameters[strParaName].Value.ToString() + "'");
                                                     break;
                                                 case DataBaseType.MySQL:
-                                                    length = Convert.ToInt32(schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"]);
+                                                    lenObj = schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"];
+                                                    length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
                                                     MySqlCommand mySqlCmd = dbCmd.DbCommand as MySqlCommand;
                                                     MySqlDbType mySqlDbType = SqlTypeToMySqlDbType(schema.Rows[k]["DATA_TYPE"].ToString());
                                                     mySqlCmd.Parameters.Add(strParaName, mySqlDbType, length);
@@ -373,10 +371,12 @@ namespace LibBase {
                                     for (int k = 0; k < schema.Rows.Count; k++) {
                                         if (dt.Columns[j].ColumnName == schema.Rows[k]["COLUMN_NAME"].ToString()) {
                                             int length = 0;
+                                            object lenObj;
                                             string strParaName = _prefixParam + dt.Columns[j].ColumnName;
                                             switch (_param.DataBaseType) {
                                             case DataBaseType.SQLServer:
-                                                length = Convert.ToInt32(schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"]);
+                                                lenObj = schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"];
+                                                length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
                                                 SqlCommand sqlCmd = dbCmd.DbCommand as SqlCommand;
                                                 SqlDbType sqldbType = SqlTypeToSqlDbType(schema.Rows[k]["DATA_TYPE"].ToString());
                                                 sqlCmd.Parameters.Add(strParaName, sqldbType, length);
@@ -392,7 +392,8 @@ namespace LibBase {
                                                 strDisplaySQL = strDisplaySQL.Replace(strParaName, "'" + oraCmd.Parameters[strParaName].Value.ToString() + "'");
                                                 break;
                                             case DataBaseType.MySQL:
-                                                length = Convert.ToInt32(schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"]);
+                                                lenObj = schema.Rows[k]["CHARACTER_MAXIMUM_LENGTH"];
+                                                length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
                                                 MySqlCommand mySqlCmd = dbCmd.DbCommand as MySqlCommand;
                                                 MySqlDbType mySqlDbType = SqlTypeToMySqlDbType(schema.Rows[k]["DATA_TYPE"].ToString());
                                                 mySqlCmd.Parameters.Add(strParaName, mySqlDbType, length);
@@ -453,49 +454,53 @@ namespace LibBase {
                 try {
                     dbConn.DbConnection.Open();
                     using (DbTransaction dbTrans = dbConn.DbConnection.BeginTransaction()) {
-                        using (DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn)) {
-                            for (int i = 0; i < whereVals.Count; i++) {
+                        for (int i = 0; i < whereVals.Count; i++) {
+                            using (DbCommand_IT dbCmd = new DbCommand_IT(_param.DataBaseType, strSQL, dbConn)) {
                                 strDisplaySQL = strSQL;
                                 int index = 0;
                                 for (int k = 0; k < schema.Rows.Count; k++) {
                                     if (whereCol == schema.Rows[k]["COLUMN_NAME"].ToString()) {
                                         index = k;
-                                    }
-                                    int length = 0;
-                                    switch (_param.DataBaseType) {
-                                    case DataBaseType.SQLServer:
-                                        length = Convert.ToInt32(schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"]);
-                                        SqlCommand sqlCmd = dbCmd.DbCommand as SqlCommand;
-                                        SqlDbType sqlDbType = SqlTypeToSqlDbType(schema.Rows[index]["DATA_TYPE"].ToString());
-                                        sqlCmd.Parameters.Add(_prefixParam + "value", sqlDbType, length);
-                                        sqlCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
-                                        strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + sqlCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
-                                        break;
-                                    case DataBaseType.Oracle:
-                                        length = Convert.ToInt32(schema.Rows[index]["LENGTH"]);
-                                        OracleCommand oracleCmd = dbCmd.DbCommand as OracleCommand;
-                                        OracleDbType oraDbType = SqlTypeToOracleDbType(schema.Rows[index]["DATATYPE"].ToString());
-                                        oracleCmd.Parameters.Add(_prefixParam + "value", oraDbType, length);
-                                        oracleCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
-                                        strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + oracleCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
-                                        break;
-                                    case DataBaseType.MySQL:
-                                        length = Convert.ToInt32(schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"]);
-                                        MySqlCommand mySqlCmd = dbCmd.DbCommand as MySqlCommand;
-                                        MySqlDbType mySqlDbType = SqlTypeToMySqlDbType(schema.Rows[index]["DATA_TYPE"].ToString());
-                                        mySqlCmd.Parameters.Add(_prefixParam + "value", mySqlDbType, length);
-                                        mySqlCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
-                                        strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + mySqlCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
-                                        break;
-                                    case DataBaseType.SQLite:
-                                        length = Convert.ToInt32(schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"]);
-                                        SQLiteCommand sqliteCmd = dbCmd.DbCommand as SQLiteCommand;
-                                        DbType dbType = SqlTypeToDbType(schema.Rows[index]["DATA_TYPE"].ToString());
-                                        sqliteCmd.Parameters.Add(_prefixParam + "value", dbType, length);
-                                        sqliteCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
-                                        strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + sqliteCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
                                         break;
                                     }
+                                }
+                                int length = 0;
+                                object lenObj;
+                                switch (_param.DataBaseType) {
+                                case DataBaseType.SQLServer:
+                                    lenObj = schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"];
+                                    length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
+                                    SqlCommand sqlCmd = dbCmd.DbCommand as SqlCommand;
+                                    SqlDbType sqlDbType = SqlTypeToSqlDbType(schema.Rows[index]["DATA_TYPE"].ToString());
+                                    sqlCmd.Parameters.Add(_prefixParam + "value", sqlDbType, length);
+                                    sqlCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
+                                    strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + sqlCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
+                                    break;
+                                case DataBaseType.Oracle:
+                                    length = Convert.ToInt32(schema.Rows[index]["LENGTH"]);
+                                    OracleCommand oracleCmd = dbCmd.DbCommand as OracleCommand;
+                                    OracleDbType oraDbType = SqlTypeToOracleDbType(schema.Rows[index]["DATATYPE"].ToString());
+                                    oracleCmd.Parameters.Add(_prefixParam + "value", oraDbType, length);
+                                    oracleCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
+                                    strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + oracleCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
+                                    break;
+                                case DataBaseType.MySQL:
+                                    lenObj = schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"];
+                                    length = Convert.ToInt32(lenObj.GetType() == typeof(DBNull) ? 19 : lenObj);
+                                    MySqlCommand mySqlCmd = dbCmd.DbCommand as MySqlCommand;
+                                    MySqlDbType mySqlDbType = SqlTypeToMySqlDbType(schema.Rows[index]["DATA_TYPE"].ToString());
+                                    mySqlCmd.Parameters.Add(_prefixParam + "value", mySqlDbType, length);
+                                    mySqlCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
+                                    strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + mySqlCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
+                                    break;
+                                case DataBaseType.SQLite:
+                                    length = Convert.ToInt32(schema.Rows[index]["CHARACTER_MAXIMUM_LENGTH"]);
+                                    SQLiteCommand sqliteCmd = dbCmd.DbCommand as SQLiteCommand;
+                                    DbType dbType = SqlTypeToDbType(schema.Rows[index]["DATA_TYPE"].ToString());
+                                    sqliteCmd.Parameters.Add(_prefixParam + "value", dbType, length);
+                                    sqliteCmd.Parameters[_prefixParam + "value"].Value = whereVals[i];
+                                    strDisplaySQL = strDisplaySQL.Replace(_prefixParam + "value", "'" + sqliteCmd.Parameters[_prefixParam + "value"].Value.ToString() + "'");
+                                    break;
                                 }
                                 if (_param.DataBaseType == DataBaseType.SQLServer) {
                                     dbCmd.DbCommand.Transaction = dbTrans;
@@ -582,7 +587,13 @@ namespace LibBase {
             case "bit":
                 dbType = DbType.Byte;
                 break;
+            case "blob":
+                dbType = DbType.Binary;
+                break;
             case "char":
+                dbType = DbType.String;
+                break;
+            case "clob":
                 dbType = DbType.String;
                 break;
             case "datetime":
