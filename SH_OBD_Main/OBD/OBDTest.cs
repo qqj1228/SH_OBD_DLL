@@ -68,7 +68,7 @@ namespace SH_OBD_Main {
             StrVIN_ECU = "";
             StrVIN_IN = "";
             StrType_IN = "";
-            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.SQLServer, _obdIfEx.Log);
+            DbLocal = new ModelLocal(_obdIfEx.DBandMES, LibBase.DataBaseType.SQLite, _obdIfEx.Log);
             DbMES = new ModelOracle(_obdIfEx.DBandMES.OraMES, _obdIfEx.Log);
             Checks = new List<CheckResult>();
         }
@@ -449,6 +449,7 @@ namespace SH_OBD_Main {
                     OBDRequest = "0902",
                     Service = 9,
                     Parameter = 2,
+                    SignalName = "VIN",
                     ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
                 };
             }
@@ -466,10 +467,13 @@ namespace SH_OBD_Main {
                 VINResult = false;
             }
             param.Parameter = HByte + 0x0A;
+            param.SignalName = "ECU_NAME";
             SetDataRow(++NO, "ECU名称", dt, param); // 1
             param.Parameter = HByte + 4;
+            param.SignalName = "CAL_ID";
             SetDataRow(++NO, "CAL_ID", dt, param);  // 2
             param.Parameter = HByte + 6;
+            param.SignalName = "CVN";
             SetDataRow(++NO, "CVN", dt, param);     // 3
 
             // 根据配置文件，判断CAL_ID和CVN两个值的合法性
