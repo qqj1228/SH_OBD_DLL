@@ -913,10 +913,10 @@ namespace SH_OBD_Main {
                 dr["ECU_ID"] = _dtECUInfo.Columns[i].ColumnName;
                 for (int j = 2; j < _dtInfo.Columns.Count; j++) {
                     if (_dtInfo.Columns[j].ColumnName == _dtECUInfo.Columns[i].ColumnName) {
-                        dr["MIL"] = _dtInfo.Rows[0][j].ToString();
-                        dr["MIL_DIST"] = _dtInfo.Rows[1][j].ToString();
-                        dr["OBD_SUP"] = _dtInfo.Rows[2][j].ToString();
-                        dr["ODO"] = _dtInfo.Rows[3][j].ToString();
+                        dr["MIL"] = _dtInfo.Rows[0][j];
+                        dr["MIL_DIST"] = _dtInfo.Rows[1][j];
+                        dr["OBD_SUP"] = _dtInfo.Rows[2][j];
+                        dr["ODO"] = _dtInfo.Rows[3][j];
                         // DTC03，若大于数据库字段容量则截断
                         strDTCTemp = _dtInfo.Rows[4][j].ToString().Replace("\n", ",");
                         if (strDTCTemp.Length > 100) {
@@ -938,9 +938,9 @@ namespace SH_OBD_Main {
                         } else {
                             dr["DTC0A"] = strDTCTemp;
                         }
-                        dr["MIS_RDY"] = _dtInfo.Rows[7][j].ToString();
-                        dr["FUEL_RDY"] = _dtInfo.Rows[8][j].ToString();
-                        dr["CCM_RDY"] = _dtInfo.Rows[9][j].ToString();
+                        dr["MIS_RDY"] = _dtInfo.Rows[7][j];
+                        dr["FUEL_RDY"] = _dtInfo.Rows[8][j];
+                        dr["CCM_RDY"] = _dtInfo.Rows[9][j];
                         if (_compIgn) {
                             dr["CAT_RDY"] = "不适用";
                             dr["HCAT_RDY"] = "不适用";
@@ -949,21 +949,21 @@ namespace SH_OBD_Main {
                             dr["ACRF_RDY"] = "不适用";
                             dr["O2S_RDY"] = "不适用";
                             dr["HTR_RDY"] = "不适用";
-                            dr["EGR_RDY"] = _dtInfo.Rows[15][j].ToString();
-                            dr["HCCAT_RDY"] = _dtInfo.Rows[10][j].ToString();
-                            dr["NCAT_RDY"] = _dtInfo.Rows[11][j].ToString();
-                            dr["BP_RDY"] = _dtInfo.Rows[12][j].ToString();
-                            dr["EGS_RDY"] = _dtInfo.Rows[13][j].ToString();
-                            dr["PM_RDY"] = _dtInfo.Rows[14][j].ToString();
+                            dr["EGR_RDY"] = _dtInfo.Rows[15][j];
+                            dr["HCCAT_RDY"] = _dtInfo.Rows[10][j];
+                            dr["NCAT_RDY"] = _dtInfo.Rows[11][j];
+                            dr["BP_RDY"] = _dtInfo.Rows[12][j];
+                            dr["EGS_RDY"] = _dtInfo.Rows[13][j];
+                            dr["PM_RDY"] = _dtInfo.Rows[14][j];
                         } else {
-                            dr["CAT_RDY"] = _dtInfo.Rows[10][j].ToString();
-                            dr["HCAT_RDY"] = _dtInfo.Rows[11][j].ToString();
-                            dr["EVAP_RDY"] = _dtInfo.Rows[12][j].ToString();
-                            dr["AIR_RDY"] = _dtInfo.Rows[13][j].ToString();
-                            dr["ACRF_RDY"] = _dtInfo.Rows[14][j].ToString();
-                            dr["O2S_RDY"] = _dtInfo.Rows[15][j].ToString();
-                            dr["HTR_RDY"] = _dtInfo.Rows[16][j].ToString();
-                            dr["EGR_RDY"] = _dtInfo.Rows[17][j].ToString();
+                            dr["CAT_RDY"] = _dtInfo.Rows[10][j];
+                            dr["HCAT_RDY"] = _dtInfo.Rows[11][j];
+                            dr["EVAP_RDY"] = _dtInfo.Rows[12][j];
+                            dr["AIR_RDY"] = _dtInfo.Rows[13][j];
+                            dr["ACRF_RDY"] = _dtInfo.Rows[14][j];
+                            dr["O2S_RDY"] = _dtInfo.Rows[15][j];
+                            dr["HTR_RDY"] = _dtInfo.Rows[16][j];
+                            dr["EGR_RDY"] = _dtInfo.Rows[17][j];
                             dr["HCCAT_RDY"] = "不适用";
                             dr["NCAT_RDY"] = "不适用";
                             dr["BP_RDY"] = "不适用";
@@ -973,7 +973,7 @@ namespace SH_OBD_Main {
                         break;
                     }
                 }
-                dr["ECU_NAME"] = _dtECUInfo.Rows[1][i].ToString();
+                dr["ECU_NAME"] = _dtECUInfo.Rows[1][i];
                 dr["CAL_ID"] = _dtECUInfo.Rows[2][i].ToString().Replace("\n", ",");
                 dr["CVN"] = _dtECUInfo.Rows[3][i].ToString().Replace("\n", ",");
                 dr["Result"] = strOBDResult;
@@ -988,28 +988,28 @@ namespace SH_OBD_Main {
                 dr["VIN"] = strVIN;
                 dr["ECU_ID"] = _dtIUPR.Columns[i].ColumnName;
                 if (_obdIfEx.OBDDll.Mode09Support.ContainsKey(_dtIUPR.Columns[i].ColumnName) && _obdIfEx.OBDDll.Mode09Support[_dtIUPR.Columns[i].ColumnName][0x08 - 1] && _dtIUPR.Rows.Count > 0) {
-                    dr["CATCOMP1"] = _dtIUPR.Rows[0][i].ToString();
-                    dr["CATCOND1"] = _dtIUPR.Rows[1][i].ToString();
-                    dr["CATCOMP2"] = _dtIUPR.Rows[3][i].ToString();
-                    dr["CATCOND2"] = _dtIUPR.Rows[4][i].ToString();
-                    dr["O2SCOMP1"] = _dtIUPR.Rows[6][i].ToString();
-                    dr["O2SCOND1"] = _dtIUPR.Rows[7][i].ToString();
-                    dr["O2SCOMP2"] = _dtIUPR.Rows[9][i].ToString();
-                    dr["O2SCOND2"] = _dtIUPR.Rows[10][i].ToString();
-                    dr["SO2SCOMP1"] = _dtIUPR.Rows[12][i].ToString();
-                    dr["SO2SCOND1"] = _dtIUPR.Rows[13][i].ToString();
-                    dr["SO2SCOMP2"] = _dtIUPR.Rows[15][i].ToString();
-                    dr["SO2SCOND2"] = _dtIUPR.Rows[16][i].ToString();
-                    dr["EVAPCOMP"] = _dtIUPR.Rows[18][i].ToString();
-                    dr["EVAPCOND"] = _dtIUPR.Rows[19][i].ToString();
-                    dr["EGRCOMP_08"] = _dtIUPR.Rows[21][i].ToString();
-                    dr["EGRCOND_08"] = _dtIUPR.Rows[22][i].ToString();
-                    dr["PFCOMP1"] = _dtIUPR.Rows[24][i].ToString();
-                    dr["PFCOND1"] = _dtIUPR.Rows[25][i].ToString();
-                    dr["PFCOMP2"] = _dtIUPR.Rows[27][i].ToString();
-                    dr["PFCOND2"] = _dtIUPR.Rows[28][i].ToString();
-                    dr["AIRCOMP"] = _dtIUPR.Rows[30][i].ToString();
-                    dr["AIRCOND"] = _dtIUPR.Rows[31][i].ToString();
+                    dr["CATCOMP1"] = _dtIUPR.Rows[0][i];
+                    dr["CATCOND1"] = _dtIUPR.Rows[1][i];
+                    dr["CATCOMP2"] = _dtIUPR.Rows[3][i];
+                    dr["CATCOND2"] = _dtIUPR.Rows[4][i];
+                    dr["O2SCOMP1"] = _dtIUPR.Rows[6][i];
+                    dr["O2SCOND1"] = _dtIUPR.Rows[7][i];
+                    dr["O2SCOMP2"] = _dtIUPR.Rows[9][i];
+                    dr["O2SCOND2"] = _dtIUPR.Rows[10][i];
+                    dr["SO2SCOMP1"] = _dtIUPR.Rows[12][i];
+                    dr["SO2SCOND1"] = _dtIUPR.Rows[13][i];
+                    dr["SO2SCOMP2"] = _dtIUPR.Rows[15][i];
+                    dr["SO2SCOND2"] = _dtIUPR.Rows[16][i];
+                    dr["EVAPCOMP"] = _dtIUPR.Rows[18][i];
+                    dr["EVAPCOND"] = _dtIUPR.Rows[19][i];
+                    dr["EGRCOMP_08"] = _dtIUPR.Rows[21][i];
+                    dr["EGRCOND_08"] = _dtIUPR.Rows[22][i];
+                    dr["PFCOMP1"] = _dtIUPR.Rows[24][i];
+                    dr["PFCOND1"] = _dtIUPR.Rows[25][i];
+                    dr["PFCOMP2"] = _dtIUPR.Rows[27][i];
+                    dr["PFCOND2"] = _dtIUPR.Rows[28][i];
+                    dr["AIRCOMP"] = _dtIUPR.Rows[30][i];
+                    dr["AIRCOND"] = _dtIUPR.Rows[31][i];
                 } else {
                     dr["CATCOMP1"] = "-1";
                     dr["CATCOND1"] = "-1";
@@ -1035,20 +1035,20 @@ namespace SH_OBD_Main {
                     dr["AIRCOND"] = "-1";
                 }
                 if (_obdIfEx.OBDDll.Mode09Support.ContainsKey(_dtIUPR.Columns[i].ColumnName) && _obdIfEx.OBDDll.Mode09Support[_dtIUPR.Columns[i].ColumnName][0x0B - 1] && _dtIUPR.Rows.Count > 0) {
-                    dr["HCCATCOMP"] = _dtIUPR.Rows[0][i].ToString();
-                    dr["HCCATCOND"] = _dtIUPR.Rows[1][i].ToString();
-                    dr["NCATCOMP"] = _dtIUPR.Rows[3][i].ToString();
-                    dr["NCATCOND"] = _dtIUPR.Rows[4][i].ToString();
-                    dr["NADSCOMP"] = _dtIUPR.Rows[6][i].ToString();
-                    dr["NADSCOND"] = _dtIUPR.Rows[7][i].ToString();
-                    dr["PMCOMP"] = _dtIUPR.Rows[9][i].ToString();
-                    dr["PMCOND"] = _dtIUPR.Rows[10][i].ToString();
-                    dr["EGSCOMP"] = _dtIUPR.Rows[12][i].ToString();
-                    dr["EGSCOND"] = _dtIUPR.Rows[13][i].ToString();
-                    dr["EGRCOMP_0B"] = _dtIUPR.Rows[15][i].ToString();
-                    dr["EGRCOND_0B"] = _dtIUPR.Rows[16][i].ToString();
-                    dr["BPCOMP"] = _dtIUPR.Rows[18][i].ToString();
-                    dr["BPCOND"] = _dtIUPR.Rows[19][i].ToString();
+                    dr["HCCATCOMP"] = _dtIUPR.Rows[0][i];
+                    dr["HCCATCOND"] = _dtIUPR.Rows[1][i];
+                    dr["NCATCOMP"] = _dtIUPR.Rows[3][i];
+                    dr["NCATCOND"] = _dtIUPR.Rows[4][i];
+                    dr["NADSCOMP"] = _dtIUPR.Rows[6][i];
+                    dr["NADSCOND"] = _dtIUPR.Rows[7][i];
+                    dr["PMCOMP"] = _dtIUPR.Rows[9][i];
+                    dr["PMCOND"] = _dtIUPR.Rows[10][i];
+                    dr["EGSCOMP"] = _dtIUPR.Rows[12][i];
+                    dr["EGSCOND"] = _dtIUPR.Rows[13][i];
+                    dr["EGRCOMP_0B"] = _dtIUPR.Rows[15][i];
+                    dr["EGRCOND_0B"] = _dtIUPR.Rows[16][i];
+                    dr["BPCOMP"] = _dtIUPR.Rows[18][i];
+                    dr["BPCOND"] = _dtIUPR.Rows[19][i];
                 } else {
                     dr["HCCATCOMP"] = "-1";
                     dr["HCCATCOND"] = "-1";
