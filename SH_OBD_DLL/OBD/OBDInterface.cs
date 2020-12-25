@@ -84,6 +84,7 @@ namespace SH_OBD_DLL {
             SetDevice(DllSettings.HardwareIndex);
             flag = _obdDevice.Initialize(DllSettings);
             STDType = _obdDevice.GetStandardType();
+            DllSettings.StandardIndex = STDType;
             if (flag) {
                 OnConnect?.Invoke();
                 _log.TraceInfo("Connection Established!");
@@ -112,6 +113,7 @@ namespace SH_OBD_DLL {
             if (flag) {
                 DllSettings.ProtocolIndex = _obdDevice.GetProtocolType();
                 DllSettings.ComPort = _obdDevice.GetComPortIndex();
+                DllSettings.StandardIndex = STDType;
                 SaveDllSettings(DllSettings);
                 OnConnect?.Invoke();
                 return true;
