@@ -181,6 +181,7 @@ namespace SH_OBD_DLL {
             string positiveResponse = (param.Service + 0x40).ToString("X2") + param.OBDRequest.Substring(2);
             string negativeResponse = "7F" + param.OBDRequest.Substring(0, 2);
 
+            tempLines.Sort();
             for (int i = 0; i < tempLines.Count; i++) {
                 if (tempLines[i].Length < headLen) {
                     continue;

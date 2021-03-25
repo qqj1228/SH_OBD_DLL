@@ -5,7 +5,6 @@ using System.Threading;
 
 namespace SH_OBD_DLL {
     public abstract class CommLine : CommBase {
-        private const int BUFF_SIZE = 512;
         private static readonly object locker = new object();
         private int _RxIndex = 0;
         private string _RxString = "";
@@ -80,7 +79,9 @@ namespace SH_OBD_DLL {
         }
 
         protected virtual void OnRxLine() {
-            _RxLine += _RxString;
+            if (_RxLine.Length <= _RxBuffer.Length) {
+                _RxLine += _RxString;
+            }
         }
 
         protected string StringFilter(string strOld) {
@@ -131,8 +132,8 @@ namespace SH_OBD_DLL {
                     startIndex = index + 1;
                 } else {
                     _RxString += strRxFilter.Substring(startIndex);
-                    if (_RxString.Length > BUFF_SIZE) {
-                        _RxString = _RxString.Substring(0, BUFF_SIZE);
+                    if (_RxString.Length > _RxBuffer.Length) {
+                        _RxString = _RxString.Substring(0, _RxBuffer.Length);
                         // 检测是否已经m_TransFlag.Set()了
                         if (_TransFlag.WaitOne(0, false)) {
                             // 已经m_TransFlag.Set()了，表示是单独接收ELM327发来的消息，即startIndex > 0
