@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DllSettings>
+<DllSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <AutoDetect>true</AutoDetect>
   <ComPort>4</ComPort>
   <RemoteIP>127.0.0.1</RemoteIP>

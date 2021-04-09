@@ -230,28 +230,13 @@ namespace SH_OBD_DLL {
             }
         }
 
-        public List<T> LoadDisplayFile<T>(string fileName) {
-            List<T> displays = null;
-            try {
-                if (File.Exists(fileName)) {
-                    Type[] extraTypes = new Type[] { typeof(T) };
-                    displays = new XmlSerializer(typeof(List<T>), extraTypes).Deserialize(new FileStream(fileName, FileMode.Open)) as List<T>;
-                    return displays;
-                } else {
-                    Console.WriteLine("Failed to locate the file: " + fileName + ", because it doesn't exist.");
-                    return displays;
-                }
-            } catch (Exception ex) {
-                Console.WriteLine("Failed to load parameters from: " + fileName + ", reason: " + ex.Message);
-                return displays;
-            }
-        }
-
         public void SaveDllSettings(DllSettings settings) {
             DllSettings = settings;
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(DllSettings));
             using (TextWriter writer = new StreamWriter(_dllSettings_xml)) {
-                xmlSerializer.Serialize(writer, DllSettings);
+                xmlSerializer.Serialize(writer, DllSettings, namespaces);
                 writer.Close();
             }
         }

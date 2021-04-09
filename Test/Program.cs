@@ -29,7 +29,7 @@ namespace Test {
                 }
                 Dictionary<string, string> PID0C = GetPID0C(obd);
                 foreach (string key in PID0C.Keys) {
-                    Console.WriteLine(string.Format("PRM: {0}/{1}", key, PID0C[key]));
+                    Console.WriteLine(string.Format("RPM: {0}/{1}", key, PID0C[key]));
                 }
                 Dictionary<string, string> VIN = GetVIN(obd);
                 foreach (string key in VIN.Keys) {

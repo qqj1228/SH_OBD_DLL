@@ -204,5 +204,9 @@ namespace SH_OBD_DLL {
             }
             return bRet;
         }
+
+        public string GetDllVersion() {
+            return DllVersion<SH_OBD_Dll>.AssemblyVersion.ToString();
+        }
     }
 }

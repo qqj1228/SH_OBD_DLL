@@ -1,0 +1,3394 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: SID_09 SID_01 Tester
+VAL_TABLE_ STAT_ENCODE 2 "L3e-A3" 1 "L3e-A2" ;
+VAL_TABLE_ Protocol_ID 1 "ISO 27145-4" ;
+VAL_TABLE_ ABS_DISABLED 1 "ABS disabled" 0 "ABS not disabled" ;
+VAL_TABLE_ HEV_MODE_STAT 3 "Not PSA" 2 "CIM (PSA)" 1 "CDM (PSA)" 0 "CSM (PSA) / Not a PHEV" ;
+VAL_TABLE_ Data_availability 1 "No fault, no result" 0 "Normal" ;
+VAL_TABLE_ DEF_Type 13 "No fault, no result" 3 "DEF is proper mixture" 2 "Fluid is Diesel" 1 "Urea Concentration Too Low" 0 "Urea Concentration Too High" ;
+VAL_TABLE_ HEV_MODE 1 "CDM" 0 "CSM / non-PHEV" ;
+VAL_TABLE_ WARN_ACTIVE 1 "Warning system active" 0 "Warning system inactive" ;
+VAL_TABLE_ INDUC_STAT 3 "not supported" 2 "active" 1 "enabled" 0 "inactive" ;
+VAL_TABLE_ VOBD_RDY 1 "not complete" 0 "complete" ;
+VAL_TABLE_ MI_MODE 15 "Not available / Not required" 14 "Error" 3 "Continuous MI" 2 "Short MI" 1 "On Demand MI" 0 "MI Off" ;
+VAL_TABLE_ MI_DISP 3 "Not available" 2 "Reserved" 1 "discriminatory" 0 "nondiscriminatory" ;
+VAL_TABLE_ STATUS 1 "YES" 0 "NO" ;
+VAL_TABLE_ NOX_ADS_DESULF 1 "Desulfurization in progress" 0 "Desulfurization not in progress" ;
+VAL_TABLE_ NOX_ADS_REGEN 1 "regen" 0 "no regen" ;
+VAL_TABLE_ DPF_REGEN_TYPE 1 "Active DPF Regen" 0 "Passive DPF Regen" ;
+VAL_TABLE_ DPF_REGEN_STAT 1 "DPF Regen in progress" 0 "DPF Regen not in progress" ;
+VAL_TABLE_ INDUC_ACTIVE 1 "inducement system active" 0 "inducement system not active" ;
+VAL_TABLE_ NOx_LEVEL 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_TABLE_ CONSUMP_DEVIATION 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_TABLE_ INCORR_REAG 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_TABLE_ LEVEL_LOW 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_TABLE_ CTL_STATUS 3 "CTL_FAULT" 2 "CTL_CL" 1 "CTL_OL" ;
+VAL_TABLE_ GPL_STAT 1 "ON" 0 "OFF" ;
+VAL_TABLE_ NG_STAT 1 "GEAR" 0 "NEUT" ;
+VAL_TABLE_ ND_STAT 1 "DRIVE" 0 "NEUT" ;
+VAL_TABLE_ EMIS_SUP 17 "EURO VI" 16 "EURO C" 15 "EURO V B2" 14 "EURO IV B1" ;
+VAL_TABLE_ FUEL_TYP 28 "DSL_NG" 27 "DSL_CNG" 26 "NG" 25 "BI_DSL" 24 "BI_NG" 23 "BI_DSL / NG" 22 "HYB_REG" 21 "HYB_MIX" 20 "HYB_ELEC" 19 "HYB_DSL" 18 "HYB_ETH" 17 "HYB_GAS" 16 "BI_MIX" 15 "BI_ELEC" 14 "BI_PROP" 13 "BI_CNG" 12 "BI_LPG" 11 "BI_ETH" 10 "BI_METH" 9 "BI_GAS" 8 "ELEC" 7 "PROP" 6 "CNG" 5 "LPG" 4 "DSL" 3 "ETH" 2 "METH" 1 "GAS" 0 "NONE" ;
+VAL_TABLE_ MonitorCompleteStatus 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_TABLE_ MonitorEnabledStatus 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_TABLE_ PTO_STAT 1 "ON" 0 "OFF" ;
+VAL_TABLE_ OBDSUP 43 "2B,CN-HDOBD-VI" 42 "2A,OBDBr-D" 41 "29,CN-OBD-6" 40 "28,MC JOBD-I" 39 "27,MC TOBD-I" 38 "26,MC COBD-I" 37 "25,MC EOBD-II" 36 "24,MC EOBD-I" 35 "23,OBDBr-3" 34 "22,OBD / OBD II / HD OBD" 33 "21,HD EOBD-VI" 32 "20,IOBD II" 31 "1F,IOBD I" 30 "1E,KOBD" 29 "1D,OBDBr-2" 28 "1C,OBDBr-1" 27 "1B,ISO/SAE reserved" 26 "1A,HD EOBD-II N" 25 "19,HD EOBD-II" 24 "18,HD EOBD-I N" 23 "17,HD EOBD-I" 22 "16,SAE/ISO reserved" 21 "15,WWH OBD" 20 "14,HD OBD" 19 "13,HD OBD-C" 18 "12,EMD+" 17 "11,EMD" 16 "10,ISO/SAE reserved" 15 "F,OBD / OBD II / EOBD / KOBD" 14 "E,OBD / EOBD / KOBD" 13 "D,JOBD / EOBD / OBD II" 12 "C,JOBD / EOBD" 11 "B,JOBD / OBD II" 10 "A,JOBD" 9 "9,EOBD / OBD / OBD II" 8 "8,EOBD / OBD" 7 "7,EOBD / OBD II" 6 "6,EOBD" 5 "5,NO OBD" 4 "4,OBD I" 3 "3,OBD / OBD II" 2 "2,OBD" 1 "1,OBD II" ;
+VAL_TABLE_ ReadinessStatus 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_TABLE_ SparkOrCompressionIgnition 1 "Compression ignition" 0 "Spark ignition" ;
+VAL_TABLE_ SupportStatus 1 "YES" 0 "NO" ;
+VAL_TABLE_ MIL_Status 1 "MIL ON" 0 "MIL OFF" ;
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ ECU_Acronym : 0|32@0+ (1,0) [0|0] "ASCII" Vector__XXX
+
+BO_ 2147485993 InfoType_29: 16 SID_09
+ SG_ OCCT5_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT5_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT5_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT5_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485992 InfoType_28: 16 SID_09
+ SG_ OCCT4_TIME2_R : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT4_TIME2_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT4_TIME1_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT4_TIME1_L : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485991 InfoType_27: 16 SID_09
+ SG_ OCCT3_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT3_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT3_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT3_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485990 InfoType_26: 16 SID_09
+ SG_ OCCT2_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT2_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT2_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT2_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485989 InfoType_25: 16 SID_09
+ SG_ OCCT1_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT1_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT1_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ OCCT1_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485988 InfoType_24: 16 SID_09
+ SG_ TWU_TIME_R : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ TWU_TIME_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ EWU_TIME_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ EWU_TIME_L : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485987 InfoType_23: 48 SID_09
+ SG_ DCTU3_CNTS_R : 295|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTU3_CNTS_L : 359|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTU2_CNTS_R : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTU2_CNTS_L : 231|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTU1_CNTS_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTU1_CNTS_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE3_CNTS_R : 263|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE3_CNTS_L : 327|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE2_CNTS_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE2_CNTS_L : 199|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE1_CNTS_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DCTE1_CNTS_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485986 InfoType_22: 24 SID_09
+ SG_ EOC_TIME1_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ EOC_TIME1_L : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ERC_TIME1_R : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ERC_TIME1_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ISS_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ISS_TIME1_L : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485985 InfoType_21: 40 SID_09
+ SG_ DSM4_TIME1_R : 263|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM4_TIME1_L : 295|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM3_TIME1_R : 199|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM3_TIME1_L : 231|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM2_TIME1_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM2_TIME1_L : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM1_TIME1_R : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ DSM1_TIME1_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ EDSM_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ EDSM_TIME1_L : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485983 InfoType_1F: 32 SID_09
+ SG_ AAF2_TIME2_R : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF2_TIME2_L : 231|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF2_TIME1_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF2_TIME1_L : 199|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF1_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF1_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF1_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AAF1_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485982 InfoType_1E: 16 SID_09
+ SG_ VRHC_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ VRHC_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ VRHC_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ VRHC_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485981 InfoType_1D: 32 SID_09
+ SG_ AGSB_TIME2_R : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSB_TIME2_L : 231|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSB_TIME1_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSB_TIME1_L : 199|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSA_TIME2_R : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSA_TIME2_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSA_TIME1_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AGSA_TIME1_L : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485980 InfoType_1C: 24 SID_09
+ SG_ GE_R : 135|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ GE_L : 167|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ CDERGE_R : 71|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ CDERGE_L : 103|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ CDEOGE_R : 7|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ CDEOGE_L : 39|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+
+BO_ 2147485979 InfoType_1B: 16 SID_09
+ SG_ CIFC_R : 71|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+ SG_ CIFC_L : 103|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+ SG_ CDFC_R : 7|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+ SG_ CDFC_L : 39|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+
+BO_ 2147485978 InfoType_1A: 24 SID_09
+ SG_ CIDT_R : 135|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ CIDT_L : 167|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ CDERDT_R : 71|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ CDERDT_L : 103|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ CDEODT_R : 7|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ CDEODT_L : 39|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+
+BO_ 2147485977 InfoType_19: 24 SID_09
+ SG_ CPSA_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ CPSA_L : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ IPSA_R : 71|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ IPSA_L : 103|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ PSA_R : 7|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ PSA_L : 39|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 2147485976 InfoType_18: 16 SID_09
+ SG_ EOE_R : 71|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ EOE_L : 103|32@0+ (0.1,0) [0|429496729.5] "kWh"  Tester
+ SG_ PKE_R : 7|32@0+ (1,0) [0|4294967295] "km/h2"  Tester
+ SG_ PKE_L : 39|32@0+ (1,0) [0|4294967295] "km/h2"  Tester
+
+BO_ 2147485975 InfoType_17: 16 SID_09
+ SG_ FC_R : 71|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+ SG_ FC_L : 103|32@0+ (0.01,0) [0|42949672.95] "L"  Tester
+ SG_ DT_R : 7|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+ SG_ DT_L : 39|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+
+BO_ 2147485974 InfoType_16: 32 SID_09
+ SG_ IERT_R : 199|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ IERT_L : 231|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ERT_R : 135|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ ERT_L : 167|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ FEOCNTR_R : 71|32@0+ (1,0) [0|4294967295] ""  Tester
+ SG_ FEOCNTR_L : 103|32@0+ (1,0) [0|4294967295] ""  Tester
+ SG_ IGNCNTR_R : 7|32@0+ (1,0) [0|4294967295] ""  Tester
+ SG_ IGNCNTR_L : 39|32@0+ (1,0) [0|4294967295] ""  Tester
+
+BO_ 2147485973 InfoType_15: 1 SID_09
+ SG_ STAT_ENCODE : 7|8@0+ (1,0) [0|0] ""  Tester
+
+BO_ 2147485972 InfoType_14: 2 SID_09
+ SG_ EVAP_DIST : 7|16@0+ (1,0) [0|65535] "km"  Tester
+
+BO_ 2147485971 InfoType_13: 12 SID_09
+ SG_ TG_EFN : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485970 InfoType_12: 2 SID_09
+ SG_ FEOCNTR : 7|16@0+ (1,0) [0|65535] ""  Tester
+
+BO_ 2147485969 InfoType_11: 11 SID_09
+ SG_ GTR_Number : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485968 InfoType_10: 1 SID_09
+ SG_ Protocol_ID : 7|8@0+ (1,0) [0|0] ""  Tester
+
+BO_ 2147485967 InfoType_0F: 17 SID_09
+ SG_ EROTAN : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485965 InfoType_0D: 17 SID_09
+ SG_ ESN : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485963 InfoType_0B: 36 SID_09
+ SG_ OBDCOND : 7|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ IGNCNTR : 23|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ FUELCOND : 279|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ FUELCOMP : 263|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ BPCOND : 247|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ BPCOMP : 231|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGRCOND : 215|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGRCOMP : 199|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGSCOND : 183|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGSCOMP : 167|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ PMCOND : 151|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ PMCOMP : 135|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ NADSCOND : 119|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ NADSCOMP : 103|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ NCATCOND : 87|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ NCATCOMP : 71|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ HCCATCOND : 55|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ HCCATCOMP : 39|16@0+ (1,0) [0|65535] ""  Tester
+
+BO_ 2147485962 InfoType_0A: 20 SID_09
+ SG_ ECU_NAME : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485960 InfoType_08: 56 SID_09
+ SG_ PFCOND2 : 439|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ PFCOND1 : 407|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ PFCOMP2 : 423|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ PFCOMP1 : 391|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AFRICOND2 : 375|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AFRICOND1 : 343|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AFRICOMP2 : 359|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AFRICOMP1 : 327|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ SO2SCOND2 : 311|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ SO2SCOND1 : 279|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ SO2SCOMP2 : 295|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ SO2SCOMP1 : 263|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EVAPCOND : 247|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EVAPCOMP : 231|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AIRCOND : 215|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ AIRCOMP : 199|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGRCOND : 183|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ EGRCOMP : 167|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ O2SCOND2 : 151|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ O2SCOND1 : 119|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ O2SCOMP2 : 135|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ O2SCOMP1 : 103|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ CATCOND2 : 87|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ CATCOND1 : 55|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ CATCOMP2 : 71|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ CATCOMP1 : 39|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ IGNCNTR : 23|16@0+ (1,0) [0|65535] ""  Tester
+ SG_ OBDCOND : 7|16@0+ (1,0) [0|65535] ""  Tester
+
+BO_ 2147485958 InfoType_06: 4 SID_09
+ SG_ CVN : 7|32@0+ (1,0) [0|4294967295] "HEX"  Tester
+
+BO_ 2147485956 InfoType_04: 16 SID_09
+ SG_ CAL_ID : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 2147485954 InfoType_02: 17 SID_09
+ SG_ VIN : 7|8@0+ (1,0) [0|255] "ASCII"  Tester
+
+BO_ 425 PID_A9: 2 SID_01
+ SG_ ABS_DISABLED_SUP : 0|1@0+ (1,0) [0|0] ""  Tester
+ SG_ ABS_DISABLED : 8|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484072 PID_A8: 9 SID_01
+ SG_ NOXC24_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC24_AVA m1M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC24 m0 : 63|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC23_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC23_AVA m1M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC23 m0 : 47|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC14_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC14_AVA m1M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC14 m0 : 31|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC13_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC13_AVA m1M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC13 m0 : 15|16@0+ (1,0) [0|65535] "ppm"  Tester
+
+BO_ 2147484071 PID_A7: 9 SID_01
+ SG_ NOX24_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX24_AVA m1M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX24 m0 : 63|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX23_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX23_AVA m1M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX23 m0 : 47|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX14_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX14_AVA m1M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX14 m0 : 31|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX13_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX13_AVA m1M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX13 m0 : 15|16@0+ (1,0) [0|65535] "ppm"  Tester
+
+BO_ 422 PID_A6: 4 SID_01
+ SG_ ODO : 7|32@0+ (0.1,0) [0|429496729.5] "km"  Tester
+
+BO_ 421 PID_A5: 4 SID_01
+ SG_ DEF_UCDC_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_UCDC m1 : 23|16@0+ (0.0005,0) [0|32.7675] "L"  Tester
+ SG_ DEF_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_CMD m1 : 15|8@0+ (0.5,0) [0|100] "%"  Tester
+
+BO_ 420 PID_A4: 4 SID_01
+ SG_ GEAR_STAT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ GEAR_RAT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ GEAR_RAT m1 : 23|16@0+ (0.001,0) [0|65.535] ""  Tester
+ SG_ GEAR_ACT m1 : 15|4@0+ (1,0) [0|15] "Gear"  Tester
+
+BO_ 2147484067 PID_A3: 9 SID_01
+ SG_ EVAP_B_VP_WR_SUP : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_B_VP_WR : 63|16@0- (2,0) [-65536|65534] "Pa"  Tester
+ SG_ EVAP_B_VP_SUP : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_B_VP : 47|16@0- (0.25,0) [-8192|8191.75] "Pa"  Tester
+ SG_ EVAP_A_VP_WR_SUP : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_A_VP_WR : 31|16@0- (2,0) [-65536|65534] "Pa"  Tester
+ SG_ EVAP_A_VP_SUP : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_A_VP : 15|16@0- (0.25,0) [-8192|8191.75] "Pa"  Tester
+
+BO_ 418 PID_A2: 2 SID_01
+ SG_ CYL_RATE : 7|16@0+ (0.0312504768444343,0) [0|2048] "mg/stroke"  Tester
+
+BO_ 2147484065 PID_A1: 9 SID_01
+ SG_ NOXC22_AVA m1M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC21_AVA m1M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC12_AVA m1M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC11_AVA m1M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC22_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC22 m0 : 63|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC21_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC21 m0 : 47|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC12 m0 : 31|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOXC11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOXC11 m0 : 15|16@0+ (1,0) [0|65535] "ppm"  Tester
+
+BO_ 2147484063 PID_9F: 9 SID_01
+ SG_ FUELSYSB_B4_SUP M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_B4 m1 : 71|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSB_B3_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_B3 m1 : 55|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSB_B2_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_B2 m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSB_B1_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_B1 m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSA_B4_SUP M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_B4 m1 : 63|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSA_B3_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_B3 m1 : 47|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSA_B2_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_B2 m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ FUELSYSA_B1_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_B1 m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 414 PID_9E: 2 SID_01
+ SG_ EXH_RATE : 7|16@0+ (0.2,0) [0|13107] "kg/h"  Tester
+
+BO_ 413 PID_9D: 4 SID_01
+ SG_ VEH_FUEL_RATE : 23|16@0+ (0.02,0) [0|1310.7] "g/s"  Tester
+ SG_ ENG_FUEL_RATE : 7|16@0+ (0.02,0) [0|1310.7] "g/s"  Tester
+
+BO_ 2147484060 PID_9C: 17 SID_01
+ SG_ LAMBDA24_SUP M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA24 m1 : 127|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA23_SUP M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA23 m1 : 111|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA14_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA14 m1 : 95|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA13_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA13 m1 : 79|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ O2S24_PCT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S24_PCT m1 : 63|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S23_PCT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S23_PCT m1 : 47|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S14_PCT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S14_PCT m1 : 31|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S13_PCT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S13_PCT m1 : 15|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+
+BO_ 411 PID_9B: 4 SID_01
+ SG_ DEF_Type_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_Type m0 : 7|4@0+ (1,0) [0|15] ""  Tester
+ SG_ DEF_T_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_T m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ DEF_LVL_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_LVL m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ DEF_CON_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DEF_CON m1 : 15|8@0+ (0.25,0) [0|63.75] "%"  Tester
+
+BO_ 410 PID_9A: 6 SID_01
+ SG_ HEV_MODE_STAT m1 : 10|2@0+ (1,0) [0|3] ""  Tester
+ SG_ HEV_STAT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HEV_MODE m1 : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HEV_BATT_V_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HEV_BATT_V m1 : 23|16@0+ (0.0156252384222171,0) [0|1024] "V"  Tester
+ SG_ HEV_BATT_A_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HEV_BATT_A m1 : 39|16@0- (0.1,0) [-3276.8|3276.7] "A"  Tester
+
+BO_ 2147484057 PID_99: 9 SID_01
+ SG_ EGT28_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT28 m1 : 63|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT27_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT27 m1 : 47|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT26_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT26 m1 : 31|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT25_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT25 m1 : 15|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 2147484056 PID_98: 9 SID_01
+ SG_ EGT18_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT18 m1 : 63|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT17_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT17 m1 : 47|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT16_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT16 m1 : 31|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT15_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT15 m1 : 15|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 2147484052 PID_94: 12 SID_01
+ SG_ NOX_DTC_TIME_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX_DTC_TIME m1 : 87|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ EGR_TIME_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_TIME m1 : 71|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ REAG_QUAL_TIME_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ REAG_QUAL_TIME m1 : 23|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ REAG_DOSE_TIME_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ REAG_DOSE_TIME m1 : 55|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ REAG_CON_TIME_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ REAG_CON_TIME m1 : 39|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ INDUC_L3 m1 : 14|2@0+ (1,0) [0|3] ""  Tester
+ SG_ INDUC_L2 m1 : 12|2@0+ (1,0) [0|3] ""  Tester
+ SG_ INDUC_L1 m1 : 10|2@0+ (1,0) [0|3] ""  Tester
+ SG_ NOX_WARN_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX_WARN_ACT m1 : 8|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 403 PID_93: 3 SID_01
+ SG_ MI_TIME_CUM_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MI_TIME_CUM m1 : 15|16@0+ (1,0) [0|65535] "h"  Tester
+
+BO_ 402 PID_92: 2 SID_01
+ SG_ IFB2_CL_SUP M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IFB2_CL m1 : 15|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IFB1_CL_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IFB1_CL m1 : 11|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIT2_CL_SUP M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIT2_CL m1 : 14|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIT1_CL_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIT1_CL m1 : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIQ2_CL_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIQ2_CL m1 : 13|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIQ1_CL_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FIQ1_CL m1 : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FP2_CL_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FP2_CL m1 : 12|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FP1_CL_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FP1_CL m1 : 8|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 401 PID_91: 5 SID_01
+ SG_ OBD_MI_TIME : 15|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ OBD_B1_TIME : 31|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ MI_MODE_ECU : 3|4@0+ (1,0) [0|15] ""  Tester
+
+BO_ 400 PID_90: 3 SID_01
+ SG_ VOBD_RDY : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VOBD_MI_TIME : 15|16@0+ (1,0) [0|65535] "h"  Tester
+ SG_ MI_MODE_VOBD : 5|4@0+ (1,0) [0|15] ""  Tester
+ SG_ MI_DISP_VOBD : 1|2@0+ (1,0) [0|3] ""  Tester
+
+BO_ 399 PID_8F: 7 SID_01
+ SG_ PM21_STAT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM21_SIG_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM21_REGEN m1 : 33|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM21_OUT m1 : 47|16@0- (0.01,0) [-327.68|327.67] "%"  Tester
+ SG_ PM21_ACTIVE m1 : 32|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM11_STAT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM11_SIG_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM11_REGEN m1 : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM11_OUT m1 : 23|16@0- (0.01,0) [-327.68|327.67] "%"  Tester
+ SG_ PM11_ACTIVE : 8|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 398 PID_8E: 1 SID_01
+ SG_ TQ_FR : 7|8@0+ (1,-125) [-125|130] "%"  Tester
+
+BO_ 397 PID_8D: 1 SID_01
+ SG_ TP_G : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 2147484044 PID_8C: 17 SID_01
+ SG_ LAMBDA22_SUP M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA22 m1 : 127|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA21_SUP M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA21 m1 : 111|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA12_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA12 m1 : 95|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ LAMBDA11_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LAMBDA11 m1 : 79|16@0+ (0.000122072175173571,0) [0|8] "lambda"  Tester
+ SG_ O2S22_PCT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S22_PCT m1 : 63|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S21_PCT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S21_PCT m1 : 47|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S12_PCT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S12_PCT m1 : 31|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+ SG_ O2S11_PCT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S11_PCT m1 : 15|16@0+ (0.00152590218966964,0) [0|100] "%"  Tester
+
+BO_ 395 PID_8B: 7 SID_01
+ SG_ NOX_ADS_REGEN_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX_ADS_REGEN m1 : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX_ADS_DESULF_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX_ADS_DESULF m1 : 11|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_TYPE_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_TYPE m1 : 9|1@0+ (1,0) [0|0] ""  Tester
+ SG_ DPF_REGEN_STAT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_STAT m1 : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_PCT_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_PCT m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ DPF_REGEN_AVGT_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_AVGT m1 : 31|16@0+ (1,0) [0|65535] "min"  Tester
+ SG_ DPF_REGEN_AVGD_SUP M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF_REGEN_AVGD m1 : 47|16@0+ (1,0) [0|65535] "km"  Tester
+
+BO_ 2147484040 PID_88: 13 SID_01
+ SG_ SCR_IND_DIST_4N : 95|16@0+ (1,0) [0|65535] "km"  Tester
+ SG_ SCR_IND_DIST_3N : 79|16@0+ (1,0) [0|65535] "km"  Tester
+ SG_ SCR_IND_DIST_2N : 63|16@0+ (1,0) [0|65535] "km"  Tester
+ SG_ SCR_IND_DIST_1N : 31|16@0+ (1,0) [0|65535] "km"  Tester
+ SG_ SCR_IND_DIST_1D : 47|16@0+ (1,0) [0|65535] "km"  Tester
+ SG_ ACTIVE : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOx_LEVEL4 : 23|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOx_LEVEL3 : 19|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOx_LEVEL2 : 15|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOx_LEVEL1 : 11|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOx_LEVEL : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CONSUMP_DEVIATION4 : 22|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CONSUMP_DEVIATION3 : 18|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CONSUMP_DEVIATION2 : 14|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CONSUMP_DEVIATION1 : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CONSUMP_DEVIATION : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ INCORR_REAG4 : 21|1@0+ (1,0) [0|1] ""  Tester
+ SG_ INCORR_REAG3 : 17|1@0+ (1,0) [0|1] ""  Tester
+ SG_ INCORR_REAG2 : 13|1@0+ (1,0) [0|1] ""  Tester
+ SG_ INCORR_REAG1 : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ INCORR_REAG : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LEVEL_LOW4 : 20|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LEVEL_LOW3 : 16|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LEVEL_LOW2 : 12|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LEVEL_LOW1 : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ LEVEL_LOW : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 391 PID_87: 5 SID_01
+ SG_ MAP_B_SUP M : 1|1@0+ (1,0) [0|0] ""  Tester
+ SG_ MAP_B m1 : 31|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+ SG_ MAP_A_SUP M : 0|1@0+ (1,0) [0|0] ""  Tester
+ SG_ MAP_A m1 : 15|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+
+BO_ 390 PID_86: 5 SID_01
+ SG_ PM21_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM21 m1 : 31|16@0+ (0.0125,0) [0|819.1875] "mg/m3"  Tester
+ SG_ PM11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM11 m1 : 15|16@0+ (0.0125,0) [0|819.1875] "mg/m3"  Tester
+
+BO_ 2147484037 PID_85: 10 SID_01
+ SG_ NWI_TIME_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NWI_TIME m1 : 55|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ REAG_RATE_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ REAG_RATE m1 : 15|16@0+ (0.005,0) [0|327.675] "L/h"  Tester
+ SG_ REAG_LVL_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ REAG_LVL m1 : 47|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ REAG_DEMD_SUP M : 1|1@0+ (1,0) [0|1] "s"  Tester
+ SG_ REAG_DEMD m1 : 31|16@0+ (0.005,0) [0|327.675] "L/h"  Tester
+
+BO_ 388 PID_84: 1 SID_01
+ SG_ MST : 7|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 2147484035 PID_83: 9 SID_01
+ SG_ NOX22_AVA m1M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX21_AVA m1M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX12_AVA m1M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX11_AVA m1M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX22_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX22 m0 : 63|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX21_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX21 m0 : 47|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX12 m0 : 31|16@0+ (1,0) [0|65535] "ppm"  Tester
+ SG_ NOX11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NOX11 m0 : 15|16@0+ (1,0) [0|65535] "ppm"  Tester
+
+BO_ 2147484042 PID_8A: 41 SID_01
+ SG_ AECD20_TIME2 m1 : 303|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD20_TIME1 m1 : 271|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD20_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD19_TIME2 m1 : 239|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD19_TIME1 m1 : 207|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD19_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD18_TIME2 m1 : 175|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD18_TIME1 m1 : 143|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD18_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD17_TIME2 m1 : 111|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD17_TIME1 m1 : 79|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD17_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD16_TIME2 m1 : 47|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD16_TIME1 m1 : 15|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD16_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484041 PID_89: 41 SID_01
+ SG_ AECD15_TIME2 m1 : 303|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD15_TIME1 m1 : 271|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD15_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD14_TIME2 m1 : 239|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD14_TIME1 m1 : 207|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD14_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD13_TIME2 m1 : 175|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD13_TIME1 m1 : 143|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD13_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD12_TIME2 m1 : 111|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD12_TIME1 m1 : 79|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD11_TIME2 m1 : 47|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD11_TIME1 m1 : 15|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484034 PID_82: 41 SID_01
+ SG_ AECD10_TIME2 m1 : 303|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD10_TIME1 m1 : 271|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD10_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD9_TIME2 m1 : 239|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD9_TIME1 m1 : 207|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD9_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD8_TIME2 m1 : 175|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD8_TIME1 m1 : 143|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD8_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD7_TIME2 m1 : 111|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD7_TIME1 m1 : 79|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD7_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD6_TIME2 m1 : 47|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD6_TIME1 m1 : 15|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD6_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484033 PID_81: 41 SID_01
+ SG_ AECD5_TIME2 m1 : 303|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD5_TIME1 m1 : 271|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD5_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD4_TIME2 m1 : 239|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD4_TIME1 m1 : 207|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD4_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD3_TIME2 m1 : 175|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD3_TIME1 m1 : 143|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD3_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD2_TIME2 m1 : 111|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD2_TIME1 m1 : 79|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD2_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AECD1_TIME2 m1 : 47|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD1_TIME1 m1 : 15|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ AECD1_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484031 PID_7F: 13 SID_01
+ SG_ PTO_TIME_SUP M : 2|1@0+ (1,0) [0|1] "s"  Tester
+ SG_ PTO_TIME m1 : 79|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ IDLE_TIME_SUP M : 1|1@0+ (1,0) [0|1] "s"  Tester
+ SG_ IDLE_TIME m1 : 47|32@0+ (1,0) [0|4294967295] "s"  Tester
+ SG_ RUN_TIME_SUP M : 0|1@0+ (1,0) [0|1] "s"  Tester
+ SG_ RUN_TIME m1 : 15|32@0+ (1,0) [0|4294967295] "s"  Tester
+
+BO_ 382 PID_7E: 1 SID_01
+ SG_ PNTE_OUT : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PNTE_IN : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PNTE_DEF : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PNTE_CAA : 2|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 381 PID_7D: 1 SID_01
+ SG_ NNTE_OUT : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NNTE_IN : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NNTE_DEF : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NNTE_CAA : 2|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 2147484028 PID_7C: 9 SID_01
+ SG_ DPF2_OUTT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF2_OUTT m1 : 63|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ DPF2_INT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF2_INT m1 : 47|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ DPF1_OUTT_SUP : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF1_OUTT m1 : 31|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ DPF1_INT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF1_INT m1 : 15|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 379 PID_7B: 7 SID_01
+ SG_ DPF2_OUTP_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF2_OUTP m1 : 47|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ DPF2_INP_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF2_INP m1 : 31|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ DPF2_DP_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF2_DP m1 : 15|16@0- (0.01,0) [-327.68|327.67] "kPa"  Tester
+
+BO_ 378 PID_7A: 7 SID_01
+ SG_ DPF1_OUTP_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF1_OUTP m1 : 47|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ DPF1_INP_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF1_INP m1 : 31|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ DPF1_DP_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DPF1_DP m1 : 15|16@0- (0.01,0) [-327.68|327.67] "kPa"  Tester
+
+BO_ 2147484025 PID_79: 9 SID_01
+ SG_ EGT24_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT24 m1 : 63|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT23_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT23 m1 : 47|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT22_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT22 m1 : 31|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT21_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT21 m1 : 15|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 2147484024 PID_78: 9 SID_01
+ SG_ EGT14_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT14 m1 : 63|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT13_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT13 m1 : 47|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT12 m1 : 31|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+ SG_ EGT11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGT11 m1 : 15|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 375 PID_77: 5 SID_01
+ SG_ CACT22_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CACT22 m1 : 39|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ CACT21_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CACT21 m1 : 31|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ CACT12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CACT12 m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ CACT11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CACT11 m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 374 PID_76: 7 SID_01
+ SG_ TCB_TOUTT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_TOUTT m1 : 47|16@0+ (0.1,-40) [-40|6513.5] " ～C"  Tester
+ SG_ TCB_TINT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_TINT m1 : 31|16@0+ (0.1,-40) [-40|6513.5] " ～C"  Tester
+ SG_ TCB_COUTT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_COUTT m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ TCB_CINT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_CINT m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 373 PID_75: 7 SID_01
+ SG_ TCA_TOUTT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_TOUTT m1 : 47|16@0+ (0.1,-40) [-40|6513.5] " ～C"  Tester
+ SG_ TCA_TINT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_TINT m1 : 31|16@0+ (0.1,-40) [-40|6513.5] " ～C"  Tester
+ SG_ TCA_COUTT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_COUTT m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ TCA_CINT_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_CINT m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 372 PID_74: 5 SID_01
+ SG_ TCB_RPM_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_RPM m1 : 31|16@0+ (10,0) [0|655350] "rpm"  Tester
+ SG_ TCA_RPM_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_RPM m1 : 15|16@0+ (10,0) [0|655350] "rpm"  Tester
+
+BO_ 371 PID_73: 5 SID_01
+ SG_ EP_2 m1 : 31|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ EP_1 m1 : 15|16@0+ (0.01,0) [0|655.35] "kPa"  Tester
+ SG_ EP2_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EP1_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 370 PID_72: 5 SID_01
+ SG_ WG_B_CMD_SUP M : 2|1@0+ (1,0) [0|0] ""  Tester
+ SG_ WG_B_CMD m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ WG_B_ACT_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ WG_B_ACT m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ WG_A_CMD_SUP M : 0|1@0+ (1,0) [0|0] ""  Tester
+ SG_ WG_A_CMD m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ WG_A_ACT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ WG_A_ACT m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 369 PID_71: 6 SID_01
+ SG_ VGT_B_STAT_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_B_CMD_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_B_ACT_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_A_STAT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_A_ACT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ VGT_B_STAT m1 : 43|2@0+ (1,0) [0|3] ""  Tester
+ SG_ VGT_B_CMD m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ VGT_B_ACT m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ VGT_A_STAT m1 : 41|2@0+ (1,0) [0|3] ""  Tester
+ SG_ VGT_A_CMD m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ VGT_A_ACT m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 2147484016 PID_70: 10 SID_01
+ SG_ BP_B_STAT m1 : 75|2@0+ (1,0) [0|3] ""  Tester
+ SG_ BP_A_STAT m1 : 73|2@0+ (1,0) [0|3] ""  Tester
+ SG_ BP_B_STAT_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_B_CMD_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_B_CMD m1 : 47|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+ SG_ BP_B_ACT_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_B_ACT m1 : 63|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+ SG_ BP_A_STAT_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_A_CMD m1 : 15|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+ SG_ BP_A_ACT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_A_ACT m1 : 31|16@0+ (0.0312504768444343,0) [0|2048] "kPa"  Tester
+
+BO_ 367 PID_6F: 3 SID_01
+ SG_ TCB_CINP_WR m1 : 23|8@0+ (8,0) [0|2040] "kPa"  Tester
+ SG_ TCB_CINP_WR_SUP m0M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_CINP_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCB_CINP m1 : 23|8@0+ (1,0) [0|255] "kPa"  Tester
+ SG_ TCA_CINP_WR m1 : 15|8@0+ (8,0) [0|2040] "kPa"  Tester
+ SG_ TCA_CINP_WR_SUP m0M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_CINP_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TCA_CINP m1 : 15|8@0+ (1,0) [0|255] "kPa"  Tester
+
+BO_ 2147484014 PID_6E: 9 SID_01
+ SG_ ICP_B_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ICP_B_CMD_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ICP_B_CMD m1 : 47|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ ICP_B m1 : 63|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ ICP_A_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ICP_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ICP_A_CMD m1 : 15|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ ICP_A m1 : 31|16@0+ (10,0) [0|655350] "kPa"  Tester
+
+BO_ 2147484013 PID_6D: 11 SID_01
+ SG_ FRT_B_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRT_B m1 : 87|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ FRT_A_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRT_A m1 : 47|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ FRP_B_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRP_B_CMD_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRP_B_CMD m1 : 55|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ FRP_B m1 : 71|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ FRP_A_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRP_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FRP_A_CMD m1 : 15|16@0+ (10,0) [0|655350] "kPa"  Tester
+ SG_ FRP_A m1 : 31|16@0+ (10,0) [0|655350] "kPa"  Tester
+
+BO_ 364 PID_6C: 5 SID_01
+ SG_ TAC_B_CMD_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TAC_B_CMD m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ TAC_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TAC_A_CMD m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ TP_B_REL_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TP_B_REL m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ TP_A_REL_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ TP_A_REL m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 303 PID_2F: 1 SID_01
+ SG_ FLI : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 363 PID_6B: 5 SID_01
+ SG_ EGRTD_WR m1 : 39|8@0+ (4,-40) [-40|980] "～C"  Tester
+ SG_ EGRTC_WR m1 : 23|8@0+ (4,-40) [-40|980] "～C"  Tester
+ SG_ EGRTB_WR m1 : 31|8@0+ (4,-40) [-40|980] "～C"  Tester
+ SG_ EGRTA_WR m1 : 15|8@0+ (4,-40) [-40|980] "～C"  Tester
+ SG_ EGRTD_WR_SUP m0M : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTD_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTD m1 : 39|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ EGRTC_WR_SUP m0M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTC_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTC m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ EGRTB_WR_SUP m0M : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTB_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTB m1 : 31|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ EGRTA_WR_SUP m0M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTA_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGRTA m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 362 PID_6A: 5 SID_01
+ SG_ IAF_B_REL_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAF_B_REL m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ IAF_B_CMD_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAF_B_CMD m1 : 31|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ IAF_A_REL_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAF_A_REL m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ IAF_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAF_A_CMD m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 361 PID_69: 7 SID_01
+ SG_ EGR_B_ERR_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_B_ERR m1 : 55|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ EGR_B_CMD_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_B_CMD m1 : 39|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ EGR_B_ACT_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_B_ACT m1 : 47|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ EGR_A_ERR_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_A_ERR m1 : 31|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ EGR_A_CMD_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_A_CMD m1 : 15|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+ SG_ EGR_A_ACT_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_A_ACT m1 : 23|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 360 PID_68: 7 SID_01
+ SG_ IAT23_SUP M : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT23 m1 : 55|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ IAT22_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT22 m1 : 47|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ IAT21_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT21 m1 : 39|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ IAT13_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT13 m1 : 31|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ IAT12_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT12 m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ IAT11_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ IAT11 m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 359 PID_67: 3 SID_01
+ SG_ ECT2_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ECT2 m1 : 23|8@0+ (1,-40) [-40|215] "～C"  Tester
+ SG_ ECT1_SUP M : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ECT1 m1 : 15|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 358 PID_66: 5 SID_01
+ SG_ MAFB m1 : 31|16@0+ (0.0312504768444343,0) [0|2048] "g/s"  Tester
+ SG_ MAFA m1 : 15|16@0+ (0.0312504768444343,0) [0|2048] "g/s"  Tester
+ SG_ MAF_SB_SUP M : 1|1@0+ (1,0) [0|0] ""  Tester
+ SG_ MAF_SA_SUP M : 0|1@0+ (1,0) [0|0] ""  Tester
+
+BO_ 357 PID_65: 2 SID_01
+ SG_ GEAR_RCMD_SUP M : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ GEAR_RCMD m1 : 15|4@0+ (1,0) [0|15] "Gear"  Tester
+ SG_ GPL_STATUS_SUP M : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ GPL_STAT m1 : 11|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NG_STATUS_SUP M : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NG_STAT m1 : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ND_STATUS_SUP M : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ ND_STAT m1 : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PTO_STAT : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PTO_STATUS_SUP : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 356 PID_64: 5 SID_01
+ SG_ TQ_MAX5 : 39|8@0+ (1,-125) [-125|130] "%"  Tester
+ SG_ TQ_MAX4 : 31|8@0+ (1,-125) [-125|130] "%"  Tester
+ SG_ TQ_MAX3 : 23|8@0+ (1,-125) [-125|130] "%"  Tester
+ SG_ TQ_MAX2 : 15|8@0+ (1,-125) [-125|130] "%"  Tester
+ SG_ TQ_MAX1 : 7|8@0+ (1,-125) [-125|130] "%"  Tester
+
+BO_ 355 PID_63: 2 SID_01
+ SG_ TQ_REF : 7|16@0+ (1,0) [0|65535] "Nm"  Tester
+
+BO_ 354 PID_62: 1 SID_01
+ SG_ TQ_ACT : 7|8@0+ (1,-125) [-125|130] "%"  Tester
+
+BO_ 353 PID_61: 1 SID_01
+ SG_ TQ_DD : 7|8@0+ (1,-125) [-125|130] "%"  Tester
+
+BO_ 351 PID_5F: 1 SID_01
+ SG_ EMIS_SUP : 7|8@0+ (1,0) [0|255] ""  Tester
+
+BO_ 350 PID_5E: 2 SID_01
+ SG_ FUEL_RATE : 7|16@0+ (0.05,0) [0|3276.75] "L/h"  Tester
+
+BO_ 349 PID_5D: 2 SID_01
+ SG_ FUEL_TIMING : 7|16@0+ (0.0078125,-210) [-210|301.9921875] ""  Tester
+
+BO_ 348 PID_5C: 1 SID_01
+ SG_ EOT : 7|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 347 PID_5B: 1 SID_01
+ SG_ BAT_PWR : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 346 PID_5A: 1 SID_01
+ SG_ APP_R : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 345 PID_59: 2 SID_01
+ SG_ FRP : 7|16@0+ (10,0) [0|655350] "kPa"  Tester
+
+BO_ 344 PID_58: 2 SID_01
+ SG_ LGSO2FT4 : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ LGSO2FT2 : 7|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+
+BO_ 343 PID_57: 2 SID_01
+ SG_ STSO2FT4 : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ STSO2FT2 : 7|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+
+BO_ 342 PID_56: 2 SID_01
+ SG_ LGSO2FT3 : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ LGSO2FT1 : 7|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+
+BO_ 341 PID_55: 2 SID_01
+ SG_ STSO2FT3 : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ STSO2FT1 : 7|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+
+BO_ 340 PID_54: 2 SID_01
+ SG_ EVAP_VP : 7|16@0- (1,0) [-32768|32767] "Pa"  Tester
+
+BO_ 339 PID_53: 2 SID_01
+ SG_ EVAP_VPA : 7|16@0+ (0.005,0) [0|327.675] "kPa"  Tester
+
+BO_ 338 PID_52: 1 SID_01
+ SG_ ALCH_PCT : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 337 PID_51: 1 SID_01
+ SG_ FUEL_TYP : 7|8@0+ (1,0) [0|255] ""  Tester
+
+BO_ 336 PID_50: 4 SID_01
+ SG_ ScaleAirFlowRatio : 7|8@0+ (10,0) [0|2550] "g/s"  Tester
+
+BO_ 335 PID_4F: 4 SID_01
+ SG_ ScaleVoltage : 15|8@0+ (1,0) [0|255] ""  Tester
+ SG_ ScaleRatio : 7|8@0+ (1,0) [0|255] ""  Tester
+ SG_ ScalePressure : 31|8@0+ (10,0) [0|2550] "kPa"  Tester
+ SG_ ScaleCurrent : 23|8@0+ (1,0) [0|255] "mA"  Tester
+
+BO_ 334 PID_4E: 2 SID_01
+ SG_ CLR_TIME : 7|16@0+ (1,0) [0|65535] "min"  Tester
+
+BO_ 333 PID_4D: 2 SID_01
+ SG_ MIL_TIME : 7|16@0+ (1,0) [0|65535] "min"  Tester
+
+BO_ 332 PID_4C: 1 SID_01
+ SG_ TAC_PCT : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 331 PID_4B: 1 SID_01
+ SG_ APP_F : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 330 PID_4A: 1 SID_01
+ SG_ APP_E : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 329 PID_49: 1 SID_01
+ SG_ APP_D : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 328 PID_48: 1 SID_01
+ SG_ TP_C : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 327 PID_47: 1 SID_01
+ SG_ TP_B : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 326 PID_46: 1 SID_01
+ SG_ AAT : 7|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 325 PID_45: 1 SID_01
+ SG_ TP_R : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 324 PID_44: 2 SID_01
+ SG_ LAMBDA : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 323 PID_43: 2 SID_01
+ SG_ LOAD_ABS : 7|16@0+ (0.392156862745098,0) [0|25700] "%"  Tester
+
+BO_ 322 PID_42: 2 SID_01
+ SG_ VPWR : 7|16@0+ (0.001,0) [0|65.535] "V"  Tester
+
+BO_ 321 PID_41: 4 SID_01
+ SG_ CIGN_SUP M : 11|1@0+ (1,0) [0|0] ""  Tester
+ SG_ PM_ENA m1M : 22|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM_CMPL m1 : 30|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGS_ENA m1M : 21|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGS_CMPL m1 : 29|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_ENA m1M : 19|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_CMPL m1 : 27|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NCATCMPL m1 : 25|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NCAT_ENA m1M : 17|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCCATENA m1M : 16|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCCATCMP m1 : 24|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_ENA_spark m0M : 23|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_ENA_compression m1M : 23|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_CMPL_spark m1 : 31|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_CMPL_compression m1 : 31|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HTR_ENA m0M : 22|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HTR_CMPL m1 : 30|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S_ENA m0M : 21|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S_CMPL m1 : 29|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_ENA m0M : 19|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_CMPL m1 : 27|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAPCMPL m1 : 26|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_ENA m0M : 18|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCATCMPL m1 : 25|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCAT_ENA m0M : 17|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CAT_ENA m0M : 16|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CAT_CMPL m1 : 24|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CCM_ENA M : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CCM_CMPL m1 : 14|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELCMPL m1 : 13|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUEL_ENA M : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MIS_ENA M : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MIS_CMPL m1 : 12|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 319 PID_3F: 2 SID_01
+ SG_ CATEMP22 : 7|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 318 PID_3E: 2 SID_01
+ SG_ CATEMP12 : 7|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 317 PID_3D: 2 SID_01
+ SG_ CATEMP21 : 7|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 316 PID_3C: 2 SID_01
+ SG_ CATEMP11 : 7|16@0+ (0.1,-40) [-40|6513.5] "～C"  Tester
+
+BO_ 315 PID_3B: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 314 PID_3A: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 313 PID_39: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 312 PID_38: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 311 PID_37: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 310 PID_36: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 309 PID_35: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 308 PID_34: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.00390625,-128) [-128|127.99609375] "mA"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 307 PID_33: 1 SID_01
+ SG_ BARO : 7|8@0+ (1,0) [0|255] "kPa"  Tester
+
+BO_ 306 PID_32: 2 SID_01
+ SG_ EVAP_VP : 7|16@0- (0.25,0) [-8192|8191.75] "Pa"  Tester
+
+BO_ 305 PID_31: 2 SID_01
+ SG_ CLR_DIST : 7|16@0+ (1,0) [0|65535] "km"  Tester
+
+BO_ 304 PID_30: 1 SID_01
+ SG_ WARM_UPS : 7|8@0+ (1,0) [0|255] ""  Tester
+
+BO_ 302 PID_2E: 1 SID_01
+ SG_ EVAP_PCT : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 301 PID_2D: 1 SID_01
+ SG_ EGR_ERR : 7|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+
+BO_ 300 PID_2C: 1 SID_01
+ SG_ EGR_PCT : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 299 PID_2B: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 298 PID_2A: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 297 PID_29: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 296 PID_28: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 295 PID_27: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 294 PID_26: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 293 PID_25: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 292 PID_24: 4 SID_01
+ SG_ O2Sxy : 23|16@0+ (0.000122072175173571,0) [0|8] "V"  Tester
+ SG_ LAMBDAxy : 7|16@0+ (3.05180437933928E-005,0) [0|2] ""  Tester
+
+BO_ 291 PID_23: 2 SID_01
+ SG_ FRP : 7|16@0+ (10,0) [0|655350] "kPa"  Tester
+
+BO_ 290 PID_22: 2 SID_01
+ SG_ FP : 7|16@0+ (0.0790112153810941,0) [0|5178] "kPa"  Tester
+
+BO_ 289 PID_21: 2 SID_01
+ SG_ MIL_DIST : 7|16@0+ (1,0) [0|65535] "km"  Tester
+
+BO_ 287 PID_1F: 2 SID_01
+ SG_ RUNTM : 7|16@0+ (1,0) [0|65535] "s"  Tester
+
+BO_ 286 PID_1E: 1 SID_01
+ SG_ PTO_STAT : 7|8@0+ (1,0) [0|0] ""  Tester
+
+BO_ 285 PID_1D: 1 SID_01
+ SG_ O2S42 : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S41 : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S32 : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S31 : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S22 : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S21 : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S12 : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S11 : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 284 PID_1C: 1 SID_01
+ SG_ OBDSUP : 7|8@0+ (1,0) [0|255] ""  Tester
+
+BO_ 283 PID_1B: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 282 PID_1A: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 281 PID_19: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 280 PID_18: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 279 PID_17: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 278 PID_16: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 277 PID_15: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 276 PID_14: 2 SID_01
+ SG_ SHRTFTxy : 15|8@0+ (0.78125,-100) [-100|99.21875] "%"  Tester
+ SG_ O2Sxy : 7|8@0+ (0.005,0) [0|1.275] "V"  Tester
+
+BO_ 275 PID_13: 1 SID_01
+ SG_ O2S24 : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S23 : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S22 : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S21 : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S14 : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S13 : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S12 : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S11 : 0|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 274 PID_12: 1 SID_01
+ SG_ AIR_STAT_UPS : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_STAT_OFF : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_STAT_DNS : 1|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_STAT_DIAG : 3|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 273 PID_11: 1 SID_01
+ SG_ TP : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 272 PID_10: 2 SID_01
+ SG_ MAF : 7|16@0+ (0.01,0) [0|655.35] "g/s"  Tester
+
+BO_ 271 PID_0F: 1 SID_01
+ SG_ IAT : 7|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 270 PID_0E: 1 SID_01
+ SG_ SPARKADV : 7|8@0+ (0.5,-64) [-64|63.5] ""  Tester
+
+BO_ 269 PID_0D: 1 SID_01
+ SG_ VSS : 7|8@0+ (1,0) [0|255] "km/h"  Tester
+
+BO_ 268 PID_0C: 2 SID_01
+ SG_ RPM : 7|16@0+ (0.25,0) [0|16383.75] "rpm"  Tester
+
+BO_ 267 PID_0B: 1 SID_01
+ SG_ MAP : 7|8@0+ (1,0) [0|255] "kPa"  Tester
+
+BO_ 266 PID_0A: 1 SID_01
+ SG_ FP : 7|8@0+ (3,0) [0|765] "kPa"  Tester
+
+BO_ 265 PID_09: 2 SID_01
+ SG_ LONGFT4 : 15|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+ SG_ LONGFT2 : 7|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+
+BO_ 264 PID_08: 2 SID_01
+ SG_ SHRTFT4 : 15|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+ SG_ SHRTFT2 : 7|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+
+BO_ 263 PID_07: 2 SID_01
+ SG_ LONGFT3 : 15|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+ SG_ LONGFT1 : 7|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+
+BO_ 262 PID_06: 2 SID_01
+ SG_ SHRTFT3 : 15|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+ SG_ SHRTFT1 : 7|8@0+ (0.78125,-100) [-100|99.22] "%"  Tester
+
+BO_ 261 PID_05: 1 SID_01
+ SG_ ECT : 7|8@0+ (1,-40) [-40|215] "～C"  Tester
+
+BO_ 260 PID_04: 1 SID_01
+ SG_ LOAD_PCT : 7|8@0+ (0.392156862745098,0) [0|100] "%"  Tester
+
+BO_ 259 PID_03: 2 SID_01
+ SG_ FUELSYSB_OLFaultB2 : 15|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_OLFault : 11|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_OLDriveB2 : 14|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_OLDrive : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_OLB2 : 13|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_OL : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_CLFault : 12|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSB_CL : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OLFaultB2 : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OLFault : 3|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OLDriveB2 : 6|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OLDrive : 2|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OLB2 : 5|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_OL : 0|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_CLFault : 4|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUELSYSA_CL : 1|1@0+ (1,0) [0|1] ""  Tester
+
+BO_ 258 PID_02: 2 SID_01
+ SG_ DTCFRZF : 7|16@0+ (1,0) [0|65535] ""  Tester
+
+BO_ 257 PID_01: 4 SID_01
+ SG_ EGR_RDY_compression m1 : 31|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM_SUP m1M : 22|1@0+ (1,0) [0|1] ""  Tester
+ SG_ PM_RDY m1 : 30|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGS_RDY m1 : 29|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_RDY m1 : 27|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NCAT_RDY m1 : 25|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCCATRDY m1 : 24|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_SUP_compression m1M : 23|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGS_SUP m1M : 21|1@0+ (1,0) [0|1] ""  Tester
+ SG_ BP_SUP m1M : 19|1@0+ (1,0) [0|1] ""  Tester
+ SG_ NCAT_SUP m1M : 17|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCCATSUP m1M : 16|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HTR_RDY m1 : 30|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_RDY_spark m1 : 31|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S_RDY m1 : 29|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_RDY m1 : 27|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_RDY m1 : 26|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCAT_RDY m1 : 25|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CAT_RDY m1 : 24|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EGR_SUP_spark m0M : 23|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HTR_SUP m0M : 22|1@0+ (1,0) [0|1] ""  Tester
+ SG_ O2S_SUP m0M : 21|1@0+ (1,0) [0|1] ""  Tester
+ SG_ AIR_SUP m0M : 19|1@0+ (1,0) [0|1] ""  Tester
+ SG_ EVAP_SUP m0M : 18|1@0+ (1,0) [0|1] ""  Tester
+ SG_ HCAT_SUP m0M : 17|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CAT_SUP m0M : 16|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CCM_RDY m1 : 14|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUEL_RDY m1 : 13|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MIS_RDY m1 : 12|1@0+ (1,0) [0|1] ""  Tester
+ SG_ CIGN_SUP M : 11|1@0+ (1,0) [0|0] ""  Tester
+ SG_ CCM_SUP M : 10|1@0+ (1,0) [0|1] ""  Tester
+ SG_ FUEL_SUP M : 9|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MIS_SUP M : 8|1@0+ (1,0) [0|1] ""  Tester
+ SG_ MIL : 7|1@0+ (1,0) [0|1] ""  Tester
+ SG_ DTC_CNT : 6|7@0+ (1,0) [0|127] ""  Tester
+
+
+
+CM_ BO_ 3221225472 "This is a message for not used signals, created by Vector CANdb++ DBC OLE DB Provider.";
+CM_ BO_ 2147485993 "Off-cycle Credit Technology #5 Vehicle Data";
+CM_ SG_ 2147485993 OCCT5_TIME2_R "Active Off-Cycle Credit Technology #5 Timer 2 (Recent)";
+CM_ SG_ 2147485993 OCCT5_TIME2_L "Active Off-Cycle Credit Technology #5 Timer 2 (Lifetime)";
+CM_ SG_ 2147485993 OCCT5_TIME1_R "Active Off-Cycle Credit Technology #5 Timer 1 (Recent)";
+CM_ SG_ 2147485993 OCCT5_TIME1_L "Active Off-Cycle Credit Technology #5 Timer 1 (Lifetime)";
+CM_ BO_ 2147485992 "Off-cycle Credit Technology #4 Vehicle Data";
+CM_ SG_ 2147485992 OCCT4_TIME2_R "Active Off-Cycle Credit Technology #4 Timer 2 (Recent)";
+CM_ SG_ 2147485992 OCCT4_TIME2_L "Active Off-Cycle Credit Technology #4 Timer 2 (Lifetime)";
+CM_ SG_ 2147485992 OCCT4_TIME1_R "Active Off-Cycle Credit Technology #4 Timer 1 (Recent)";
+CM_ SG_ 2147485992 OCCT4_TIME1_L "Active Off-Cycle Credit Technology #4 Timer 1 (Lifetime)";
+CM_ BO_ 2147485991 "Off-cycle Credit Technology #3 Vehicle Data";
+CM_ SG_ 2147485991 OCCT3_TIME2_R "Active Off-Cycle Credit Technology #3 Timer 2 (Recent)";
+CM_ SG_ 2147485991 OCCT3_TIME2_L "Active Off-Cycle Credit Technology #3 Timer 2 (Lifetime)";
+CM_ SG_ 2147485991 OCCT3_TIME1_R "Active Off-Cycle Credit Technology #3 Timer 1 (Recent)";
+CM_ SG_ 2147485991 OCCT3_TIME1_L "Active Off-Cycle Credit Technology #3 Timer 1 (Lifetime)";
+CM_ BO_ 2147485990 "Off-cycle Credit Technology #2 Vehicle Data";
+CM_ SG_ 2147485990 OCCT2_TIME2_R "Active Off-Cycle Credit Technology #2 Timer 2 (Recent)";
+CM_ SG_ 2147485990 OCCT2_TIME2_L "Active Off-Cycle Credit Technology #2 Timer 2 (Lifetime)";
+CM_ SG_ 2147485990 OCCT2_TIME1_R "Active Off-Cycle Credit Technology #2 Timer 1 (Recent)";
+CM_ SG_ 2147485990 OCCT2_TIME1_L "Active Off-Cycle Credit Technology #2 Timer 1 (Lifetime)";
+CM_ BO_ 2147485989 "Off-cycle Credit Technology #1 Vehicle Data";
+CM_ SG_ 2147485989 OCCT1_TIME2_R "Active Off-Cycle Credit Technology #1 Timer 2 (Recent)";
+CM_ SG_ 2147485989 OCCT1_TIME2_L "Active Off-Cycle Credit Technology #1 Timer 2 (Lifetime)";
+CM_ SG_ 2147485989 OCCT1_TIME1_R "Active Off-Cycle Credit Technology #1 Timer 1 (Recent)";
+CM_ SG_ 2147485989 OCCT1_TIME1_L "Active Off-Cycle Credit Technology #1 Timer 1 (Lifetime)";
+CM_ BO_ 2147485988 "Active Powertrain Warm-up Features Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485988 TWU_TIME_R " Active Transmission Warm-up Timer (Recent)";
+CM_ SG_ 2147485988 TWU_TIME_L " Active Transmission Warm-up Timer (Lifetime)";
+CM_ SG_ 2147485988 EWU_TIME_R " Active Engine Warm-up Timer (Recent)";
+CM_ SG_ 2147485988 EWU_TIME_L " Active Engine Warm-up Timer (Lifetime)";
+CM_ BO_ 2147485987 "Driver Coaching Technology Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485987 DCTU3_CNTS_R "Driver Coaching Technology 3 Utilized Counter (Recent)";
+CM_ SG_ 2147485987 DCTU3_CNTS_L "Driver Coaching Technology 3 Utilized Counter (Lifetime)";
+CM_ SG_ 2147485987 DCTU2_CNTS_R "Driver Coaching Technology 2 Utilized Counter (Recent)";
+CM_ SG_ 2147485987 DCTU2_CNTS_L "Driver Coaching Technology 2 Utilized Counter (Lifetime)";
+CM_ SG_ 2147485987 DCTU1_CNTS_R "Driver Coaching Technology 1 Utilized Counter (Recent)";
+CM_ SG_ 2147485987 DCTU1_CNTS_L "Driver Coaching Technology 1 Utilized Counter (Lifetime)";
+CM_ SG_ 2147485987 DCTE3_CNTS_R "Driver Coaching Technology 3 Enabled Counter (Recent)";
+CM_ SG_ 2147485987 DCTE3_CNTS_L "Driver Coaching Technology 3 Enabled Counter (Lifetime)";
+CM_ SG_ 2147485987 DCTE2_CNTS_R "Driver Coaching Technology 2 Enabled Counter (Recent)";
+CM_ SG_ 2147485987 DCTE2_CNTS_L "Driver Coaching Technology 2 Enabled Counter (Lifetime)";
+CM_ SG_ 2147485987 DCTE1_CNTS_R "Driver Coaching Technology 1 Enabled Counter (Recent)";
+CM_ SG_ 2147485987 DCTE1_CNTS_L "Driver Coaching Technology 1 Enabled Counter (Lifetime)";
+CM_ BO_ 2147485986 "Run Time for Stop-Start and Coasting Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485986 EOC_TIME1_R "Engine Off Coasting Timer (Recent)";
+CM_ SG_ 2147485986 EOC_TIME1_L "Engine Off Coasting Timer (Lifetime)";
+CM_ SG_ 2147485986 ERC_TIME1_R "Engine Running Coasting Timer (Recent)";
+CM_ SG_ 2147485986 ERC_TIME1_L "Engine Running Coasting Timer (Lifetime)";
+CM_ SG_ 2147485986 ISS_TIME1_R "Idle Stop-Start Timer (Recent)";
+CM_ SG_ 2147485986 ISS_TIME1_L "Idle Stop-Start Timer (Lifetime)";
+CM_ BO_ 2147485985 "Driver-Selectable Operating Modes Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485985 DSM4_TIME1_R " Driver-Selectable Mode Timer 4 (Recent)";
+CM_ SG_ 2147485985 DSM4_TIME1_L " Driver-Selectable Mode Timer 4 (Lifetime)";
+CM_ SG_ 2147485985 DSM3_TIME1_R " Driver-Selectable Mode Timer 3 (Recent)";
+CM_ SG_ 2147485985 DSM3_TIME1_L " Driver-Selectable Mode Timer 3 (Lifetime)";
+CM_ SG_ 2147485985 DSM2_TIME1_R " Driver-Selectable Mode Timer 2 (Recent)";
+CM_ SG_ 2147485985 DSM2_TIME1_L " Driver-Selectable Mode Timer 2 (Lifetime)";
+CM_ SG_ 2147485985 DSM1_TIME1_R " Driver-Selectable Mode Timer 1 (Recent)";
+CM_ SG_ 2147485985 DSM1_TIME1_L " Driver-Selectable Mode Timer 1 (Lifetime)";
+CM_ SG_ 2147485985 EDSM_TIME1_R " 'Eco' Driver-Selectable Mode Timer (Recent)";
+CM_ SG_ 2147485985 EDSM_TIME1_L " 'Eco' Driver-Selectable Mode Timer (Lifetime)";
+CM_ BO_ 2147485983 "Active Aerodynamic Features #3 Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485983 AAF2_TIME2_R "Active Aerodynamic Feature #2 Timer 2 (Recent)";
+CM_ SG_ 2147485983 AAF2_TIME2_L "Active Aerodynamic Feature #2 Timer 2 (Lifetime)";
+CM_ SG_ 2147485983 AAF2_TIME1_R "Active Aerodynamic Feature #2 Timer 1 (Recent)";
+CM_ SG_ 2147485983 AAF2_TIME1_L "Active Aerodynamic Feature #2 Timer 1 (Lifetime)";
+CM_ SG_ 2147485983 AAF1_TIME2_R "Active Aerodynamic Feature #1 Timer 2 (Recent)";
+CM_ SG_ 2147485983 AAF1_TIME2_L "Active Aerodynamic Feature #1 Timer 2 (Lifetime)";
+CM_ SG_ 2147485983 AAF1_TIME1_R "Active Aerodynamic Feature #1 Timer 1 (Recent)";
+CM_ SG_ 2147485983 AAF1_TIME1_L "Active Aerodynamic Feature #1 Timer 1 (Lifetime)";
+CM_ BO_ 2147485982 "Active Aerodynamic Features #2 Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485982 VRHC_TIME2_R "Vehicle Ride Height Control Timer 2 (Recent)";
+CM_ SG_ 2147485982 VRHC_TIME2_L "Vehicle Ride Height Control Timer 2 (Lifetime)";
+CM_ SG_ 2147485982 VRHC_TIME1_R "Vehicle Ride Height Control Timer 1 (Recent)";
+CM_ SG_ 2147485982 VRHC_TIME1_L "Vehicle Ride Height Control Timer 1 (Lifetime)";
+CM_ BO_ 2147485981 "Active Aerodynamic Features #1 Off-cycle Credit Vehicle Data";
+CM_ SG_ 2147485981 AGSB_TIME2_R "Active Grille Air Shutter 'B' Timer 2 (Recent)";
+CM_ SG_ 2147485981 AGSB_TIME2_L "Active Grille Air Shutter 'B' Timer 2 (Lifetime)";
+CM_ SG_ 2147485981 AGSB_TIME1_R "Active Grille Air Shutter 'B' Timer 1 (Recent)";
+CM_ SG_ 2147485981 AGSB_TIME1_L "Active Grille Air Shutter 'B' Timer 1 (Lifetime)";
+CM_ SG_ 2147485981 AGSA_TIME2_R "Active Grille Air Shutter 'A' Timer 2 (Recent)";
+CM_ SG_ 2147485981 AGSA_TIME2_L "Active Grille Air Shutter 'A' Timer 2 (Lifetime)";
+CM_ SG_ 2147485981 AGSA_TIME1_R "Active Grille Air Shutter 'A' Timer 1 (Recent)";
+CM_ SG_ 2147485981 AGSA_TIME1_L "Active Grille Air Shutter 'A' Timer 1 (Lifetime)";
+CM_ BO_ 2147485980 "Plug-in Hybrid Vehicle Grid Data";
+CM_ SG_ 2147485980 GE_R "Total grid energy into the battery (Recent)";
+CM_ SG_ 2147485980 GE_L "Total grid energy into the battery (Lifetime)";
+CM_ SG_ 2147485980 CDERGE_R "Total grid energy consumed in charge depleting operation with engine running (Recent)";
+CM_ SG_ 2147485980 CDERGE_L "Total grid energy consumed in charge depleting operation with engine running (Lifetime)";
+CM_ SG_ 2147485980 CDEOGE_R "Total grid energy consumed in charge depleting operation with engine off (Recent)";
+CM_ SG_ 2147485980 CDEOGE_L "Total grid energy consumed in charge depleting operation with engine off (Lifetime)";
+CM_ BO_ 2147485979 "Plug-in Hybrid Vehicle Fuel Data";
+CM_ SG_ 2147485979 CIFC_R "Total fuel consumed in driver-selectable charge increasing operation (Recent)";
+CM_ SG_ 2147485979 CIFC_L "Total fuel consumed in driver-selectable charge increasing operation (Lifetime)";
+CM_ SG_ 2147485979 CDFC_R "Total fuel consumed in charge depleting operation (Recent)";
+CM_ SG_ 2147485979 CDFC_L "Total fuel consumed in charge depleting operation (Lifetime)";
+CM_ BO_ 2147485978 "Plug-in Hybrid Vehicle Distance Data";
+CM_ SG_ 2147485978 CIDT_R "Total distance traveled in driver-selectable charge increasing operation (Recent)";
+CM_ SG_ 2147485978 CIDT_L "Total distance traveled in driver-selectable charge increasing operation (Lifetime)";
+CM_ SG_ 2147485978 CDERDT_R "Total distance traveled in charge depleting operation with engine running (Recent)";
+CM_ SG_ 2147485978 CDERDT_L "Total distance traveled in charge depleting operation with engine running (Lifetime)";
+CM_ SG_ 2147485978 CDEODT_R "Total distance traveled in charge depleting operation with engine off (Recent)";
+CM_ SG_ 2147485978 CDEODT_L "Total distance traveled in charge depleting operation with engine off (Lifetime)";
+CM_ BO_ 2147485977 "Vehicle Operation Data - PSA";
+CM_ SG_ 2147485977 CPSA_R "Total City Propulsion System Active Time (Recent)";
+CM_ SG_ 2147485977 CPSA_L "Total City Propulsion System Active Time (Lifetime)";
+CM_ SG_ 2147485977 IPSA_R "Total Idle Propulsion System Active Time (Recent)";
+CM_ SG_ 2147485977 IPSA_L "Total Idle Propulsion System Active Time (Lifetime)";
+CM_ SG_ 2147485977 PSA_R "Total Propulsion System Active Time (Recent)";
+CM_ SG_ 2147485977 PSA_L "Total Propulsion System Active Time (Lifetime)";
+CM_ BO_ 2147485976 "Vehicle Operation Data - PKE/EOE";
+CM_ SG_ 2147485976 EOE_R "Engine Output Energy (Recent)";
+CM_ SG_ 2147485976 EOE_L "Engine Output Energy (Lifetime)";
+CM_ SG_ 2147485976 PKE_R "Positive Kinetic Energy (Recent)";
+CM_ SG_ 2147485976 PKE_L "Positive Kinetic Energy (Lifetime)";
+CM_ BO_ 2147485975 "Vehicle Operation Data - Distance/Fuel Used";
+CM_ SG_ 2147485975 FC_R "Total Fuel Consumed (Recent)";
+CM_ SG_ 2147485975 FC_L "Total Fuel Consumed (Lifetime)";
+CM_ SG_ 2147485975 DT_R "Total Distance Traveled (Recent)";
+CM_ SG_ 2147485975 DT_L "Total Distance Traveled (Lifetime)";
+CM_ BO_ 2147485974 "Vehicle Operation Data - Engine Run/Idle Time";
+CM_ SG_ 2147485974 IERT_R "Total Idle Engine Run Time (Recent)";
+CM_ SG_ 2147485974 IERT_L "Total Idle Engine Run Time (Lifetime)";
+CM_ SG_ 2147485974 ERT_R "Total Engine Run Time (Recent)";
+CM_ SG_ 2147485974 ERT_L "Total Engine Run Time (Lifetime)";
+CM_ SG_ 2147485974 FEOCNTR_R "Fueled Engine Operation Ignition Cycle Counter (Recent)";
+CM_ SG_ 2147485974 FEOCNTR_L "Fueled Engine Operation Ignition Cycle Counter (Lifetime)";
+CM_ SG_ 2147485974 IGNCNTR_R "Ignition Counter (Recent)";
+CM_ SG_ 2147485974 IGNCNTR_L "Ignition Counter (Lifetime)";
+CM_ SG_ 2147485973 STAT_ENCODE "Applicable Motorcycle Category for Type Approval";
+CM_ BO_ 2147485972 "Distance Traveled Since Evap Monitoring Decision";
+CM_ SG_ 2147485972 EVAP_DIST "Distance Traveled Since Evap Monitoring Decision";
+CM_ BO_ 2147485971 "Certification Test Group/Engine Family Number ";
+CM_ SG_ 2147485971 TG_EFN "Certification Test Group/Engine Family Number";
+CM_ BO_ 2147485970 "Fueled Engine Operation Ignition Cycle Counter";
+CM_ SG_ 2147485970 FEOCNTR "Fueled Engine Operation Ignition Cycle Counter";
+CM_ BO_ 2147485969 "WWH-OBD GTR Number";
+CM_ BO_ 2147485968 "Protocol Identification";
+CM_ SG_ 2147485968 Protocol_ID "Protocol Identification";
+CM_ BO_ 2147485967 "Exhaust Regulation Or Type Approval Number";
+CM_ BO_ 2147485965 "Engine Serial Number";
+CM_ BO_ 2147485963 "In-use Performance Tracking for compression ignition vehicles";
+CM_ SG_ 2147485963 OBDCOND "OBD Monitoring Conditions Encountered Counts";
+CM_ SG_ 2147485963 IGNCNTR "Ignition Cycle Counter";
+CM_ SG_ 2147485963 FUELCOND "Fuel Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 FUELCOMP "Fuel Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 BPCOND "Boost Pressure Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 BPCOMP "Boost Pressure Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 EGRCOND "EGR and/or VVT Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 EGRCOMP "EGR and/or VVT Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 EGSCOND "Exhaust Gas Sensor Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 EGSCOMP "Exhaust Gas Sensor Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 PMCOND "PM Filter Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 PMCOMP "PM Filter Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 NADSCOND "NOx Adsorber Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 NADSCOMP "NOx Adsorber Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 NCATCOND "NOx/SCR Catalyst Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 NCATCOMP "NOx/SCR Catalyst Monitor Completion Condition Counts";
+CM_ SG_ 2147485963 HCCATCOND "NMHC Catalyst Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485963 HCCATCOMP "NMHC Catalyst Monitor Completion Condition Counts";
+CM_ BO_ 2147485962 "ECUNAME";
+CM_ BO_ 2147485960 "In-use Performance Tracking for spark ignition vehicles";
+CM_ SG_ 2147485960 PFCOND2 "Particulate Filter Monitor Conditions Encountered Counts Bank 2";
+CM_ SG_ 2147485960 PFCOND1 "Particulate Filter Monitor Conditions Encountered Counts Bank 1";
+CM_ SG_ 2147485960 PFCOMP2 "Particulate Filter Monitor Completion Counts Bank 2";
+CM_ SG_ 2147485960 PFCOMP1 "Particulate Filter Monitor Completion Counts Bank 1";
+CM_ SG_ 2147485960 AFRICOND2 "Air Fuel Ratio Imbalance Monitor Conditions Encountered Counts Bank 2";
+CM_ SG_ 2147485960 AFRICOND1 "Air Fuel Ratio Imbalance Monitor Conditions Encountered Counts Bank 1";
+CM_ SG_ 2147485960 AFRICOMP2 "Air Fuel Ratio Imbalance Monitor Completion Counts Bank 2";
+CM_ SG_ 2147485960 AFRICOMP1 "Air Fuel Ratio Imbalance Monitor Completion Counts Bank 1";
+CM_ SG_ 2147485960 SO2SCOND2 "Secondary O2 Sensor Monitor Conditions Encountered Counts Bank 2";
+CM_ SG_ 2147485960 SO2SCOND1 "Secondary O2 Sensor Monitor Conditions Encountered Counts Bank 1";
+CM_ SG_ 2147485960 SO2SCOMP2 "Secondary O2 Sensor Monitor Completion Counts Bank 2";
+CM_ SG_ 2147485960 SO2SCOMP1 "Secondary O2 Sensor Monitor Completion Counts Bank 1";
+CM_ SG_ 2147485960 EVAPCOND "EVAP Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485960 EVAPCOMP "EVAP Monitor Completion Condition Counts";
+CM_ SG_ 2147485960 AIRCOND "AIR Monitor Conditions Encountered Counts (Secondary Air)";
+CM_ SG_ 2147485960 AIRCOMP "AIR Monitor Completion Condition Counts (Secondary Air)";
+CM_ SG_ 2147485960 EGRCOND "EGR and/or VVT Monitor Conditions Encountered Counts";
+CM_ SG_ 2147485960 EGRCOMP "EGR and/or VVT Monitor Completion Condition Counts";
+CM_ SG_ 2147485960 O2SCOND2 "O2 Sensor Monitor Conditions Encountered Counts Bank 2";
+CM_ SG_ 2147485960 O2SCOND1 "O2 Sensor Monitor Conditions Encountered Counts Bank 1";
+CM_ SG_ 2147485960 O2SCOMP2 "O2 Sensor Monitor Completion Counts Bank 2";
+CM_ SG_ 2147485960 O2SCOMP1 "O2 Sensor Monitor Completion Counts Bank 1";
+CM_ SG_ 2147485960 CATCOND2 "Catalyst Monitor Conditions Encountered Counts Bank 2";
+CM_ SG_ 2147485960 CATCOND1 "Catalyst Monitor Conditions Encountered Counts Bank 1";
+CM_ SG_ 2147485960 CATCOMP2 "Catalyst Monitor Completion Counts Bank 2";
+CM_ SG_ 2147485960 CATCOMP1 "Catalyst Monitor Completion Counts Bank 1";
+CM_ SG_ 2147485960 IGNCNTR "Ignition Cycle Counter";
+CM_ SG_ 2147485960 OBDCOND "OBD Monitoring Conditions Encountered Counts";
+CM_ BO_ 2147485958 "Calibration Verification Numbers";
+CM_ BO_ 2147485956 "Calibration Identifications";
+CM_ BO_ 2147485954 "Vehicle Identification Number";
+CM_ BO_ 425 "Motorcycle Input/Output Status";
+CM_ SG_ 425 ABS_DISABLED_SUP "ABS Disable Switch Supported";
+CM_ SG_ 425 ABS_DISABLED "ABS Disable Switch State";
+CM_ BO_ 2147484072 "NOx Sensor Corrected";
+CM_ SG_ 2147484072 NOXC24_SUP "NOx Sensor Corrected Concentration Bank 2 Sensor 4 supported";
+CM_ SG_ 2147484072 NOXC24_AVA "NOx Sensor Corrected Concentration Bank 2 Sensor 4 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484072 NOXC24 "NOx Sensor Corrected Concentration Bank 2 Sensor 4";
+CM_ SG_ 2147484072 NOXC23_SUP "NOx Sensor Corrected Concentration Bank 2 Sensor 3 supported";
+CM_ SG_ 2147484072 NOXC23_AVA "NOx Sensor Corrected Concentration Bank 2 Sensor 3 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484072 NOXC23 "NOx Sensor Corrected Concentration Bank 2 Sensor 3";
+CM_ SG_ 2147484072 NOXC14_SUP "NOx Sensor Corrected Concentration Bank 1 Sensor 4 supported";
+CM_ SG_ 2147484072 NOXC14_AVA "NOx Sensor Corrected Concentration Bank 1 Sensor 4 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484072 NOXC14 "NOx Sensor Corrected Concentration Bank 1 Sensor 4";
+CM_ SG_ 2147484072 NOXC13_SUP "NOx Sensor Corrected Concentration Bank 1 Sensor 3 supported";
+CM_ SG_ 2147484072 NOXC13_AVA "NOx Sensor Corrected Concentration Bank 1 Sensor 3 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484072 NOXC13 "NOx Sensor Corrected Concentration Bank 1 Sensor 3";
+CM_ BO_ 2147484071 "NOx Sensor";
+CM_ SG_ 2147484071 NOX24_SUP "NOx Sensor Concentration Bank 2 Sensor 4 supported";
+CM_ SG_ 2147484071 NOX24_AVA "NOx Sensor Concentration Bank 2 Sensor 4 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484071 NOX24 "NOx Sensor Concentration Bank 2 Sensor 4";
+CM_ SG_ 2147484071 NOX23_SUP "NOx Sensor Concentration Bank 2 Sensor 3 supported";
+CM_ SG_ 2147484071 NOX23_AVA "NOx Sensor Concentration Bank 2 Sensor 3 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484071 NOX23 "NOx Sensor Concentration Bank 2 Sensor 3";
+CM_ SG_ 2147484071 NOX14_SUP "NOx Sensor Concentration Bank 1 Sensor 4 supported";
+CM_ SG_ 2147484071 NOX14_AVA "NOx Sensor Concentration Bank 1 Sensor 4 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484071 NOX14 "NOx Sensor Concentration Bank 1 Sensor 4";
+CM_ SG_ 2147484071 NOX13_SUP "NOx Sensor Concentration Bank 1 Sensor 3 supported";
+CM_ SG_ 2147484071 NOX13_AVA "NOx Sensor Concentration Bank 1 Sensor 3 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484071 NOX13 "NOx Sensor Concentration Bank 1 Sensor 3";
+CM_ BO_ 422 "Vehicle Odometer";
+CM_ SG_ 422 ODO "Vehicle Odometer Reading";
+CM_ BO_ 421 "Diesel Exhaust Fluid Dosing";
+CM_ SG_ 421 DEF_UCDC_SUP "DEF Usage for the Current Driving Cycle Supported";
+CM_ SG_ 421 DEF_UCDC "DEF Usage for the Current Driving Cycle.";
+CM_ SG_ 421 DEF_CMD_SUP "Commanded DEF Dosing Supported";
+CM_ SG_ 421 DEF_CMD "Commanded DEF Dosing";
+CM_ BO_ 420 "Transmission Actual Gear";
+CM_ SG_ 420 GEAR_STAT_SUP "Transmission Actual Gear Status Supported";
+CM_ SG_ 420 GEAR_RAT_SUP "Transmission Actual Gear Ratio Supported";
+CM_ SG_ 420 GEAR_RAT "Transmission Actual Gear Ratio";
+CM_ SG_ 420 GEAR_ACT "Transmission Actual Gear Status";
+CM_ BO_ 2147484067 "Evap System Vapor Pressure";
+CM_ SG_ 2147484067 EVAP_B_VP_WR_SUP "Evap System Vapor Pressure B (wide range) supported";
+CM_ SG_ 2147484067 EVAP_B_VP_WR "Evap System Vapor Pressure B (wide range)";
+CM_ SG_ 2147484067 EVAP_B_VP_SUP "Evap System Vapor Pressure B supported";
+CM_ SG_ 2147484067 EVAP_B_VP "Evap System Vapor Pressure B";
+CM_ SG_ 2147484067 EVAP_A_VP_WR_SUP "Evap System Vapor Pressure A (wide range) supported";
+CM_ SG_ 2147484067 EVAP_A_VP_WR "Evap System Vapor Pressure A (wide range)";
+CM_ SG_ 2147484067 EVAP_A_VP_SUP "Evap System Vapor Pressure A supported";
+CM_ SG_ 2147484067 EVAP_A_VP "Evap System Vapor Pressure A";
+CM_ SG_ 418 CYL_RATE "Cylinder Fuel Rate";
+CM_ BO_ 2147484065 "NOx Sensor Corrected";
+CM_ SG_ 2147484065 NOXC22_AVA "NOx Sensor Corrected Concentration Bank 2 Sensor 2 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484065 NOXC21_AVA "NOx Sensor Corrected Concentration Bank 2 Sensor 1 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484065 NOXC12_AVA "NOx Sensor Corrected Concentration Bank 1 Sensor 2 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484065 NOXC11_AVA "NOx Sensor Corrected Concentration Bank 1 Sensor 1 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484065 NOXC22_SUP "NOx Sensor Corrected Concentration Bank 2 Sensor 2 supported";
+CM_ SG_ 2147484065 NOXC22 "NOx Sensor Corrected Concentration Bank 2 Sensor 2";
+CM_ SG_ 2147484065 NOXC21_SUP "NOx Sensor Corrected Concentration Bank 2 Sensor 1 supported";
+CM_ SG_ 2147484065 NOXC21 "NOx Sensor Corrected Concentration Bank 2 Sensor 1";
+CM_ SG_ 2147484065 NOXC12_SUP "NOx Sensor Corrected Concentration Bank 1 Sensor 2 supported";
+CM_ SG_ 2147484065 NOXC12 "NOx Sensor Corrected Concentration Bank 1 Sensor 2";
+CM_ SG_ 2147484065 NOXC11_SUP "NOx Sensor Corrected Concentration Bank 1 Sensor 1 supported";
+CM_ SG_ 2147484065 NOXC11 "NOx Sensor Corrected Concentration Bank 1 Sensor 1";
+CM_ BO_ 2147484063 "Fuel System Percentage Use";
+CM_ SG_ 2147484063 FUELSYSB_B4_SUP "Fuel System B Use Percentage Bank 4 supported";
+CM_ SG_ 2147484063 FUELSYSB_B4 "Fuel System B Use Percentage Bank 4";
+CM_ SG_ 2147484063 FUELSYSB_B3_SUP "Fuel System B Use Percentage Bank 3 supported";
+CM_ SG_ 2147484063 FUELSYSB_B3 "Fuel System B Use Percentage Bank 3";
+CM_ SG_ 2147484063 FUELSYSB_B2_SUP "Fuel System B Use Percentage Bank 2 supported";
+CM_ SG_ 2147484063 FUELSYSB_B2 "Fuel System B Use Percentage Bank 2";
+CM_ SG_ 2147484063 FUELSYSB_B1_SUP "Fuel System B Use Percentage Bank 1 supported";
+CM_ SG_ 2147484063 FUELSYSB_B1 "Fuel System B Use Percentage Bank 1";
+CM_ SG_ 2147484063 FUELSYSA_B4_SUP "Fuel System A Use Percentage Bank 4 supported";
+CM_ SG_ 2147484063 FUELSYSA_B4 "Fuel System A Use Percentage Bank 4";
+CM_ SG_ 2147484063 FUELSYSA_B3_SUP "Fuel System A Use Percentage Bank 3 supported";
+CM_ SG_ 2147484063 FUELSYSA_B3 "Fuel System A Use Percentage Bank 3";
+CM_ SG_ 2147484063 FUELSYSA_B2_SUP "Fuel System A Use Percentage Bank 2 supported";
+CM_ SG_ 2147484063 FUELSYSA_B2 "Fuel System A Use Percentage Bank 2";
+CM_ SG_ 2147484063 FUELSYSA_B1_SUP "Fuel System A Use Percentage Bank 1 supported";
+CM_ SG_ 2147484063 FUELSYSA_B1 "Fuel System A Use Percentage Bank 1";
+CM_ SG_ 414 EXH_RATE "Engine Exhaust Flow Rate";
+CM_ SG_ 413 VEH_FUEL_RATE "Vehicle Fuel Rate";
+CM_ SG_ 413 ENG_FUEL_RATE "Engine Fuel Rate";
+CM_ BO_ 2147484060 "O2 Sensor (Wide Range)";
+CM_ SG_ 2147484060 LAMBDA24_SUP "O2 Sensor Lambda Bank 2 Sensor 4 supported";
+CM_ SG_ 2147484060 LAMBDA24 "O2 Sensor Lambda Bank 2 Sensor 4";
+CM_ SG_ 2147484060 LAMBDA23_SUP "O2 Sensor Lambda Bank 2 Sensor 3 supported";
+CM_ SG_ 2147484060 LAMBDA23 "O2 Sensor Lambda Bank 2 Sensor 3";
+CM_ SG_ 2147484060 LAMBDA14_SUP "O2 Sensor Lambda Bank 1 Sensor 4 supported";
+CM_ SG_ 2147484060 LAMBDA14 "O2 Sensor Lambda Bank 1 Sensor 4";
+CM_ SG_ 2147484060 LAMBDA13_SUP "O2 Sensor Lambda Bank 1 Sensor 3 supported";
+CM_ SG_ 2147484060 LAMBDA13 "O2 Sensor Lambda Bank 1 Sensor 3";
+CM_ SG_ 2147484060 O2S24_PCT_SUP "O2 Sensor Concentration Bank 2 Sensor 4 supported";
+CM_ SG_ 2147484060 O2S24_PCT "O2 Sensor Concentration Bank 2 Sensor 4";
+CM_ SG_ 2147484060 O2S23_PCT_SUP "O2 Sensor Concentration Bank 2 Sensor 3 supported";
+CM_ SG_ 2147484060 O2S23_PCT "O2 Sensor Concentration Bank 2 Sensor 3";
+CM_ SG_ 2147484060 O2S14_PCT_SUP "O2 Sensor Concentration Bank 1 Sensor 4 supported";
+CM_ SG_ 2147484060 O2S14_PCT "O2 Sensor Concentration Bank 1 Sensor 4";
+CM_ SG_ 2147484060 O2S13_PCT_SUP "O2 Sensor Concentration Bank 1 Sensor 3 supported";
+CM_ SG_ 2147484060 O2S13_PCT "O2 Sensor Concentration Bank 1 Sensor 3";
+CM_ BO_ 411 "Diesel Exhaust Fluid Sensor Output";
+CM_ SG_ 411 DEF_Type_SUP "DEF Type supported";
+CM_ SG_ 411 DEF_Type "DEF Type";
+CM_ SG_ 411 DEF_T_SUP "DEF Temperature supported";
+CM_ SG_ 411 DEF_T "DEF Tank Temperature";
+CM_ SG_ 411 DEF_LVL_SUP "DEF Level supported";
+CM_ SG_ 411 DEF_LVL "DEF Tank Level";
+CM_ SG_ 411 DEF_CON_SUP "DEF Concentration supported";
+CM_ SG_ 411 DEF_CON "DEF Concentration";
+CM_ BO_ 410 "Hybrid/EV Vehicle System Data";
+CM_ SG_ 410 HEV_MODE_STAT "Enhanced Hybrid/EV Charging State";
+CM_ SG_ 410 HEV_STAT_SUP "Hybrid/EV Vehicle State supported";
+CM_ SG_ 410 HEV_MODE "Hybrid/EV Charging State";
+CM_ SG_ 410 HEV_BATT_V_SUP "Hybrid/EV Battery Voltage supported";
+CM_ SG_ 410 HEV_BATT_V "Hybrid/EV Battery System Voltage";
+CM_ SG_ 410 HEV_BATT_A_SUP "Hybrid/EV Battery  Current supported";
+CM_ SG_ 410 HEV_BATT_A "Hybrid/EV Battery System Current";
+CM_ BO_ 2147484057 "Exhaust Gas Temperature (EGT) Bank 2";
+CM_ SG_ 2147484057 EGT28_SUP "EGT Bank 2, Sensor 8 supported";
+CM_ SG_ 2147484057 EGT28 "Exhaust Gas Temperature Bank 2, Sensor 8";
+CM_ SG_ 2147484057 EGT27_SUP "EGT Bank 2, Sensor 7 supported";
+CM_ SG_ 2147484057 EGT27 "Exhaust Gas Temperature Bank 2, Sensor 7";
+CM_ SG_ 2147484057 EGT26_SUP "EGT Bank 2, Sensor 6 supported";
+CM_ SG_ 2147484057 EGT26 "Exhaust Gas Temperature Bank 2, Sensor 6";
+CM_ SG_ 2147484057 EGT25_SUP "EGT Bank 2, Sensor 5 supported";
+CM_ SG_ 2147484057 EGT25 "Exhaust Gas Temperature Bank 2, Sensor 5";
+CM_ BO_ 2147484056 "Exhaust Gas Temperature (EGT) Bank 1";
+CM_ SG_ 2147484056 EGT18_SUP "EGT Bank 1, Sensor 8 supported";
+CM_ SG_ 2147484056 EGT18 "Exhaust Gas Temperature Bank 1, Sensor 8";
+CM_ SG_ 2147484056 EGT17_SUP "EGT Bank 1, Sensor 7 supported";
+CM_ SG_ 2147484056 EGT17 "Exhaust Gas Temperature Bank 1, Sensor 7";
+CM_ SG_ 2147484056 EGT16_SUP "EGT Bank 1, Sensor 6 supported";
+CM_ SG_ 2147484056 EGT16 "Exhaust Gas Temperature Bank 1, Sensor 6";
+CM_ SG_ 2147484056 EGT15_SUP "EGT Bank 1, Sensor 5 supported";
+CM_ SG_ 2147484056 EGT15 "Exhaust Gas Temperature Bank 1, Sensor 5";
+CM_ BO_ 2147484052 "NOx control - driver inducement system status and counters";
+CM_ SG_ 2147484052 NOX_DTC_TIME_SUP "Malfunction of NOx control monitoring system counter supported";
+CM_ SG_ 2147484052 NOX_DTC_TIME "Monitoring System Counter";
+CM_ SG_ 2147484052 EGR_TIME_SUP "EGR valve counter supported";
+CM_ SG_ 2147484052 EGR_TIME "EGR valve counter";
+CM_ SG_ 2147484052 REAG_QUAL_TIME_SUP "Reagent quality counter supported";
+CM_ SG_ 2147484052 REAG_QUAL_TIME "Reagent quality counter";
+CM_ SG_ 2147484052 REAG_DOSE_TIME_SUP "Absence of reagent dosing counter supported";
+CM_ SG_ 2147484052 REAG_DOSE_TIME "Dosing Activity Counter";
+CM_ SG_ 2147484052 REAG_CON_TIME_SUP "Reagent consumption counter supported";
+CM_ SG_ 2147484052 REAG_CON_TIME "Reagent Consumption Counter";
+CM_ SG_ 2147484052 INDUC_L3 "Level 3 inducement status";
+CM_ SG_ 2147484052 INDUC_L2 "Level 2 inducement status";
+CM_ SG_ 2147484052 INDUC_L1 "Level 1 inducement status";
+CM_ SG_ 2147484052 NOX_WARN_SUP "NOx warning system activation status supported";
+CM_ SG_ 2147484052 NOX_WARN_ACT "NOx warning system activation status";
+CM_ BO_ 403 "WWH-OBD Vehicle OBD Counters";
+CM_ SG_ 403 MI_TIME_CUM_SUP "Cumulative continuous MI counter supported";
+CM_ SG_ 403 MI_TIME_CUM "Cumulative continuous MI counter";
+CM_ BO_ 402 "Fuel System Control Status (Compression Ignition)";
+CM_ SG_ 402 IFB2_CL_SUP "Idle Fuel Balance/Contribution Control 2 supported";
+CM_ SG_ 402 IFB2_CL "Idle Fuel Balance/Contribution Control 2 in closed loop";
+CM_ SG_ 402 IFB1_CL_SUP "Idle Fuel Balance/Contribution Control 1 supported";
+CM_ SG_ 402 IFB1_CL "Idle Fuel Balance/Contribution Control 1 in closed loop";
+CM_ SG_ 402 FIT2_CL_SUP "Fuel Injection Timing Control 2 supported";
+CM_ SG_ 402 FIT2_CL "Fuel Injection Timing 2 in closed loop control";
+CM_ SG_ 402 FIT1_CL_SUP "Fuel Injection Timing Control 1 supported";
+CM_ SG_ 402 FIT1_CL "Fuel Injection Timing 1 in closed loop control";
+CM_ SG_ 402 FIQ2_CL_SUP "Fuel Injection Quantity Control 2 supported";
+CM_ SG_ 402 FIQ2_CL "Fuel Injection Quantity 2 in closed loop control";
+CM_ SG_ 402 FIQ1_CL_SUP "Fuel Injection Quantity Control 1 supported";
+CM_ SG_ 402 FIQ1_CL "Fuel Injection Quantity 1 in closed loop control";
+CM_ SG_ 402 FP2_CL_SUP "Fuel Pressure Control 2 supported";
+CM_ SG_ 402 FP2_CL "Fuel Pressure 2 in closed loop control";
+CM_ SG_ 402 FP1_CL_SUP "Fuel Pressure Control 1 supported";
+CM_ SG_ 402 FP1_CL "Fuel Pressure 1 in closed loop control";
+CM_ BO_ 401 "WWH-OBD ECU OBD System Information";
+CM_ SG_ 401 OBD_MI_TIME "Number of engine operating hours that the continuous MI was active. (Continuous MI counter)";
+CM_ SG_ 401 OBD_B1_TIME "Highest ECU B1 counter";
+CM_ SG_ 401 MI_MODE_ECU "ECU Malfunction Indication status";
+CM_ BO_ 400 "WWH-OBD Vehicle OBD System Information";
+CM_ SG_ 400 VOBD_RDY "Emission system readiness";
+CM_ SG_ 400 VOBD_MI_TIME "Number of engine operating hours that the continuous MI was active. (Continuous MI counter)";
+CM_ SG_ 400 MI_MODE_VOBD "Vehicle Malfunction Indicator status";
+CM_ SG_ 400 MI_DISP_VOBD "Discriminatory/nondiscriminatory display strategy";
+CM_ BO_ 399 "Particulate Matter (PM) Sensor Output";
+CM_ SG_ 399 PM21_STAT_SUP "PM Sensor operating status Bank 2 Sensor 1 supported";
+CM_ SG_ 399 PM21_SIG_SUP "PM Sensor signal Bank 2 Sensor 1 supported";
+CM_ SG_ 399 PM21_REGEN "PM Sensor regen status Bank 2 Sensor 1";
+CM_ SG_ 399 PM21_OUT "PM Sensor normalized output value Bank 2 Sensor 1";
+CM_ SG_ 399 PM21_ACTIVE "PM Sensor active status Bank 2 Sensor 1";
+CM_ SG_ 399 PM11_STAT_SUP "PM Sensor operating status Bank 1 Sensor 1 supported";
+CM_ SG_ 399 PM11_SIG_SUP "PM Sensor signal Bank 1 Sensor 1 supported";
+CM_ SG_ 399 PM11_REGEN "PM Sensor regen status Bank 1 Sensor 1";
+CM_ SG_ 399 PM11_OUT "PM Sensor normalized output value Bank 1 Sensor 1";
+CM_ SG_ 399 PM11_ACTIVE "PM Sensor active status Bank 1 Sensor 1";
+CM_ SG_ 398 TQ_FR "Engine Friction - Percent Torque";
+CM_ SG_ 397 TP_G "Absolute Throttle Position G";
+CM_ BO_ 2147484044 "O2 Sensor (Wide Range)";
+CM_ SG_ 2147484044 LAMBDA22_SUP "O2 Sensor Lambda Bank 2 Sensor 2 supported";
+CM_ SG_ 2147484044 LAMBDA22 "O2 Sensor Lambda Bank 2 Sensor 2";
+CM_ SG_ 2147484044 LAMBDA21_SUP "O2 Sensor Lambda Bank 2 Sensor 1 supported";
+CM_ SG_ 2147484044 LAMBDA21 "O2 Sensor Lambda Bank 2 Sensor 1";
+CM_ SG_ 2147484044 LAMBDA12_SUP "O2 Sensor Lambda Bank 1 Sensor 2 supported";
+CM_ SG_ 2147484044 LAMBDA12 "O2 Sensor Lambda Bank 1 Sensor 2";
+CM_ SG_ 2147484044 LAMBDA11_SUP "O2 Sensor Lambda Bank 1 Sensor 1 supported";
+CM_ SG_ 2147484044 LAMBDA11 "O2 Sensor Lambda Bank 1 Sensor 1";
+CM_ SG_ 2147484044 O2S22_PCT_SUP "O2 Sensor Concentration Bank 2 Sensor 2 supported";
+CM_ SG_ 2147484044 O2S22_PCT "O2 Sensor Concentration Bank 2 Sensor 2";
+CM_ SG_ 2147484044 O2S21_PCT_SUP "O2 Sensor Concentration Bank 2 Sensor 1 supported";
+CM_ SG_ 2147484044 O2S21_PCT "O2 Sensor Concentration Bank 2 Sensor 1";
+CM_ SG_ 2147484044 O2S12_PCT_SUP "O2 Sensor Concentration Bank 1 Sensor 2 supported";
+CM_ SG_ 2147484044 O2S12_PCT "O2 Sensor Concentration Bank 1 Sensor 2";
+CM_ SG_ 2147484044 O2S11_PCT_SUP "O2 Sensor Concentration Bank 1 Sensor 1 supported";
+CM_ SG_ 2147484044 O2S11_PCT "O2 Sensor Concentration Bank 1 Sensor 1";
+CM_ BO_ 395 "Diesel Aftertreatment Status";
+CM_ SG_ 395 NOX_ADS_REGEN_SUP "NOx Adsorber Regen Status Supported";
+CM_ SG_ 395 NOX_ADS_REGEN "NOx Adsorber Regen Status";
+CM_ SG_ 395 NOX_ADS_DESULF_SUP "NOx Adsorber Desulfurization Status Supported";
+CM_ SG_ 395 NOX_ADS_DESULF "NOx Adsorber Desulfurization Status";
+CM_ SG_ 395 DPF_REGEN_TYPE_SUP "Diesel Particulate Filter (DPF) Regen Type Supported";
+CM_ SG_ 395 DPF_REGEN_TYPE "Diesel Particulate Filter (DPF) Regen Type";
+CM_ SG_ 395 DPF_REGEN_STAT_SUP "Diesel Particulate Filter (DPF) Regen Status Supported";
+CM_ SG_ 395 DPF_REGEN_STAT "Diesel Particulate Filter (DPF) Regen Status";
+CM_ SG_ 395 DPF_REGEN_PCT_SUP "Normalized trigger for DPF regen supported";
+CM_ SG_ 395 DPF_REGEN_PCT "Normalized Trigger for DPF Regen";
+CM_ SG_ 395 DPF_REGEN_AVGT_SUP "Average time between DPF regens supported";
+CM_ SG_ 395 DPF_REGEN_AVGT "Average Time Between DPF Regens";
+CM_ SG_ 395 DPF_REGEN_AVGD_SUP "Average distance between DPF regens supported";
+CM_ SG_ 395 DPF_REGEN_AVGD "Average Distance Between DPF Regens";
+CM_ SG_ 2147484040 SCR_IND_DIST_4N "Distance travelled while inducement system active in 40K block (30 每 40,000 km)";
+CM_ SG_ 2147484040 SCR_IND_DIST_3N "Distance travelled while inducement system active in 30K block (20 每 30,000 km)";
+CM_ SG_ 2147484040 SCR_IND_DIST_2N "Distance travelled while inducement system active in 20K block (10 每 20,000 km)";
+CM_ SG_ 2147484040 SCR_IND_DIST_1N "Distance travelled while inducement system active in current 10K block (0 每 10,000 km)";
+CM_ SG_ 2147484040 SCR_IND_DIST_1D "Distance travelled in current 10K block (0 - 10,000 km block)";
+CM_ SG_ 2147484040 ACTIVE "SCR inducement system actual state";
+CM_ SG_ 2147484040 NOx_LEVEL4 "SCR inducement system state 40K history (30,000 每 40,000 km)";
+CM_ SG_ 2147484040 NOx_LEVEL3 "SCR inducement system state 30K history (20,000 每 30,000 km)";
+CM_ SG_ 2147484040 NOx_LEVEL2 "SCR inducement system state 20K history (10,000 每 20,000 km)";
+CM_ SG_ 2147484040 NOx_LEVEL1 "SCR inducement system state 10K history (0 每 10,000 km)";
+CM_ SG_ 2147484040 NOx_LEVEL "SCR inducement system actual state";
+CM_ SG_ 2147484040 CONSUMP_DEVIATION4 "SCR inducement system state 40K history (30,000 每 40,000 km)";
+CM_ SG_ 2147484040 CONSUMP_DEVIATION3 "SCR inducement system state 30K history (20,000 每 30,000 km)";
+CM_ SG_ 2147484040 CONSUMP_DEVIATION2 "SCR inducement system state 20K history (10,000 每 20,000 km)";
+CM_ SG_ 2147484040 CONSUMP_DEVIATION1 "SCR inducement system state 10K history (0 每 10,000 km)";
+CM_ SG_ 2147484040 CONSUMP_DEVIATION "SCR inducement system actual state";
+CM_ SG_ 2147484040 INCORR_REAG4 "SCR inducement system state 40K history (30,000 每 40,000 km)";
+CM_ SG_ 2147484040 INCORR_REAG3 "SCR inducement system state 30K history (20,000 每 30,000 km)";
+CM_ SG_ 2147484040 INCORR_REAG2 "SCR inducement system state 20K history (10,000 每 20,000 km)";
+CM_ SG_ 2147484040 INCORR_REAG1 "SCR inducement system state 10K history (0 每 10,000 km)";
+CM_ SG_ 2147484040 INCORR_REAG "SCR inducement system actual state";
+CM_ SG_ 2147484040 LEVEL_LOW4 "SCR inducement system state 40K history (30,000 每 40,000 km)";
+CM_ SG_ 2147484040 LEVEL_LOW3 "SCR inducement system state 30K history (20,000 每 30,000 km)";
+CM_ SG_ 2147484040 LEVEL_LOW2 "SCR inducement system state 20K history (10,000 每 20,000 km)";
+CM_ SG_ 2147484040 LEVEL_LOW1 "SCR inducement system state 10K history (0 每 10,000 km)";
+CM_ SG_ 2147484040 LEVEL_LOW "SCR inducement system actual state";
+CM_ BO_ 391 "Intake Manifold Absolute Pressure";
+CM_ SG_ 391 MAP_B_SUP "Intake Manifold Absolute Pressure B supported";
+CM_ SG_ 391 MAP_B "Intake Manifold Absolute Pressure B";
+CM_ SG_ 391 MAP_A_SUP "Intake Manifold Absolute Pressure A supported";
+CM_ SG_ 391 MAP_A "Intake Manifold Absolute Pressure A";
+CM_ BO_ 390 "Particulate Matter (PM) Sensor";
+CM_ SG_ 390 PM21_SUP "PM Sensor Mass Concentration Bank 2 Sensor 1 supported";
+CM_ SG_ 390 PM21 "PM Sensor Mass Concentration Bank 2 Sensor 1";
+CM_ SG_ 390 PM11_SUP "PM Sensor Mass Concentration Bank 1 Sensor 1 supported";
+CM_ SG_ 390 PM11 "PM Sensor Mass Concentration Bank 1 Sensor 1";
+CM_ BO_ 2147484037 "NOx Control System";
+CM_ SG_ 2147484037 NWI_TIME_SUP "Minutes run by the engine while NOx warning mode is activated supported";
+CM_ SG_ 2147484037 NWI_TIME "Total run time by the engine while NOx warning mode is activated";
+CM_ SG_ 2147484037 REAG_RATE_SUP "Average Reagent Consumption Supported";
+CM_ SG_ 2147484037 REAG_RATE "Average Reagent Consumption";
+CM_ SG_ 2147484037 REAG_LVL_SUP "Reagent Tank Level Supported";
+CM_ SG_ 2147484037 REAG_LVL "Reagent Tank Level";
+CM_ SG_ 2147484037 REAG_DEMD_SUP "Average Demanded Reagent Consumption Supported";
+CM_ SG_ 2147484037 REAG_DEMD "Average Demanded Reagent Consumption";
+CM_ SG_ 388 MST "Manifold Surface Temperature";
+CM_ BO_ 2147484035 "NOx Sensor";
+CM_ SG_ 2147484035 NOX22_AVA "NOx Sensor Concentration Bank 2 Sensor 2 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484035 NOX21_AVA "NOx Sensor Concentration Bank 2 Sensor 1 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484035 NOX12_AVA "NOx Sensor Concentration Bank 1 Sensor 2 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484035 NOX11_AVA "NOx Sensor Concentration Bank 1 Sensor 1 data availability
+If data availability bit = 1, sensor data shall report $FFFF";
+CM_ SG_ 2147484035 NOX22_SUP "NOx Sensor Concentration Bank 2 Sensor 2 supported";
+CM_ SG_ 2147484035 NOX22 "NOx Sensor Concentration Bank 2 Sensor 2";
+CM_ SG_ 2147484035 NOX21_SUP "NOx Sensor Concentration Bank 2 Sensor 1 supported";
+CM_ SG_ 2147484035 NOX21 "NOx Sensor Concentration Bank 2 Sensor 1";
+CM_ SG_ 2147484035 NOX12_SUP "NOx Sensor Concentration Bank 1 Sensor 2 supported";
+CM_ SG_ 2147484035 NOX12 "NOx Sensor Concentration Bank 1 Sensor 2";
+CM_ SG_ 2147484035 NOX11_SUP "NOx Sensor Concentration Bank 1 Sensor 1 supported";
+CM_ SG_ 2147484035 NOX11 "NOx Sensor Concentration Bank 1 Sensor 1";
+CM_ BO_ 2147484042 "Engine Run Time for AECD #16 - #20";
+CM_ SG_ 2147484042 AECD20_TIME2 "Total run time with EI-AECD #20 Timer 2 active";
+CM_ SG_ 2147484042 AECD20_TIME1 "Total run time with EI-AECD #20 Timer 1 active";
+CM_ SG_ 2147484042 AECD20_SUP "Total run time with EI-AECD #20 active supported";
+CM_ SG_ 2147484042 AECD19_TIME2 "Total run time with EI-AECD #19 Timer 2 active";
+CM_ SG_ 2147484042 AECD19_TIME1 "Total run time with EI-AECD #19 Timer 1 active";
+CM_ SG_ 2147484042 AECD19_SUP "Total run time with EI-AECD #19 active supported";
+CM_ SG_ 2147484042 AECD18_TIME2 "Total run time with EI-AECD #18 Timer 2 active";
+CM_ SG_ 2147484042 AECD18_TIME1 "Total run time with EI-AECD #18 Timer 1 active";
+CM_ SG_ 2147484042 AECD18_SUP "Total run time with EI-AECD #18 active supported";
+CM_ SG_ 2147484042 AECD17_TIME2 "Total run time with EI-AECD #17 Timer 2 active";
+CM_ SG_ 2147484042 AECD17_TIME1 "Total run time with EI-AECD #17 Timer 1 active";
+CM_ SG_ 2147484042 AECD17_SUP "Total run time with EI-AECD #17 active supported";
+CM_ SG_ 2147484042 AECD16_TIME2 "Total run time with EI-AECD #16 Timer 2 active";
+CM_ SG_ 2147484042 AECD16_TIME1 "Total run time with EI-AECD #16 Timer 1 active";
+CM_ SG_ 2147484042 AECD16_SUP "Total run time with EI-AECD #16 active supported";
+CM_ BO_ 2147484041 "Engine Run Time for AECD #11 - #15";
+CM_ SG_ 2147484041 AECD15_TIME2 "Total run time with EI-AECD #15 Timer 2 active";
+CM_ SG_ 2147484041 AECD15_TIME1 "Total run time with EI-AECD #15 Timer 1 active";
+CM_ SG_ 2147484041 AECD15_SUP "Total run time with EI-AECD #15 active supported";
+CM_ SG_ 2147484041 AECD14_TIME2 "Total run time with EI-AECD #14 Timer 2 active";
+CM_ SG_ 2147484041 AECD14_TIME1 "Total run time with EI-AECD #14 Timer 1 active";
+CM_ SG_ 2147484041 AECD14_SUP "Total run time with EI-AECD #14 active supported";
+CM_ SG_ 2147484041 AECD13_TIME2 "Total run time with EI-AECD #13 Timer 2 active";
+CM_ SG_ 2147484041 AECD13_TIME1 "Total run time with EI-AECD #13 Timer 1 active";
+CM_ SG_ 2147484041 AECD13_SUP "Total run time with EI-AECD #13 active supported";
+CM_ SG_ 2147484041 AECD12_TIME2 "Total run time with EI-AECD #12 Timer 2 active";
+CM_ SG_ 2147484041 AECD12_TIME1 "Total run time with EI-AECD #12 Timer 1 active";
+CM_ SG_ 2147484041 AECD12_SUP "Total run time with EI-AECD #12 active supported";
+CM_ SG_ 2147484041 AECD11_TIME2 "Total run time with EI-AECD #11 Timer 2 active";
+CM_ SG_ 2147484041 AECD11_TIME1 "Total run time with EI-AECD #11 Timer 1 active";
+CM_ SG_ 2147484041 AECD11_SUP "Total run time with EI-AECD #11 active supported";
+CM_ BO_ 2147484034 "Engine Run Time for AECD #6 - #10";
+CM_ SG_ 2147484034 AECD10_TIME2 "Total run time with EI-AECD #10 Timer 2 active";
+CM_ SG_ 2147484034 AECD10_TIME1 "Total run time with EI-AECD #10 Timer 1 active";
+CM_ SG_ 2147484034 AECD10_SUP "Total run time with EI-AECD #10 active supported";
+CM_ SG_ 2147484034 AECD9_TIME2 "Total run time with EI-AECD #9 Timer 2 active";
+CM_ SG_ 2147484034 AECD9_TIME1 "Total run time with EI-AECD #9 Timer 1 active";
+CM_ SG_ 2147484034 AECD9_SUP "Total run time with EI-AECD #9 active supported";
+CM_ SG_ 2147484034 AECD8_TIME2 "Total run time with EI-AECD #8 Timer 2 active";
+CM_ SG_ 2147484034 AECD8_TIME1 "Total run time with EI-AECD #8 Timer 1 active";
+CM_ SG_ 2147484034 AECD8_SUP "Total run time with EI-AECD #8 active supported";
+CM_ SG_ 2147484034 AECD7_TIME2 "Total run time with EI-AECD #7 Timer 2 active";
+CM_ SG_ 2147484034 AECD7_TIME1 "Total run time with EI-AECD #7 Timer 1 active";
+CM_ SG_ 2147484034 AECD7_SUP "Total run time with EI-AECD #7 active supported";
+CM_ SG_ 2147484034 AECD6_TIME2 "Total run time with EI-AECD #6 Timer 2 active";
+CM_ SG_ 2147484034 AECD6_TIME1 "Total run time with EI-AECD #6 Timer 1 active";
+CM_ SG_ 2147484034 AECD6_SUP "Total run time with EI-AECD #6 active supported";
+CM_ BO_ 2147484033 "Engine Run Time for AECD #1 - #5";
+CM_ SG_ 2147484033 AECD5_TIME2 "Total run time with EI-AECD #5 Timer 2 active";
+CM_ SG_ 2147484033 AECD5_TIME1 "Total run time with EI-AECD #5 Timer 1 active";
+CM_ SG_ 2147484033 AECD5_SUP "Total run time with EI-AECD #5 active supported";
+CM_ SG_ 2147484033 AECD4_TIME2 "Total run time with EI-AECD #4 Timer 2 active";
+CM_ SG_ 2147484033 AECD4_TIME1 "Total run time with EI-AECD #4 Timer 1 active";
+CM_ SG_ 2147484033 AECD4_SUP "Total run time with EI-AECD #4 active supported";
+CM_ SG_ 2147484033 AECD3_TIME2 "Total run time with EI-AECD #3 Timer 2 active";
+CM_ SG_ 2147484033 AECD3_TIME1 "Total run time with EI-AECD #3 Timer 1 active";
+CM_ SG_ 2147484033 AECD3_SUP "Total run time with EI-AECD #3 active supported";
+CM_ SG_ 2147484033 AECD2_TIME2 "Total run time with EI-AECD #2 Timer 2 active";
+CM_ SG_ 2147484033 AECD2_TIME1 "Total run time with EI-AECD #2 Timer 1 active";
+CM_ SG_ 2147484033 AECD2_SUP "Total run time with EI-AECD #2 active supported";
+CM_ SG_ 2147484033 AECD1_TIME2 "Total run time with EI-AECD #1 Timer 2 active";
+CM_ SG_ 2147484033 AECD1_TIME1 "Total run time with EI-AECD #1 Timer 1 active";
+CM_ SG_ 2147484033 AECD1_SUP "Total run time with EI-AECD #1 active supported";
+CM_ BO_ 2147484031 "Engine Run Time";
+CM_ SG_ 2147484031 PTO_TIME_SUP "Total Run Time With PTO Active supported";
+CM_ SG_ 2147484031 PTO_TIME "Total Run Time With PTO Active";
+CM_ SG_ 2147484031 IDLE_TIME_SUP "Total Idle Run Time supported";
+CM_ SG_ 2147484031 IDLE_TIME "Total Idle Run Time";
+CM_ SG_ 2147484031 RUN_TIME_SUP "Total Engine Run Time supported";
+CM_ SG_ 2147484031 RUN_TIME "Total Engine Run Time";
+CM_ BO_ 382 "PM NTE control area status";
+CM_ SG_ 382 PNTE_OUT "Outside PM control area";
+CM_ SG_ 382 PNTE_IN "Inside PM control area";
+CM_ SG_ 382 PNTE_DEF "NTE deficiency for PM active area";
+CM_ SG_ 382 PNTE_CAA "Inside manufacturer-specific PM NTE carve-out area";
+CM_ BO_ 381 "NOx NTE control area status";
+CM_ SG_ 381 NNTE_OUT "Outside NOx control area";
+CM_ SG_ 381 NNTE_IN "Inside NOx control area";
+CM_ SG_ 381 NNTE_DEF "NTE deficiency for NOx active area";
+CM_ SG_ 381 NNTE_CAA "Inside manufacturer-specific NOx NTE carve-out area";
+CM_ BO_ 2147484028 "Exhaust Gas Temperature (EGT) Bank 2";
+CM_ SG_ 2147484028 DPF2_OUTT_SUP "DPF Bank 2 Outlet Temperature Supported";
+CM_ SG_ 2147484028 DPF2_OUTT "DPF Bank 2 Outlet Temperature Sensor";
+CM_ SG_ 2147484028 DPF2_INT_SUP "DPF Bank 2 Inlet Temperature Supported";
+CM_ SG_ 2147484028 DPF2_INT "DPF Bank 2 Inlet Temperature Sensor";
+CM_ SG_ 2147484028 DPF1_OUTT_SUP "DPF Bank 1 Outlet Temperature Supported";
+CM_ SG_ 2147484028 DPF1_OUTT "DPF Bank 1 Outlet Temperature Sensor";
+CM_ SG_ 2147484028 DPF1_INT_SUP "DPF Bank 1 Inlet Temperature Supported";
+CM_ SG_ 2147484028 DPF1_INT "DPF Bank 1 Inlet Temperature Sensor";
+CM_ BO_ 379 "Exhaust Gas Temperature (EGT) Bank 2";
+CM_ SG_ 379 DPF2_OUTP_SUP "DPF Bank 2 Outlet Pressure Supported";
+CM_ SG_ 379 DPF2_OUTP "Diesel Particulate Filter Bank 2 Outlet Pressure";
+CM_ SG_ 379 DPF2_INP_SUP "DPF Bank 2 Inlet Pressure Supported";
+CM_ SG_ 379 DPF2_INP "Diesel Particulate Filter Bank 2 Inlet Pressure";
+CM_ SG_ 379 DPF2_DP_SUP "DPF Bank 2 Delta Pressure Supported";
+CM_ SG_ 379 DPF2_DP "Diesel Particulate Filter Bank 2 Delta Pressure";
+CM_ BO_ 378 "Exhaust Gas Temperature (EGT) Bank 2";
+CM_ SG_ 378 DPF1_OUTP_SUP "DPF Bank 1 Outlet Pressure Supported";
+CM_ SG_ 378 DPF1_OUTP "Diesel Particulate Filter Bank 1 Outlet Pressure";
+CM_ SG_ 378 DPF1_INP_SUP "DPF Bank 1 Inlet Pressure Supported";
+CM_ SG_ 378 DPF1_INP "Diesel Particulate Filter Bank 1 Inlet Pressure";
+CM_ SG_ 378 DPF1_DP_SUP "DPF Bank 1 Delta Pressure Supported";
+CM_ SG_ 378 DPF1_DP "Diesel Particulate Filter Bank 1 Delta Pressure";
+CM_ BO_ 2147484025 "Exhaust Gas Temperature (EGT) Bank 2";
+CM_ SG_ 2147484025 EGT24_SUP "EGT Bank 2, Sensor 4 supported";
+CM_ SG_ 2147484025 EGT24 "Exhaust Gas Temperature Bank 2, Sensor 4";
+CM_ SG_ 2147484025 EGT23_SUP "EGT Bank 2, Sensor 3 supported";
+CM_ SG_ 2147484025 EGT23 "Exhaust Gas Temperature Bank 2, Sensor 3";
+CM_ SG_ 2147484025 EGT22_SUP "EGT Bank 2, Sensor 2 supported";
+CM_ SG_ 2147484025 EGT22 "Exhaust Gas Temperature Bank 2, Sensor 2";
+CM_ SG_ 2147484025 EGT21_SUP "EGT Bank 2, Sensor 1 supported";
+CM_ SG_ 2147484025 EGT21 "Exhaust Gas Temperature Bank 2, Sensor 1";
+CM_ BO_ 2147484024 "Exhaust Gas Temperature (EGT) Bank 1";
+CM_ SG_ 2147484024 EGT14_SUP "EGT Bank 1, Sensor 4 supported";
+CM_ SG_ 2147484024 EGT14 "Exhaust Gas Temperature Bank 1, Sensor 4";
+CM_ SG_ 2147484024 EGT13_SUP "EGT Bank 1, Sensor 3 supported";
+CM_ SG_ 2147484024 EGT13 "Exhaust Gas Temperature Bank 1, Sensor 3";
+CM_ SG_ 2147484024 EGT12_SUP "EGT Bank 1, Sensor 2 supported";
+CM_ SG_ 2147484024 EGT12 "Exhaust Gas Temperature Bank 1, Sensor 2";
+CM_ SG_ 2147484024 EGT11_SUP "EGT Bank 1, Sensor 1 supported";
+CM_ SG_ 2147484024 EGT11 "Exhaust Gas Temperature Bank 1, Sensor 1";
+CM_ BO_ 375 "Charge Air Cooler Temperature (CACT)";
+CM_ SG_ 375 CACT22_SUP "CACT Bank 2, Sensor 2 supported";
+CM_ SG_ 375 CACT22 "Charge Air Cooler Temperature Bank 2, Sensor 2";
+CM_ SG_ 375 CACT21_SUP "CACT Bank 2, Sensor 1 supported";
+CM_ SG_ 375 CACT21 "Charge Air Cooler Temperature Bank 2, Sensor 1";
+CM_ SG_ 375 CACT12_SUP "CACT Bank 1, Sensor 2 supported";
+CM_ SG_ 375 CACT12 "Charge Air Cooler Temperature Bank 1, Sensor 2";
+CM_ SG_ 375 CACT11_SUP "CACT Bank 1, Sensor 1 supported";
+CM_ SG_ 375 CACT11 "Charge Air Cooler Temperature Bank 1, Sensor 1";
+CM_ BO_ 374 "Turbocharger B Temperature";
+CM_ SG_ 374 TCB_TOUTT_SUP "Turbo B Turbine Outlet Temperature supported";
+CM_ SG_ 374 TCB_TOUTT "Turbocharger B Turbine Outlet Temperature";
+CM_ SG_ 374 TCB_TINT_SUP "Turbo B Turbine Inlet Temperature supported";
+CM_ SG_ 374 TCB_TINT "Turbocharger B Turbine Inlet Temperature";
+CM_ SG_ 374 TCB_COUTT_SUP "Turbo B Compressor Outlet Temperature supported";
+CM_ SG_ 374 TCB_COUTT "Turbocharger B Compressor Outlet Temperature";
+CM_ SG_ 374 TCB_CINT_SUP "Turbo B Compressor Inlet Temperature supported";
+CM_ SG_ 374 TCB_CINT "Turbocharger B Compressor Inlet Temperature";
+CM_ BO_ 373 "Turbocharger A Temperature";
+CM_ SG_ 373 TCA_TOUTT_SUP "Turbo A Turbine Outlet Temperature supported";
+CM_ SG_ 373 TCA_TOUTT "Turbocharger A Turbine Outlet Temperature";
+CM_ SG_ 373 TCA_TINT_SUP "Turbo A Turbine Inlet Temperature supported";
+CM_ SG_ 373 TCA_TINT "Turbocharger A Turbine Inlet Temperature";
+CM_ SG_ 373 TCA_COUTT_SUP "Turbo A Compressor Outlet Temperature supported";
+CM_ SG_ 373 TCA_COUTT "Turbocharger A Compressor Outlet Temperature";
+CM_ SG_ 373 TCA_CINT_SUP "Turbo A Compressor Inlet Temperature supported";
+CM_ SG_ 373 TCA_CINT "Turbocharger A Compressor Inlet Temperature";
+CM_ BO_ 372 "Exhaust Pressure";
+CM_ SG_ 372 TCB_RPM_SUP "Turbo B RPM supported";
+CM_ SG_ 372 TCB_RPM "Turbocharger B RPM";
+CM_ SG_ 372 TCA_RPM_SUP "Turbo A RPM supported";
+CM_ SG_ 372 TCA_RPM "Turbocharger A RPM";
+CM_ BO_ 371 "Exhaust Pressure";
+CM_ SG_ 371 EP_2 "Exhaust Pressure Sensor Bank 2";
+CM_ SG_ 371 EP_1 "Exhaust Pressure Sensor Bank 1";
+CM_ SG_ 371 EP2_SUP "Exhaust Pressure Sensor Bank 2 supported";
+CM_ SG_ 371 EP1_SUP "Exhaust Pressure Sensor Bank 1 supported";
+CM_ BO_ 370 "Wastegate Control";
+CM_ SG_ 370 WG_B_CMD_SUP "Commanded Wastegate B Position supported";
+CM_ SG_ 370 WG_B_CMD "Commanded Wastegate B Position";
+CM_ SG_ 370 WG_B_ACT_SUP "Wastegate B Position supported";
+CM_ SG_ 370 WG_B_ACT "Wastegate B Position";
+CM_ SG_ 370 WG_A_CMD_SUP "Commanded Wastegate A Position supported";
+CM_ SG_ 370 WG_A_CMD "Commanded Wastegate A Position";
+CM_ SG_ 370 WG_A_ACT_SUP "Wastegate A Position supported";
+CM_ SG_ 370 WG_A_ACT "Wastegate A Position";
+CM_ BO_ 369 "Variable Geometry Turbo (VGT) Control";
+CM_ SG_ 369 VGT_B_STAT_SUP "VGT B Control Status supported";
+CM_ SG_ 369 VGT_B_CMD_SUP "Commanded VGT B Position supported";
+CM_ SG_ 369 VGT_B_ACT_SUP "VGT B Position supported";
+CM_ SG_ 369 VGT_A_STAT_SUP "VGT A Control Status supported";
+CM_ SG_ 369 VGT_A_CMD_SUP "Commanded VGT A Position supported";
+CM_ SG_ 369 VGT_A_ACT_SUP "VGT A Position supported";
+CM_ SG_ 369 VGT_B_STAT "VGT B Control Status";
+CM_ SG_ 369 VGT_B_CMD "Commanded Variable Geometry Turbo B Position";
+CM_ SG_ 369 VGT_B_ACT "Variable Geometry Turbo B Position";
+CM_ SG_ 369 VGT_A_STAT "VGT A Control Status";
+CM_ SG_ 369 VGT_A_CMD "Commanded Variable Geometry Turbo A Position";
+CM_ SG_ 369 VGT_A_ACT "Variable Geometry Turbo A Position";
+CM_ BO_ 2147484016 "Boost Pressure Control";
+CM_ SG_ 2147484016 BP_B_STAT "Boost Pressure B Control Status";
+CM_ SG_ 2147484016 BP_A_STAT "Boost Pressure A Control Status";
+CM_ SG_ 2147484016 BP_B_STAT_SUP "Boost Pressure B Control Status supported";
+CM_ SG_ 2147484016 BP_B_CMD_SUP "Commanded Boost Pressure B supported";
+CM_ SG_ 2147484016 BP_B_CMD "Commanded Boost Pressure B";
+CM_ SG_ 2147484016 BP_B_ACT_SUP "Boost Pressure Sensor B supported";
+CM_ SG_ 2147484016 BP_B_ACT "Boost Pressure Sensor B";
+CM_ SG_ 2147484016 BP_A_STAT_SUP "Boost Pressure A Control Status supported";
+CM_ SG_ 2147484016 BP_A_CMD_SUP "Commanded Boost Pressure A supported";
+CM_ SG_ 2147484016 BP_A_CMD "Commanded Boost Pressure A";
+CM_ SG_ 2147484016 BP_A_ACT_SUP "Boost Pressure Sensor A supported";
+CM_ SG_ 2147484016 BP_A_ACT "Boost Pressure Sensor A";
+CM_ BO_ 367 "Exhaust Gas Recirculation Temperature";
+CM_ SG_ 367 TCB_CINP_WR "Turbocharger Compressor Inlet Pressure Sensor B Wide Range";
+CM_ SG_ 367 TCB_CINP_WR_SUP "Turbocharger Compressor Inlet Pressure Sensor B Wide Range supported";
+CM_ SG_ 367 TCB_CINP_SUP "Turbocharger Compressor Inlet Pressure Sensor B supported";
+CM_ SG_ 367 TCB_CINP "Turbocharger Compressor Inlet Pressure Sensor B";
+CM_ SG_ 367 TCA_CINP_WR "Turbocharger Compressor Inlet Pressure Sensor A Wide Range";
+CM_ SG_ 367 TCA_CINP_WR_SUP "Turbocharger Compressor Inlet Pressure Sensor A Wide Range supported";
+CM_ SG_ 367 TCA_CINP_SUP "Turbocharger Compressor Inlet Pressure Sensor A supported";
+CM_ SG_ 367 TCA_CINP "Turbocharger Compressor Inlet Pressure Sensor A";
+CM_ BO_ 2147484014 "Injection Pressure Control System";
+CM_ SG_ 2147484014 ICP_B_SUP "Injection Control Pressure B supported";
+CM_ SG_ 2147484014 ICP_B_CMD_SUP "Commanded Injection Control Pressure B supported";
+CM_ SG_ 2147484014 ICP_B_CMD "Commanded Injection Control Pressure B";
+CM_ SG_ 2147484014 ICP_B "Injection Control Pressure B";
+CM_ SG_ 2147484014 ICP_A_SUP "Injection Control Pressure A supported";
+CM_ SG_ 2147484014 ICP_A_CMD_SUP "Commanded Injection Control Pressure A supported";
+CM_ SG_ 2147484014 ICP_A_CMD "Commanded Injection Control Pressure A";
+CM_ SG_ 2147484014 ICP_A "Injection Control Pressure A";
+CM_ BO_ 2147484013 "Commanded Throttle Actuator Control and Relative Throttle Position";
+CM_ SG_ 2147484013 FRT_B_SUP "Fuel Temperature B supported";
+CM_ SG_ 2147484013 FRT_B "Fuel Rail Temperature B";
+CM_ SG_ 2147484013 FRT_A_SUP "Fuel Temperature A supported";
+CM_ SG_ 2147484013 FRT_A "Fuel Rail Temperature A";
+CM_ SG_ 2147484013 FRP_B_SUP "Fuel Rail Pressure B supported";
+CM_ SG_ 2147484013 FRP_B_CMD_SUP "Commanded Fuel Rail Pressure B supported";
+CM_ SG_ 2147484013 FRP_B_CMD "Commanded Fuel Rail Pressure B";
+CM_ SG_ 2147484013 FRP_B "Fuel Rail Pressure B";
+CM_ SG_ 2147484013 FRP_A_SUP "Fuel Rail Pressure A supported";
+CM_ SG_ 2147484013 FRP_A_CMD_SUP "Commanded Fuel Rail Pressure A supported";
+CM_ SG_ 2147484013 FRP_A_CMD "Commanded Fuel Rail Pressure A";
+CM_ SG_ 2147484013 FRP_A "Fuel Rail Pressure A";
+CM_ BO_ 364 "Commanded Throttle Actuator Control and Relative Throttle Position";
+CM_ SG_ 364 TAC_B_CMD_SUP "Commanded Throttle Actuator B Control supported";
+CM_ SG_ 364 TAC_B_CMD "Commanded Throttle Actuator B Control";
+CM_ SG_ 364 TAC_A_CMD_SUP "Commanded Throttle Actuator A Control supported";
+CM_ SG_ 364 TAC_A_CMD "Commanded Throttle Actuator A Control";
+CM_ SG_ 364 TP_B_REL_SUP "Relative Throttle B Position supported";
+CM_ SG_ 364 TP_B_REL "Relative Throttle B Position";
+CM_ SG_ 364 TP_A_REL_SUP "Relative Throttle A Position supported";
+CM_ SG_ 364 TP_A_REL "Relative Throttle A Position";
+CM_ SG_ 303 FLI "Fuel Level Input";
+CM_ BO_ 363 "Exhaust Gas Recirculation Temperature";
+CM_ SG_ 363 EGRTD_WR "Exhaust Gas Recirculation Temp Sensor D (Bank 2, Sensor 2) Wide Range";
+CM_ SG_ 363 EGRTC_WR "Exhaust Gas Recirculation Temp Sensor C (Bank 1, Sensor 2) Wide Range";
+CM_ SG_ 363 EGRTB_WR "Exhaust Gas Recirculation Temp Sensor B (Bank 2, Sensor 1) Wide Range";
+CM_ SG_ 363 EGRTA_WR "Exhaust Gas Recirculation Temp Sensor A (Bank 1, Sensor 1) Wide Range";
+CM_ SG_ 363 EGRTD_WR_SUP "EGR Temperature Sensor D (Bank 2, Sensor 2) Wide Range supported";
+CM_ SG_ 363 EGRTD_SUP "EGR Temperature Sensor D (Bank 2, Sensor 2) supported";
+CM_ SG_ 363 EGRTD "Exhaust Gas Recirculation Temp Sensor D (Bank 2, Sensor 2)";
+CM_ SG_ 363 EGRTC_WR_SUP "EGR Temperature Sensor C (Bank 1, Sensor 2) Wide Range supported";
+CM_ SG_ 363 EGRTC_SUP "EGR Temperature Sensor C (Bank 1, Sensor 2) supported";
+CM_ SG_ 363 EGRTC "Exhaust Gas Recirculation Temp Sensor C (Bank 1, Sensor 2)";
+CM_ SG_ 363 EGRTB_WR_SUP "EGR Temperature Sensor B (Bank 2, Sensor 1) Wide Range supported";
+CM_ SG_ 363 EGRTB_SUP "EGR Temperature Sensor B (Bank 2, Sensor 1) supported";
+CM_ SG_ 363 EGRTB "Exhaust Gas Recirculation Temp Sensor B (Bank 2, Sensor 1)";
+CM_ SG_ 363 EGRTA_WR_SUP "EGR Temperature Sensor A (Bank 1, Sensor 1) Wide Range supported";
+CM_ SG_ 363 EGRTA_SUP "EGR Temperature Sensor A (Bank 1, Sensor 1) supported";
+CM_ SG_ 363 EGRTA "Exhaust Gas Recirculation Temp Sensor A (Bank 1, Sensor 1)";
+CM_ BO_ 362 "Commanded EGR and EGR Error";
+CM_ SG_ 362 IAF_B_REL_SUP "Relative Intake Air Flow B Position supported";
+CM_ SG_ 362 IAF_B_REL "Relative Intake Air Flow B Position";
+CM_ SG_ 362 IAF_B_CMD_SUP "Commanded Intake Air Flow B Control supported";
+CM_ SG_ 362 IAF_B_CMD "Commanded Intake Air Flow B Control";
+CM_ SG_ 362 IAF_A_REL_SUP "Relative Intake Air Flow A Position supported";
+CM_ SG_ 362 IAF_A_REL "Relative Intake Air Flow A Position";
+CM_ SG_ 362 IAF_A_CMD_SUP "Commanded Intake Air Flow A Control supported";
+CM_ SG_ 362 IAF_A_CMD "Commanded Intake Air Flow A Control";
+CM_ BO_ 361 "Commanded EGR and EGR Error";
+CM_ SG_ 361 EGR_B_ERR_SUP "EGR B Error Supported";
+CM_ SG_ 361 EGR_B_ERR "EGR B Error";
+CM_ SG_ 361 EGR_B_CMD_SUP "Commanded EGR B Duty Cycle/Position Supported";
+CM_ SG_ 361 EGR_B_CMD "Commanded EGR B Duty Cycle/Position";
+CM_ SG_ 361 EGR_B_ACT_SUP "Actual EGR B Duty Cycle/Position Supported";
+CM_ SG_ 361 EGR_B_ACT "Actual EGR B Duty Cycle/Position";
+CM_ SG_ 361 EGR_A_ERR_SUP "EGR A Error Supported";
+CM_ SG_ 361 EGR_A_ERR "EGR A Error";
+CM_ SG_ 361 EGR_A_CMD_SUP "Commanded EGR A Duty Cycle/Position Supported";
+CM_ SG_ 361 EGR_A_CMD "Commanded EGR A Duty Cycle/Position";
+CM_ SG_ 361 EGR_A_ACT_SUP "Actual EGR A Duty Cycle/Position Supported";
+CM_ SG_ 361 EGR_A_ACT "Actual EGR A Duty Cycle/Position";
+CM_ BO_ 360 "Intake Air Temperature Sensor";
+CM_ SG_ 360 IAT23_SUP "Intake Air Temperature Bank 2, Sensor 3 supported";
+CM_ SG_ 360 IAT23 "Intake Air Temperature Bank 2, Sensor 3";
+CM_ SG_ 360 IAT22_SUP "Intake Air Temperature Bank 2, Sensor 2 supported";
+CM_ SG_ 360 IAT22 "Intake Air Temperature Bank 2, Sensor 2";
+CM_ SG_ 360 IAT21_SUP "Intake Air Temperature Bank 2, Sensor 1 supported";
+CM_ SG_ 360 IAT21 "Intake Air Temperature Bank 2, Sensor 1";
+CM_ SG_ 360 IAT13_SUP "Intake Air Temperature Bank 1, Sensor 3 supported";
+CM_ SG_ 360 IAT13 "Intake Air Temperature Bank 1, Sensor 3";
+CM_ SG_ 360 IAT12_SUP "Intake Air Temperature Bank 1, Sensor 2 supported";
+CM_ SG_ 360 IAT12 "Intake Air Temperature Bank 1, Sensor 2";
+CM_ SG_ 360 IAT11_SUP "Intake Air Temperature Bank 1, Sensor 1 supported";
+CM_ SG_ 360 IAT11 "Intake Air Temperature Bank 1, Sensor 1";
+CM_ BO_ 359 "Engine Coolant Temperature";
+CM_ SG_ 359 ECT2_SUP "ECT Sensor 2 supported";
+CM_ SG_ 359 ECT2 "Engine Coolant Temperature 2";
+CM_ SG_ 359 ECT1_SUP "ECT Sensor 1 supported";
+CM_ SG_ 359 ECT1 "Engine Coolant Temperature 1";
+CM_ BO_ 358 "Mass Air Flow Sensor";
+CM_ SG_ 358 MAFB "Mass Air Flow Sensor B";
+CM_ SG_ 358 MAFA "Mass Air Flow Sensor A";
+CM_ SG_ 358 MAF_SB_SUP "MAF Sensor B supported";
+CM_ SG_ 358 MAF_SA_SUP "MAF Sensor A supported";
+CM_ BO_ 357 "Auxiliary Inputs / Outputs";
+CM_ SG_ 357 GEAR_RCMD_SUP "Recommended Gear Supported";
+CM_ SG_ 357 GEAR_RCMD "Recommended transmission gear for current vehicle conditions";
+CM_ SG_ 357 GPL_STATUS_SUP "Glow Plug Lamp Status Supported";
+CM_ SG_ 357 GPL_STAT "Glow Plug Lamp Output Status";
+CM_ SG_ 357 NG_STATUS_SUP "Manual Trans Neutral Gear Status Supported";
+CM_ SG_ 357 NG_STAT "Manual Trans Neutral Gear Status";
+CM_ SG_ 357 ND_STATUS_SUP "Auto Trans Neutral Drive Status Supported";
+CM_ SG_ 357 ND_STAT "Auto Trans Neutral Drive Status";
+CM_ SG_ 357 PTO_STAT "Power Take Off (PTO) Output Status";
+CM_ SG_ 357 PTO_STATUS_SUP "Power Take Off (PTO) Output Status Supported";
+CM_ BO_ 356 "Engine Percent Torque Data";
+CM_ SG_ 356 TQ_MAX5 "Engine Percent Torque At Idle, Point 5";
+CM_ SG_ 356 TQ_MAX4 "Engine Percent Torque At Idle, Point 4";
+CM_ SG_ 356 TQ_MAX3 "Engine Percent Torque At Idle, Point 3";
+CM_ SG_ 356 TQ_MAX2 "Engine Percent Torque At Idle, Point 2";
+CM_ SG_ 356 TQ_MAX1 "Engine Percent Torque At Idle, Point 1";
+CM_ SG_ 355 TQ_REF "Engine Reference Torque";
+CM_ SG_ 354 TQ_ACT "Actual Engine - Percent Torque";
+CM_ SG_ 353 TQ_DD "Driver's Demand Engine - Percent Torque";
+CM_ SG_ 351 EMIS_SUP "Emission requirements to which vehicle is designed";
+CM_ SG_ 350 FUEL_RATE "Engine Fuel Rate";
+CM_ SG_ 349 FUEL_TIMING "Fuel Injection Timing";
+CM_ SG_ 348 EOT "Engine Oil Temperature";
+CM_ SG_ 347 BAT_PWR "Hybrid/EV Battery Pack Remaining Charge";
+CM_ SG_ 346 APP_R "Relative Accelerator Pedal Position";
+CM_ SG_ 345 FRP "Fuel Rail Pressure";
+CM_ SG_ 344 LGSO2FT4 "Long Term Secondary O2 Sensor Fuel Trim 每 Bank 4";
+CM_ SG_ 344 LGSO2FT2 "Long Term Secondary O2 Sensor Fuel Trim 每 Bank 2 (use if only 1 fuel trim value)";
+CM_ SG_ 343 STSO2FT4 "Short Term Secondary O2 Sensor Fuel Trim 每 Bank 4";
+CM_ SG_ 343 STSO2FT2 "Short Term Secondary O2 Sensor Fuel Trim 每 Bank 2 (use if only 1 fuel trim value)";
+CM_ SG_ 342 LGSO2FT3 "Long Term Secondary O2 Sensor Fuel Trim 每 Bank 3";
+CM_ SG_ 342 LGSO2FT1 "Long Term Secondary O2 Sensor Fuel Trim 每 Bank 1 (use if only 1 fuel trim value)";
+CM_ SG_ 341 STSO2FT3 "Short Term Secondary O2 Sensor Fuel Trim 每 Bank 3";
+CM_ SG_ 341 STSO2FT1 "Short Term Secondary O2 Sensor Fuel Trim 每 Bank 1 (use if only 1 fuel trim value)";
+CM_ SG_ 340 EVAP_VP "Evap System Vapor Pressure";
+CM_ SG_ 339 EVAP_VPA "Absolute Evap System Vapor Pressure";
+CM_ SG_ 338 ALCH_PCT "Alcohol Fuel Percentage";
+CM_ SG_ 337 FUEL_TYP "Type of fuel currently being utilized by the internal combustion engine";
+CM_ SG_ 336 ScaleAirFlowRatio "Maximum value for Air Flow Rate from Mass Air Flow Sensor. Calculate the scaling per bit of PID $10.";
+CM_ SG_ 335 ScaleVoltage "Maximum value for Oxygen Sensor Voltage. Calculate the scaling per bit of PIDs $24 to $2B.";
+CM_ SG_ 335 ScaleRatio "Maximum value for Equivalence Ratio. Calculate the scaling per bit of PIDs $24 to $2B, $34 to $3B, $44.";
+CM_ SG_ 335 ScalePressure "Maximum value for Intake Manifold Absolute Pressure. Calculate the scaling per bit of PID $0B.";
+CM_ SG_ 335 ScaleCurrent "Maximum value for Oxygen Sensor Current. Calculate the scaling per bit of PIDs $34 to $3B.";
+CM_ SG_ 334 CLR_TIME "Engine run time since DTCs cleared";
+CM_ SG_ 333 MIL_TIME "Engine run time while MIL is activated";
+CM_ SG_ 332 TAC_PCT "Commanded Throttle Actuator Control";
+CM_ SG_ 331 APP_F "Accelerator Pedal Position F";
+CM_ SG_ 330 APP_E "Accelerator Pedal Position E";
+CM_ SG_ 329 APP_D "Accelerator Pedal Position D";
+CM_ SG_ 328 TP_C "Absolute Throttle Position C";
+CM_ SG_ 327 TP_B "Absolute Throttle Position B";
+CM_ SG_ 326 AAT "Ambient air temperature (same scaling as IAT - $0F)";
+CM_ SG_ 325 TP_R "Relative Throttle Position";
+CM_ SG_ 324 LAMBDA "Fuel/Air Commanded Equivalence Ratio";
+CM_ SG_ 323 LOAD_ABS "Absolute Load Value";
+CM_ SG_ 322 VPWR "Control module voltage";
+CM_ BO_ 321 "Monitor status this driving cycle";
+CM_ SG_ 321 CIGN_SUP "Compression ignition monitoring supported";
+CM_ SG_ 321 PM_ENA "PM filter monitoring";
+CM_ SG_ 321 PM_CMPL "PM filter monitoring completed";
+CM_ SG_ 321 EGS_ENA "Exhaust gas sensor monitoring";
+CM_ SG_ 321 EGS_CMPL "Exhaust gas sensor monitoring completed";
+CM_ SG_ 321 BP_ENA "Boost pressure system monitoring";
+CM_ SG_ 321 BP_CMPL "Boost pressure system monitoring completed";
+CM_ SG_ 321 NCATCMPL "NOx/SCR aftertreatment monitoring completed";
+CM_ SG_ 321 NCAT_ENA "NOx/SCR aftertreatment monitoring";
+CM_ SG_ 321 HCCATENA "NMHC catalyst monitoring";
+CM_ SG_ 321 HCCATCMP "NMHC catalyst monitoring completed";
+CM_ SG_ 321 EGR_ENA_spark "EGR and/or VVT system monitoring";
+CM_ SG_ 321 EGR_ENA_compression "EGR and/or VVT system monitoring";
+CM_ SG_ 321 EGR_CMPL_spark "EGR and/or VVT system monitoring completed";
+CM_ SG_ 321 EGR_CMPL_compression "EGR and/or VVT system monitoring completed";
+CM_ SG_ 321 HTR_ENA "Oxygen sensor heater monitoring";
+CM_ SG_ 321 HTR_CMPL "Oxygen sensor heater monitoring completed";
+CM_ SG_ 321 O2S_ENA "Oxygen sensor monitoring";
+CM_ SG_ 321 O2S_CMPL "Oxygen sensor monitoring completed";
+CM_ SG_ 321 AIR_ENA "Secondary air system monitoring";
+CM_ SG_ 321 AIR_CMPL "Secondary air system monitoring completed";
+CM_ SG_ 321 EVAPCMPL "Evaporative system monitoring";
+CM_ SG_ 321 EVAP_ENA "Evaporative system monitoring";
+CM_ SG_ 321 HCATCMPL "Heated catalyst monitoring completed";
+CM_ SG_ 321 HCAT_ENA "Heated catalyst monitoring";
+CM_ SG_ 321 CAT_ENA "Catalyst monitoring";
+CM_ SG_ 321 CAT_CMPL "Catalyst monitoring completed";
+CM_ SG_ 321 CCM_ENA "Comprehensive component monitoring enabled";
+CM_ SG_ 321 CCM_CMPL "Comprehensive component monitoring completed";
+CM_ SG_ 321 FUELCMPL "Fuel system monitoring completed";
+CM_ SG_ 321 FUEL_ENA "Fuel system monitoring enabled";
+CM_ SG_ 321 MIS_ENA "Misfire monitoring enabled";
+CM_ SG_ 321 MIS_CMPL "Misfire monitoring completed";
+CM_ SG_ 319 CATEMP22 "Catalyst Temperature Bank 2, Sensor 2";
+CM_ SG_ 318 CATEMP12 "Catalyst Temperature Bank 1, Sensor 2";
+CM_ SG_ 317 CATEMP21 "Catalyst Temperature Bank 2, Sensor 1";
+CM_ SG_ 316 CATEMP11 "Catalyst Temperature Bank 1, Sensor 1";
+CM_ BO_ 315 "Bank 2 每 Sensor 4 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 4 每 Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 315 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 315 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 314 "Bank 2 每 Sensor 3 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 4 每 Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 314 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 314 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 313 "Bank 2 每 Sensor 2 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 3 每 Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 313 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 313 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 312 "Bank 2 每 Sensor 1 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 3 每 Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 312 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 312 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 311 "Bank 1 每 Sensor 4 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 2 每 Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 311 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 311 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 310 "Bank 1 每 Sensor 3 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 2 每 Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 310 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 310 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 309 "Bank 1 每 Sensor 2 (wide range O2S)";
+CM_ SG_ 309 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 309 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 308 "Bank 1 每 Sensor 1 (wide range O2S)";
+CM_ SG_ 308 O2Sxy "Oxygen Sensor Current (Bx-Sy)";
+CM_ SG_ 308 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ SG_ 307 BARO "Barometric Pressure (absolute)";
+CM_ SG_ 306 EVAP_VP "Evap System Vapor Pressure";
+CM_ SG_ 305 CLR_DIST "Distance traveled since DTCs cleared";
+CM_ SG_ 304 WARM_UPS "Number of warm-ups since DTCs cleared";
+CM_ SG_ 302 EVAP_PCT "Commanded Evaporative Purge";
+CM_ SG_ 301 EGR_ERR "EGR Error";
+CM_ SG_ 300 EGR_PCT "Commanded EGR";
+CM_ BO_ 299 "Bank 2 每 Sensor 4 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 4 - Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 299 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 299 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 298 "Bank 2 每 Sensor 3 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 4 - Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 298 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 298 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 297 "Bank 2 每 Sensor 2 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 3 - Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 297 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 297 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 296 "Bank 2 每 Sensor 1 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 3 - Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 296 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 296 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 295 "Bank 1 每 Sensor 4 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 2 - Sensor 2 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 295 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 295 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 294 "Bank 1 每 Sensor 2 (wide range O2S) (1 OR 2 BANKS) (uses PID $13)
+Bank 2 - Sensor 1 (wide range O2S) (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 294 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 294 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 293 "Bank 1 每 Sensor 2 (wide range O2S)";
+CM_ SG_ 293 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 293 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ BO_ 292 "Bank 1 每 Sensor 1 (wide range O2S)";
+CM_ SG_ 292 O2Sxy "Oxygen Sensor Voltage (Bx-Sy)";
+CM_ SG_ 292 LAMBDAxy "Equivalence Ratio (lambda) (Bx-Sy)";
+CM_ SG_ 291 FRP "Fuel Rail Pressure";
+CM_ SG_ 290 FP "Fuel Pressure relative to manifold vacuum";
+CM_ SG_ 289 MIL_DIST "Distance Traveled While MIL is
+Activated";
+CM_ SG_ 287 RUNTM "Time Since Engine Start";
+CM_ BO_ 286 "Auxiliary Input Status";
+CM_ SG_ 286 PTO_STAT "Power Take Off (PTO) Status";
+CM_ BO_ 285 "Location of Oxygen Sensors (3 OR 4 BANKS)";
+CM_ SG_ 285 O2S42 "1 = Bank 4 - Sensor 2 present at that location";
+CM_ SG_ 285 O2S41 "1 = Bank 4 - Sensor 1 present at that location";
+CM_ SG_ 285 O2S32 "1 = Bank 3 - Sensor 2 present at that location";
+CM_ SG_ 285 O2S31 "1 = Bank 3 - Sensor 1 present at that location";
+CM_ SG_ 285 O2S22 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 2 present at that location";
+CM_ SG_ 285 O2S21 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 1 present at that location";
+CM_ SG_ 285 O2S12 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 2 present at that location";
+CM_ SG_ 285 O2S11 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 1 present at that location";
+CM_ SG_ 284 OBDSUP "OBD requirements to which vehicle or engine is certified.";
+CM_ BO_ 283 "Bank 2 每 Sensor 4 (1 OR 2 BANKS) (uses PID $13)
+Bank 4 每 Sensor 2 (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 283 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 283 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 282 "Bank 2 每 Sensor 3 (1 OR 2 BANKS) (uses PID $13)
+Bank 4 每 Sensor 1 (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 282 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 282 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 281 "Bank 2 每 Sensor 2 (1 OR 2 BANKS) (uses PID $13)
+Bank 3 每 Sensor 2 (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 281 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 281 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 280 "Bank 2 每 Sensor 1 (1 OR 2 BANKS) (uses PID $13)
+Bank 3 每 Sensor 1 (3 OR 4 BANKS) (uses PID $1D)";
+CM_ SG_ 280 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 280 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 279 "Bank 1 每 Sensor 4 (1 OR 2 BANKS)  (uses PID $13)
+Bank 2 每 Sensor 2 (3 OR 4 BANKS)  (uses PID $1D)";
+CM_ SG_ 279 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 279 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 278 "Bank 1 每 Sensor 3 (1 OR 2 BANKS)  (uses PID $13)
+Bank 2 每 Sensor 1 (3 OR 4 BANKS)  (uses PID $1D)";
+CM_ SG_ 278 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 278 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 277 "Bank 1 每 Sensor 2";
+CM_ SG_ 277 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 277 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 276 "Bank 1 每 Sensor 1";
+CM_ SG_ 276 SHRTFTxy "Short Term Fuel Trim (Bx-Sy) associated with this sensor. (reported as $FF if this sensor is not used in the calculation or if SHRTFT is not applicable.)";
+CM_ SG_ 276 O2Sxy "Oxygen Sensor Output Voltage (Bx-Sy)";
+CM_ BO_ 275 "Location of Oxygen Sensors (1 OR 2 BANKS)";
+CM_ SG_ 275 O2S24 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 4 present at that location";
+CM_ SG_ 275 O2S23 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 3 present at that location";
+CM_ SG_ 275 O2S22 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 2 present at that location";
+CM_ SG_ 275 O2S21 "Location of Oxygen Sensors: 1 = Bank 2 - Sensor 1 present at that location";
+CM_ SG_ 275 O2S14 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 4 present at that location";
+CM_ SG_ 275 O2S13 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 3 present at that location";
+CM_ SG_ 275 O2S12 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 2 present at that location";
+CM_ SG_ 275 O2S11 "Location of Oxygen Sensors: 1 = Bank 1 - Sensor 1 present at that location";
+CM_ SG_ 274 AIR_STAT_UPS "Commanded Secondary Air Status: 1 = upstream of first catalytic converter";
+CM_ SG_ 274 AIR_STAT_OFF "Commanded Secondary Air Status: 1 = atmosphere / off";
+CM_ SG_ 274 AIR_STAT_DNS "Commanded Secondary Air Status: 1 = downstream of first catalytic converter inlet";
+CM_ SG_ 274 AIR_STAT_DIAG "Commanded Secondary Air Status: 1 = pump commanded on for diagnostics";
+CM_ SG_ 273 TP "Absolute Throttle Position";
+CM_ SG_ 272 MAF "Air Flow Rate from Mass Air Flow Sensor";
+CM_ SG_ 271 IAT "Intake Air Temperature";
+CM_ SG_ 270 SPARKADV "Ignition Timing Advance for #1 Cylinder";
+CM_ SG_ 269 VSS "Vehicle Speed Sensor";
+CM_ SG_ 268 RPM "Engine RPM";
+CM_ SG_ 267 MAP "Intake Manifold Absolute Pressure (absolute)";
+CM_ SG_ 266 FP "Fuel Pressure (gauge)";
+CM_ SG_ 265 LONGFT4 "Long Term Fuel Trim 每 Bank 4";
+CM_ SG_ 265 LONGFT2 "Long Term Fuel Trim 每 Bank 2";
+CM_ SG_ 264 SHRTFT4 "Short Term Fuel Trim - Bank 4";
+CM_ SG_ 264 SHRTFT2 "Short Term Fuel Trim - Bank 2";
+CM_ SG_ 263 LONGFT3 "Long Term Fuel Trim 每 Bank 3";
+CM_ SG_ 263 LONGFT1 "Long Term Fuel Trim 每 Bank 1";
+CM_ SG_ 262 SHRTFT3 "Short Term Fuel Trim - Bank 3";
+CM_ SG_ 262 SHRTFT1 "Short Term Fuel Trim - Bank 1";
+CM_ SG_ 261 ECT "Engine Coolant Temperature";
+CM_ SG_ 260 LOAD_PCT "Calculated LOAD Value";
+CM_ SG_ 259 FUELSYSB_OLFaultB2 "1 = Open loop - due to detected system fault (Bank 2)";
+CM_ SG_ 259 FUELSYSB_OLFault "1 = Open loop - due to detected system fault (Bank 1 or both)";
+CM_ SG_ 259 FUELSYSB_OLDriveB2 "1 = Open loop due to driving conditions (Bank 2) (e.g. power enrichment, deceleration enleanment, cylinder deactivation)";
+CM_ SG_ 259 FUELSYSB_OLDrive "1 = Open loop due to driving conditions (Bank 1 or both) (e.g. power enrichment, deceleration enleanment, cylinder deactivation)";
+CM_ SG_ 259 FUELSYSB_OLB2 "1 = Open loop - has not yet satisfied conditions to go closed loop (Bank 2)";
+CM_ SG_ 259 FUELSYSB_OL "1 = Open loop - has not yet satisfied conditions to go closed loop (Bank 1 or both)";
+CM_ SG_ 259 FUELSYSB_CLFault "1 = Closed loop, but fault with at least one oxygen sensor - may be using single oxygen sensor for fuel control (Bank 1 or Bank 2)";
+CM_ SG_ 259 FUELSYSB_CL "1 = Closed loop - using all oxygen sensor(s) as feedback for fuel control";
+CM_ SG_ 259 FUELSYSA_OLFaultB2 "1 = Open loop - due to detected system fault (Bank 2)";
+CM_ SG_ 259 FUELSYSA_OLFault "1 = Open loop - due to detected system fault (Bank 1 or both)";
+CM_ SG_ 259 FUELSYSA_OLDriveB2 "1 = Open loop due to driving conditions (Bank 2) (e.g. power enrichment, deceleration enleanment, cylinder deactivation)";
+CM_ SG_ 259 FUELSYSA_OLDrive "1 = Open loop due to driving conditions (Bank 1 or both) (e.g. power enrichment, deceleration enleanment, cylinder deactivation)";
+CM_ SG_ 259 FUELSYSA_OLB2 "1 = Open loop - has not yet satisfied conditions to go closed loop (Bank 2)";
+CM_ SG_ 259 FUELSYSA_OL "1 = Open loop - has not yet satisfied conditions to go closed loop (Bank 1 or both)";
+CM_ SG_ 259 FUELSYSA_CLFault "1 = Closed loop, but fault with at least one oxygen sensor - may be using single oxygen sensor for fuel control (Bank 1 or Bank 2)";
+CM_ SG_ 259 FUELSYSA_CL "1 = Closed loop - using all oxygen sensor(s) as feedback for fuel control";
+CM_ SG_ 258 DTCFRZF "DTC that caused required freeze frame data storage. $0000 indicates no stored freeze frame data.";
+CM_ SG_ 257 EGR_RDY_compression "EGR and/or VVT system monitoring readyEGR and/or VVT system monitoring ready";
+CM_ SG_ 257 PM_SUP "PM filter monitoring supported";
+CM_ SG_ 257 PM_RDY "PM filter monitoring ready";
+CM_ SG_ 257 EGS_RDY "Exhaust gas sensor monitoring ready";
+CM_ SG_ 257 BP_RDY "Boost pressure system monitoring ready";
+CM_ SG_ 257 NCAT_RDY "NOx/SCR aftertreatment monitoring ready";
+CM_ SG_ 257 HCCATRDY "NMHC catalyst monitoring ready";
+CM_ SG_ 257 EGR_SUP_compression "EGR and/or VVT system monitoring supportedEGR and/or VVT system monitoring supported";
+CM_ SG_ 257 EGS_SUP "Exhaust gas sensor monitoring supported";
+CM_ SG_ 257 BP_SUP "Boost pressure system monitoring supported";
+CM_ SG_ 257 NCAT_SUP "NOx/SCR aftertreatment monitoring supported";
+CM_ SG_ 257 HCCATSUP "NMHC catalyst monitoring supported";
+CM_ SG_ 257 HTR_RDY "Oxygen sensor heater monitoring ready";
+CM_ SG_ 257 EGR_RDY_spark "EGR and/or VVT system monitoring readyEGR and/or VVT system monitoring ready";
+CM_ SG_ 257 O2S_RDY "Oxygen sensor monitoring ready";
+CM_ SG_ 257 AIR_RDY "Secondary air system monitoring ready";
+CM_ SG_ 257 EVAP_RDY "Evaporative system monitoring ready";
+CM_ SG_ 257 HCAT_RDY "Heated catalyst monitoring ready";
+CM_ SG_ 257 CAT_RDY "Catalyst monitoring ready";
+CM_ SG_ 257 EGR_SUP_spark "EGR and/or VVT system monitoring supportedEGR and/or VVT system monitoring supported";
+CM_ SG_ 257 HTR_SUP "Oxygen sensor heater monitoring supported";
+CM_ SG_ 257 O2S_SUP "Oxygen sensor monitoring supported";
+CM_ SG_ 257 AIR_SUP "Secondary air system monitoring supported";
+CM_ SG_ 257 EVAP_SUP "Evaporative system monitoring supported";
+CM_ SG_ 257 HCAT_SUP "Heated catalyst monitoring supported";
+CM_ SG_ 257 CAT_SUP "Catalyst monitoring supported";
+CM_ SG_ 257 CCM_RDY "Comprehensive component monitoring ready";
+CM_ SG_ 257 FUEL_RDY "Fuel system monitoring ready";
+CM_ SG_ 257 MIS_RDY "Misfire monitoring ready";
+CM_ SG_ 257 CIGN_SUP "Compression ignition monitoring supported";
+CM_ SG_ 257 CCM_SUP "Comprehensive component monitoring supported";
+CM_ SG_ 257 FUEL_SUP "Fuel system monitoring supported";
+CM_ SG_ 257 MIS_SUP "Misfire monitoring supported";
+CM_ SG_ 257 MIL "Malfunction Indicator Lamp (MIL) Status. ISO 27145 shall not support this data. (WWH-OBD uses PIDs $90/$91) The default value shall be $00.";
+CM_ SG_ 257 DTC_CNT "DTCs stored in this ECU. ISO 27145 shall not support this data. (WWH-OBD uses PIDs $90/$91) The default value shall be $00.";
+BA_DEF_ BO_  "DLCMin" INT 0 0;
+BA_DEF_ BO_  "MultipleItem" INT 0 1;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","J1939PG";
+BA_DEF_  "ProtocolType" STRING ;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "DLCMin" 0;
+BA_DEF_DEF_  "MultipleItem" 0;
+BA_DEF_DEF_  "VFrameFormat" "J1939PG";
+BA_DEF_DEF_  "ProtocolType" "";
+BA_DEF_DEF_  "BusType" "CAN";
+BA_ "ProtocolType" "J1939";
+BA_ "BusType" "CAN";
+BA_ "VFrameFormat" BO_ 2147485993 3;
+BA_ "VFrameFormat" BO_ 2147485992 3;
+BA_ "VFrameFormat" BO_ 2147485991 3;
+BA_ "VFrameFormat" BO_ 2147485990 3;
+BA_ "VFrameFormat" BO_ 2147485989 3;
+BA_ "VFrameFormat" BO_ 2147485988 3;
+BA_ "VFrameFormat" BO_ 2147485987 3;
+BA_ "VFrameFormat" BO_ 2147485986 3;
+BA_ "VFrameFormat" BO_ 2147485985 3;
+BA_ "VFrameFormat" BO_ 2147485983 3;
+BA_ "VFrameFormat" BO_ 2147485982 3;
+BA_ "VFrameFormat" BO_ 2147485981 3;
+BA_ "VFrameFormat" BO_ 2147485980 3;
+BA_ "VFrameFormat" BO_ 2147485979 3;
+BA_ "VFrameFormat" BO_ 2147485978 3;
+BA_ "VFrameFormat" BO_ 2147485977 3;
+BA_ "VFrameFormat" BO_ 2147485976 3;
+BA_ "VFrameFormat" BO_ 2147485975 3;
+BA_ "VFrameFormat" BO_ 2147485974 3;
+BA_ "VFrameFormat" BO_ 2147485973 1;
+BA_ "VFrameFormat" BO_ 2147485972 1;
+BA_ "VFrameFormat" BO_ 2147485971 3;
+BA_ "VFrameFormat" BO_ 2147485970 1;
+BA_ "VFrameFormat" BO_ 2147485969 3;
+BA_ "VFrameFormat" BO_ 2147485968 1;
+BA_ "VFrameFormat" BO_ 2147485967 3;
+BA_ "VFrameFormat" BO_ 2147485965 3;
+BA_ "DLCMin" BO_ 2147485963 16;
+BA_ "VFrameFormat" BO_ 2147485963 3;
+BA_ "VFrameFormat" BO_ 2147485962 3;
+BA_ "DLCMin" BO_ 2147485960 16;
+BA_ "VFrameFormat" BO_ 2147485960 3;
+BA_ "MultipleItem" BO_ 2147485958 1;
+BA_ "VFrameFormat" BO_ 2147485958 3;
+BA_ "MultipleItem" BO_ 2147485956 1;
+BA_ "VFrameFormat" BO_ 2147485956 3;
+BA_ "VFrameFormat" BO_ 2147485954 3;
+BA_ "VFrameFormat" BO_ 425 0;
+BA_ "VFrameFormat" BO_ 2147484072 3;
+BA_ "VFrameFormat" BO_ 2147484071 3;
+BA_ "VFrameFormat" BO_ 422 0;
+BA_ "VFrameFormat" BO_ 421 0;
+BA_ "VFrameFormat" BO_ 420 0;
+BA_ "VFrameFormat" BO_ 2147484067 3;
+BA_ "VFrameFormat" BO_ 418 0;
+BA_ "VFrameFormat" BO_ 2147484065 3;
+BA_ "VFrameFormat" BO_ 2147484063 3;
+BA_ "VFrameFormat" BO_ 414 0;
+BA_ "VFrameFormat" BO_ 413 0;
+BA_ "VFrameFormat" BO_ 2147484060 3;
+BA_ "VFrameFormat" BO_ 411 0;
+BA_ "VFrameFormat" BO_ 410 0;
+BA_ "VFrameFormat" BO_ 2147484057 3;
+BA_ "VFrameFormat" BO_ 2147484056 3;
+BA_ "VFrameFormat" BO_ 2147484052 3;
+BA_ "VFrameFormat" BO_ 403 0;
+BA_ "VFrameFormat" BO_ 402 0;
+BA_ "VFrameFormat" BO_ 401 0;
+BA_ "VFrameFormat" BO_ 400 0;
+BA_ "VFrameFormat" BO_ 399 0;
+BA_ "VFrameFormat" BO_ 398 0;
+BA_ "VFrameFormat" BO_ 397 0;
+BA_ "VFrameFormat" BO_ 2147484044 3;
+BA_ "VFrameFormat" BO_ 395 0;
+BA_ "VFrameFormat" BO_ 2147484040 3;
+BA_ "VFrameFormat" BO_ 391 0;
+BA_ "VFrameFormat" BO_ 390 0;
+BA_ "VFrameFormat" BO_ 2147484037 3;
+BA_ "VFrameFormat" BO_ 388 0;
+BA_ "VFrameFormat" BO_ 2147484035 3;
+BA_ "VFrameFormat" BO_ 2147484042 3;
+BA_ "VFrameFormat" BO_ 2147484041 3;
+BA_ "VFrameFormat" BO_ 2147484034 3;
+BA_ "VFrameFormat" BO_ 2147484033 3;
+BA_ "VFrameFormat" BO_ 2147484031 3;
+BA_ "VFrameFormat" BO_ 382 0;
+BA_ "VFrameFormat" BO_ 381 0;
+BA_ "VFrameFormat" BO_ 2147484028 3;
+BA_ "VFrameFormat" BO_ 379 0;
+BA_ "VFrameFormat" BO_ 378 0;
+BA_ "VFrameFormat" BO_ 2147484025 3;
+BA_ "VFrameFormat" BO_ 2147484024 3;
+BA_ "VFrameFormat" BO_ 375 0;
+BA_ "VFrameFormat" BO_ 374 0;
+BA_ "VFrameFormat" BO_ 373 0;
+BA_ "VFrameFormat" BO_ 372 0;
+BA_ "VFrameFormat" BO_ 371 0;
+BA_ "VFrameFormat" BO_ 370 0;
+BA_ "VFrameFormat" BO_ 369 0;
+BA_ "VFrameFormat" BO_ 2147484016 3;
+BA_ "VFrameFormat" BO_ 367 0;
+BA_ "VFrameFormat" BO_ 2147484014 3;
+BA_ "VFrameFormat" BO_ 2147484013 3;
+BA_ "VFrameFormat" BO_ 364 0;
+BA_ "VFrameFormat" BO_ 303 0;
+BA_ "VFrameFormat" BO_ 363 0;
+BA_ "VFrameFormat" BO_ 362 0;
+BA_ "VFrameFormat" BO_ 361 0;
+BA_ "VFrameFormat" BO_ 360 0;
+BA_ "VFrameFormat" BO_ 359 0;
+BA_ "VFrameFormat" BO_ 358 0;
+BA_ "VFrameFormat" BO_ 357 0;
+BA_ "VFrameFormat" BO_ 356 0;
+BA_ "VFrameFormat" BO_ 355 0;
+BA_ "VFrameFormat" BO_ 354 0;
+BA_ "VFrameFormat" BO_ 353 0;
+BA_ "VFrameFormat" BO_ 351 0;
+BA_ "VFrameFormat" BO_ 350 0;
+BA_ "VFrameFormat" BO_ 349 0;
+BA_ "VFrameFormat" BO_ 348 0;
+BA_ "VFrameFormat" BO_ 347 0;
+BA_ "VFrameFormat" BO_ 346 0;
+BA_ "VFrameFormat" BO_ 345 0;
+BA_ "VFrameFormat" BO_ 344 0;
+BA_ "VFrameFormat" BO_ 343 0;
+BA_ "VFrameFormat" BO_ 342 0;
+BA_ "VFrameFormat" BO_ 341 0;
+BA_ "VFrameFormat" BO_ 340 0;
+BA_ "VFrameFormat" BO_ 339 0;
+BA_ "VFrameFormat" BO_ 338 0;
+BA_ "VFrameFormat" BO_ 337 0;
+BA_ "VFrameFormat" BO_ 336 0;
+BA_ "VFrameFormat" BO_ 335 0;
+BA_ "VFrameFormat" BO_ 334 0;
+BA_ "VFrameFormat" BO_ 333 0;
+BA_ "VFrameFormat" BO_ 332 0;
+BA_ "VFrameFormat" BO_ 331 0;
+BA_ "VFrameFormat" BO_ 330 0;
+BA_ "VFrameFormat" BO_ 329 0;
+BA_ "VFrameFormat" BO_ 328 0;
+BA_ "VFrameFormat" BO_ 327 0;
+BA_ "VFrameFormat" BO_ 326 0;
+BA_ "VFrameFormat" BO_ 325 0;
+BA_ "VFrameFormat" BO_ 324 0;
+BA_ "VFrameFormat" BO_ 323 0;
+BA_ "VFrameFormat" BO_ 322 0;
+BA_ "VFrameFormat" BO_ 321 0;
+BA_ "VFrameFormat" BO_ 319 0;
+BA_ "VFrameFormat" BO_ 318 0;
+BA_ "VFrameFormat" BO_ 317 0;
+BA_ "VFrameFormat" BO_ 316 0;
+BA_ "VFrameFormat" BO_ 315 0;
+BA_ "VFrameFormat" BO_ 314 0;
+BA_ "VFrameFormat" BO_ 313 0;
+BA_ "VFrameFormat" BO_ 312 0;
+BA_ "VFrameFormat" BO_ 311 0;
+BA_ "VFrameFormat" BO_ 310 0;
+BA_ "VFrameFormat" BO_ 309 0;
+BA_ "VFrameFormat" BO_ 308 0;
+BA_ "VFrameFormat" BO_ 307 0;
+BA_ "VFrameFormat" BO_ 306 0;
+BA_ "VFrameFormat" BO_ 305 0;
+BA_ "VFrameFormat" BO_ 304 0;
+BA_ "VFrameFormat" BO_ 302 0;
+BA_ "VFrameFormat" BO_ 301 0;
+BA_ "VFrameFormat" BO_ 300 0;
+BA_ "VFrameFormat" BO_ 299 0;
+BA_ "VFrameFormat" BO_ 298 0;
+BA_ "VFrameFormat" BO_ 297 0;
+BA_ "VFrameFormat" BO_ 296 0;
+BA_ "VFrameFormat" BO_ 295 0;
+BA_ "VFrameFormat" BO_ 294 0;
+BA_ "VFrameFormat" BO_ 293 0;
+BA_ "VFrameFormat" BO_ 292 0;
+BA_ "VFrameFormat" BO_ 291 0;
+BA_ "VFrameFormat" BO_ 290 0;
+BA_ "VFrameFormat" BO_ 289 0;
+BA_ "VFrameFormat" BO_ 287 0;
+BA_ "VFrameFormat" BO_ 286 0;
+BA_ "VFrameFormat" BO_ 285 0;
+BA_ "VFrameFormat" BO_ 284 0;
+BA_ "VFrameFormat" BO_ 283 0;
+BA_ "VFrameFormat" BO_ 282 0;
+BA_ "VFrameFormat" BO_ 281 0;
+BA_ "VFrameFormat" BO_ 280 0;
+BA_ "VFrameFormat" BO_ 279 0;
+BA_ "VFrameFormat" BO_ 278 0;
+BA_ "VFrameFormat" BO_ 277 0;
+BA_ "VFrameFormat" BO_ 276 0;
+BA_ "VFrameFormat" BO_ 275 0;
+BA_ "VFrameFormat" BO_ 274 0;
+BA_ "VFrameFormat" BO_ 273 0;
+BA_ "VFrameFormat" BO_ 272 0;
+BA_ "VFrameFormat" BO_ 271 0;
+BA_ "VFrameFormat" BO_ 270 0;
+BA_ "VFrameFormat" BO_ 269 0;
+BA_ "VFrameFormat" BO_ 268 0;
+BA_ "VFrameFormat" BO_ 267 0;
+BA_ "VFrameFormat" BO_ 266 0;
+BA_ "VFrameFormat" BO_ 265 0;
+BA_ "VFrameFormat" BO_ 264 0;
+BA_ "VFrameFormat" BO_ 263 0;
+BA_ "VFrameFormat" BO_ 262 0;
+BA_ "VFrameFormat" BO_ 261 0;
+BA_ "VFrameFormat" BO_ 260 0;
+BA_ "VFrameFormat" BO_ 259 0;
+BA_ "VFrameFormat" BO_ 258 0;
+BA_ "VFrameFormat" BO_ 257 0;
+VAL_ 2147485973 STAT_ENCODE 2 "L3e-A3" 1 "L3e-A2" ;
+VAL_ 2147485968 Protocol_ID 1 "ISO 27145-4" ;
+VAL_ 425 ABS_DISABLED_SUP 1 "YES" 0 "NO" ;
+VAL_ 425 ABS_DISABLED 1 "ABS disabled" 0 "ABS not disabled" ;
+VAL_ 2147484072 NOXC24_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484072 NOXC24_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484072 NOXC23_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484072 NOXC23_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484072 NOXC14_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484072 NOXC14_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484072 NOXC13_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484072 NOXC13_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484071 NOX24_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484071 NOX24_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484071 NOX23_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484071 NOX23_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484071 NOX14_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484071 NOX14_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484071 NOX13_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484071 NOX13_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 421 DEF_UCDC_SUP 1 "YES" 0 "NO" ;
+VAL_ 421 DEF_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 420 GEAR_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 420 GEAR_RAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484067 EVAP_B_VP_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484067 EVAP_B_VP_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484067 EVAP_A_VP_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484067 EVAP_A_VP_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484065 NOXC22_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484065 NOXC21_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484065 NOXC12_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484065 NOXC11_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484065 NOXC22_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484065 NOXC21_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484065 NOXC12_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484065 NOXC11_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSB_B4_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSB_B3_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSB_B2_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSB_B1_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSA_B4_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSA_B3_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSA_B2_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484063 FUELSYSA_B1_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 LAMBDA24_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 LAMBDA23_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 LAMBDA14_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 LAMBDA13_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 O2S24_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 O2S23_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 O2S14_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484060 O2S13_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 411 DEF_Type_SUP 1 "YES" 0 "NO" ;
+VAL_ 411 DEF_Type 13 "No fault, no result" 3 "DEF is proper mixture" 2 "Fluid is Diesel" 1 "Urea Concentration Too Low" 0 "Urea Concentration Too High" ;
+VAL_ 411 DEF_T_SUP 1 "YES" 0 "NO" ;
+VAL_ 411 DEF_LVL_SUP 1 "YES" 0 "NO" ;
+VAL_ 411 DEF_CON_SUP 1 "YES" 0 "NO" ;
+VAL_ 410 HEV_MODE_STAT 3 "Not PSA" 2 "CIM (PSA)" 1 "CDM (PSA)" 0 "CSM (PSA) / Not a PHEV" ;
+VAL_ 410 HEV_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 410 HEV_MODE 1 "CDM" 0 "CSM / non-PHEV" ;
+VAL_ 410 HEV_BATT_V_SUP 1 "YES" 0 "NO" ;
+VAL_ 410 HEV_BATT_A_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484057 EGT28_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484057 EGT27_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484057 EGT26_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484057 EGT25_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484056 EGT18_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484056 EGT17_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484056 EGT16_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484056 EGT15_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 NOX_DTC_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 EGR_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 REAG_QUAL_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 REAG_DOSE_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 REAG_CON_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 INDUC_L3 3 "not supported" 2 "active" 1 "enabled" 0 "inactive" ;
+VAL_ 2147484052 INDUC_L2 3 "not supported" 2 "active" 1 "enabled" 0 "inactive" ;
+VAL_ 2147484052 INDUC_L1 3 "not supported" 2 "active" 1 "enabled" 0 "inactive" ;
+VAL_ 2147484052 NOX_WARN_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484052 NOX_WARN_ACT 1 "Warning system active" 0 "Warning system inactive" ;
+VAL_ 403 MI_TIME_CUM_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 IFB2_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 IFB2_CL 1 "YES" 0 "NO" ;
+VAL_ 402 IFB1_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 IFB1_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FIT2_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FIT2_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FIT1_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FIT1_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FIQ2_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FIQ2_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FIQ1_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FIQ1_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FP2_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FP2_CL 1 "YES" 0 "NO" ;
+VAL_ 402 FP1_CL_SUP 1 "YES" 0 "NO" ;
+VAL_ 402 FP1_CL 1 "YES" 0 "NO" ;
+VAL_ 401 MI_MODE_ECU 15 "Not available / Not required" 14 "Error" 3 "Continuous MI" 2 "Short MI" 1 "On Demand MI" 0 "MI Off" ;
+VAL_ 400 VOBD_RDY 1 "not complete" 0 "complete" ;
+VAL_ 400 MI_MODE_VOBD 15 "Not available / Not required" 14 "Error" 3 "Continuous MI" 2 "Short MI" 1 "On Demand MI" 0 "MI Off" ;
+VAL_ 400 MI_DISP_VOBD 3 "Not available" 2 "Reserved" 1 "discriminatory" 0 "nondiscriminatory" ;
+VAL_ 399 PM21_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 399 PM21_SIG_SUP 1 "YES" 0 "NO" ;
+VAL_ 399 PM21_REGEN 1 "YES" 0 "NO" ;
+VAL_ 399 PM21_ACTIVE 1 "YES" 0 "NO" ;
+VAL_ 399 PM11_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 399 PM11_SIG_SUP 1 "YES" 0 "NO" ;
+VAL_ 399 PM11_REGEN 1 "YES" 0 "NO" ;
+VAL_ 399 PM11_ACTIVE 1 "YES" 0 "NO" ;
+VAL_ 2147484044 LAMBDA22_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 LAMBDA21_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 LAMBDA12_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 LAMBDA11_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 O2S22_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 O2S21_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 O2S12_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484044 O2S11_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 NOX_ADS_REGEN_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 NOX_ADS_REGEN 1 "regen" 0 "no regen" ;
+VAL_ 395 NOX_ADS_DESULF_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 NOX_ADS_DESULF 1 "Desulfurization in progress" 0 "Desulfurization not in progress" ;
+VAL_ 395 DPF_REGEN_TYPE_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 DPF_REGEN_TYPE 1 "Active DPF Regen" 0 "Passive DPF Regen" ;
+VAL_ 395 DPF_REGEN_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 DPF_REGEN_STAT 1 "DPF Regen in progress" 0 "DPF Regen not in progress" ;
+VAL_ 395 DPF_REGEN_PCT_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 DPF_REGEN_AVGT_SUP 1 "YES" 0 "NO" ;
+VAL_ 395 DPF_REGEN_AVGD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484040 ACTIVE 1 "inducement system active" 0 "inducement system not active" ;
+VAL_ 2147484040 NOx_LEVEL4 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_ 2147484040 NOx_LEVEL3 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_ 2147484040 NOx_LEVEL2 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_ 2147484040 NOx_LEVEL1 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_ 2147484040 NOx_LEVEL 1 "NOx emissions too high" 0 "NOx emissions normal" ;
+VAL_ 2147484040 CONSUMP_DEVIATION4 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_ 2147484040 CONSUMP_DEVIATION3 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_ 2147484040 CONSUMP_DEVIATION2 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_ 2147484040 CONSUMP_DEVIATION1 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_ 2147484040 CONSUMP_DEVIATION 1 "deviation of reagent consumption" 0 "reagent consumption correct" ;
+VAL_ 2147484040 INCORR_REAG4 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_ 2147484040 INCORR_REAG3 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_ 2147484040 INCORR_REAG2 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_ 2147484040 INCORR_REAG1 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_ 2147484040 INCORR_REAG 1 "incorrect reagent" 0 "correct reagent" ;
+VAL_ 2147484040 LEVEL_LOW4 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_ 2147484040 LEVEL_LOW3 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_ 2147484040 LEVEL_LOW2 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_ 2147484040 LEVEL_LOW1 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_ 2147484040 LEVEL_LOW 1 "reagent level too low" 0 "reagent level normal" ;
+VAL_ 391 MAP_B_SUP 1 "YES" 0 "NO" ;
+VAL_ 391 MAP_A_SUP 1 "YES" 0 "NO" ;
+VAL_ 390 PM21_SUP 1 "YES" 0 "NO" ;
+VAL_ 390 PM11_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484037 NWI_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484037 REAG_RATE_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484037 REAG_LVL_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484037 REAG_DEMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484035 NOX22_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484035 NOX21_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484035 NOX12_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484035 NOX11_AVA 1 "No fault, no result" 0 "Normal" ;
+VAL_ 2147484035 NOX22_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484035 NOX21_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484035 NOX12_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484035 NOX11_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484042 AECD20_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484042 AECD19_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484042 AECD18_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484042 AECD17_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484042 AECD16_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484041 AECD15_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484041 AECD14_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484041 AECD13_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484041 AECD12_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484041 AECD11_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484034 AECD10_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484034 AECD9_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484034 AECD8_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484034 AECD7_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484034 AECD6_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484033 AECD5_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484033 AECD4_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484033 AECD3_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484033 AECD2_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484033 AECD1_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484031 PTO_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484031 IDLE_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484031 RUN_TIME_SUP 1 "YES" 0 "NO" ;
+VAL_ 382 PNTE_OUT 1 "YES" 0 "NO" ;
+VAL_ 382 PNTE_IN 1 "YES" 0 "NO" ;
+VAL_ 382 PNTE_DEF 1 "YES" 0 "NO" ;
+VAL_ 382 PNTE_CAA 1 "YES" 0 "NO" ;
+VAL_ 381 NNTE_OUT 1 "YES" 0 "NO" ;
+VAL_ 381 NNTE_IN 1 "YES" 0 "NO" ;
+VAL_ 381 NNTE_DEF 1 "YES" 0 "NO" ;
+VAL_ 381 NNTE_CAA 1 "YES" 0 "NO" ;
+VAL_ 2147484028 DPF2_OUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484028 DPF2_INT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484028 DPF1_OUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484028 DPF1_INT_SUP 1 "YES" 0 "NO" ;
+VAL_ 379 DPF2_OUTP_SUP 1 "YES" 0 "NO" ;
+VAL_ 379 DPF2_INP_SUP 1 "YES" 0 "NO" ;
+VAL_ 379 DPF2_DP_SUP 1 "YES" 0 "NO" ;
+VAL_ 378 DPF1_OUTP_SUP 1 "YES" 0 "NO" ;
+VAL_ 378 DPF1_INP_SUP 1 "YES" 0 "NO" ;
+VAL_ 378 DPF1_DP_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484025 EGT24_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484025 EGT23_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484025 EGT22_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484025 EGT21_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484024 EGT14_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484024 EGT13_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484024 EGT12_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484024 EGT11_SUP 1 "YES" 0 "NO" ;
+VAL_ 375 CACT22_SUP 1 "YES" 0 "NO" ;
+VAL_ 375 CACT21_SUP 1 "YES" 0 "NO" ;
+VAL_ 375 CACT12_SUP 1 "YES" 0 "NO" ;
+VAL_ 375 CACT11_SUP 1 "YES" 0 "NO" ;
+VAL_ 374 TCB_TOUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 374 TCB_TINT_SUP 1 "YES" 0 "NO" ;
+VAL_ 374 TCB_COUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 374 TCB_CINT_SUP 1 "YES" 0 "NO" ;
+VAL_ 373 TCA_TOUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 373 TCA_TINT_SUP 1 "YES" 0 "NO" ;
+VAL_ 373 TCA_COUTT_SUP 1 "YES" 0 "NO" ;
+VAL_ 373 TCA_CINT_SUP 1 "YES" 0 "NO" ;
+VAL_ 372 TCB_RPM_SUP 1 "YES" 0 "NO" ;
+VAL_ 372 TCA_RPM_SUP 1 "YES" 0 "NO" ;
+VAL_ 371 EP2_SUP 1 "YES" 0 "NO" ;
+VAL_ 371 EP1_SUP 1 "YES" 0 "NO" ;
+VAL_ 370 WG_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 370 WG_B_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 370 WG_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 370 WG_A_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_B_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_B_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_A_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_A_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 369 VGT_B_STAT 3 "CTL_FAULT" 2 "CTL_CL" 1 "CTL_OL" ;
+VAL_ 369 VGT_A_STAT 3 "CTL_FAULT" 2 "CTL_CL" 1 "CTL_OL" ;
+VAL_ 2147484016 BP_B_STAT 3 "CTL_FAULT" 2 "CTL_CL" 1 "CTL_OL" ;
+VAL_ 2147484016 BP_A_STAT 3 "CTL_FAULT" 2 "CTL_CL" 1 "CTL_OL" ;
+VAL_ 2147484016 BP_B_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484016 BP_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484016 BP_B_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484016 BP_A_STAT_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484016 BP_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484016 BP_A_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 367 TCB_CINP_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 367 TCB_CINP_SUP 1 "YES" 0 "NO" ;
+VAL_ 367 TCA_CINP_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 367 TCA_CINP_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484014 ICP_B_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484014 ICP_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484014 ICP_A_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484014 ICP_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRT_B_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRT_A_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRP_B_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRP_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRP_A_SUP 1 "YES" 0 "NO" ;
+VAL_ 2147484013 FRP_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 364 TAC_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 364 TAC_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 364 TP_B_REL_SUP 1 "YES" 0 "NO" ;
+VAL_ 364 TP_A_REL_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTD_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTD_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTC_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTC_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTB_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTB_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTA_WR_SUP 1 "YES" 0 "NO" ;
+VAL_ 363 EGRTA_SUP 1 "YES" 0 "NO" ;
+VAL_ 362 IAF_B_REL_SUP 1 "YES" 0 "NO" ;
+VAL_ 362 IAF_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 362 IAF_A_REL_SUP 1 "YES" 0 "NO" ;
+VAL_ 362 IAF_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_B_ERR_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_B_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_B_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_A_ERR_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_A_CMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 361 EGR_A_ACT_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT23_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT22_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT21_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT13_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT12_SUP 1 "YES" 0 "NO" ;
+VAL_ 360 IAT11_SUP 1 "YES" 0 "NO" ;
+VAL_ 359 ECT2_SUP 1 "YES" 0 "NO" ;
+VAL_ 359 ECT1_SUP 1 "YES" 0 "NO" ;
+VAL_ 358 MAF_SB_SUP 1 "YES" 0 "NO" ;
+VAL_ 358 MAF_SA_SUP 1 "YES" 0 "NO" ;
+VAL_ 357 GEAR_RCMD_SUP 1 "YES" 0 "NO" ;
+VAL_ 357 GPL_STATUS_SUP 1 "YES" 0 "NO" ;
+VAL_ 357 GPL_STAT 1 "ON" 0 "OFF" ;
+VAL_ 357 NG_STATUS_SUP 1 "YES" 0 "NO" ;
+VAL_ 357 NG_STAT 1 "GEAR" 0 "NEUT" ;
+VAL_ 357 ND_STATUS_SUP 1 "YES" 0 "NO" ;
+VAL_ 357 ND_STAT 1 "DRIVE" 0 "NEUT" ;
+VAL_ 357 PTO_STAT 1 "ON" 0 "OFF" ;
+VAL_ 357 PTO_STATUS_SUP 1 "YES" 0 "NO" ;
+VAL_ 337 FUEL_TYP 28 "DSL_NG" 27 "DSL_CNG" 26 "NG" 25 "BI_DSL" 24 "BI_NG" 23 "BI_DSL / NG" 22 "HYB_REG" 21 "HYB_MIX" 20 "HYB_ELEC" 19 "HYB_DSL" 18 "HYB_ETH" 17 "HYB_GAS" 16 "BI_MIX" 15 "BI_ELEC" 14 "BI_PROP" 13 "BI_CNG" 12 "BI_LPG" 11 "BI_ETH" 10 "BI_METH" 9 "BI_GAS" 8 "ELEC" 7 "PROP" 6 "CNG" 5 "LPG" 4 "DSL" 3 "ETH" 2 "METH" 1 "GAS" 0 "NONE" ;
+VAL_ 321 CIGN_SUP 1 "Compression ignition" 0 "Spark ignition" ;
+VAL_ 321 PM_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 PM_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 EGS_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 EGS_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 BP_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 BP_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 NCATCMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 NCAT_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 HCCATENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 HCCATCMP 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 EGR_ENA_spark 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 EGR_ENA_compression 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 EGR_CMPL_spark 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 EGR_CMPL_compression 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 HTR_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 HTR_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 O2S_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 O2S_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 AIR_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 AIR_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 EVAPCMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 EVAP_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 HCATCMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 HCAT_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 CAT_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 CAT_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 CCM_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 CCM_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 FUELCMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 321 FUEL_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 MIS_ENA 1 "enabled (YES)" 0 "disabled (NO) / not supported" ;
+VAL_ 321 MIS_CMPL 1 "not complete (NO)" 0 "complete (YES) / not supported" ;
+VAL_ 286 PTO_STAT 1 "ON" 0 "OFF" ;
+VAL_ 284 OBDSUP 43 "2B,CN-HDOBD-VI" 42 "2A,OBDBr-D" 41 "29,CN-OBD-6" 40 "28,MC JOBD-I" 39 "27,MC TOBD-I" 38 "26,MC COBD-I" 37 "25,MC EOBD-II" 36 "24,MC EOBD-I" 35 "23,OBDBr-3" 34 "22,OBD / OBD II / HD OBD" 33 "21,HD EOBD-VI" 32 "20,IOBD II" 31 "1F,IOBD I" 30 "1E,KOBD" 29 "1D,OBDBr-2" 28 "1C,OBDBr-1" 27 "1B,ISO/SAE reserved" 26 "1A,HD EOBD-II N" 25 "19,HD EOBD-II" 24 "18,HD EOBD-I N" 23 "17,HD EOBD-I" 22 "16,SAE/ISO reserved" 21 "15,WWH OBD" 20 "14,HD OBD" 19 "13,HD OBD-C" 18 "12,EMD+" 17 "11,EMD" 16 "10,ISO/SAE reserved" 15 "F,OBD / OBD II / EOBD / KOBD" 14 "E,OBD / EOBD / KOBD" 13 "D,JOBD / EOBD / OBD II" 12 "C,JOBD / EOBD" 11 "B,JOBD / OBD II" 10 "A,JOBD" 9 "9,EOBD / OBD / OBD II" 8 "8,EOBD / OBD" 7 "7,EOBD / OBD II" 6 "6,EOBD" 5 "5,NO OBD" 4 "4,OBD I" 3 "3,OBD / OBD II" 2 "2,OBD" 1 "1,OBD II" ;
+VAL_ 257 EGR_RDY_compression 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 PM_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 PM_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 EGS_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 BP_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 NCAT_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 HCCATRDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 EGR_SUP_compression 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 EGS_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 BP_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 NCAT_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 HCCATSUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 HTR_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 EGR_RDY_spark 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 O2S_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 AIR_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 EVAP_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 HCAT_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 CAT_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 EGR_SUP_spark 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 HTR_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 O2S_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 AIR_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 EVAP_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 HCAT_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 CAT_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 CCM_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 FUEL_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 MIS_RDY 1 "Not complete (NO)" 0 "Complete (YES) / not applicable" ;
+VAL_ 257 CIGN_SUP 1 "Compression ignition" 0 "Spark ignition" ;
+VAL_ 257 CCM_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 FUEL_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 MIS_SUP 1 "Supported (YES)" 0 "Not supported (NO)" ;
+VAL_ 257 MIL 1 "MIL ON" 0 "MIL OFF" ;
+
+SG_MUL_VAL_ 2147484072 NOXC24_AVA NOXC24_SUP 1-1;
+SG_MUL_VAL_ 2147484072 NOXC24 NOXC24_AVA 0-0;
+SG_MUL_VAL_ 2147484072 NOXC23_AVA NOXC23_SUP 1-1;
+SG_MUL_VAL_ 2147484072 NOXC23 NOXC23_AVA 0-0;
+SG_MUL_VAL_ 2147484072 NOXC14_AVA NOXC14_SUP 1-1;
+SG_MUL_VAL_ 2147484072 NOXC14 NOXC14_AVA 0-0;
+SG_MUL_VAL_ 2147484072 NOXC13_AVA NOXC13_SUP 1-1;
+SG_MUL_VAL_ 2147484072 NOXC13 NOXC13_AVA 0-0;
+SG_MUL_VAL_ 2147484071 NOX24_AVA NOX24_SUP 1-1;
+SG_MUL_VAL_ 2147484071 NOX24 NOX24_AVA 0-0;
+SG_MUL_VAL_ 2147484071 NOX23_AVA NOX23_SUP 1-1;
+SG_MUL_VAL_ 2147484071 NOX23 NOX23_AVA 0-0;
+SG_MUL_VAL_ 2147484071 NOX14_AVA NOX14_SUP 1-1;
+SG_MUL_VAL_ 2147484071 NOX14 NOX14_AVA 0-0;
+SG_MUL_VAL_ 2147484071 NOX13_AVA NOX13_SUP 1-1;
+SG_MUL_VAL_ 2147484071 NOX13 NOX13_AVA 0-0;
+SG_MUL_VAL_ 421 DEF_UCDC DEF_UCDC_SUP 1-1;
+SG_MUL_VAL_ 421 DEF_CMD DEF_CMD_SUP 1-1;
+SG_MUL_VAL_ 420 GEAR_RAT GEAR_RAT_SUP 1-1;
+SG_MUL_VAL_ 420 GEAR_ACT GEAR_STAT_SUP 1-1;
+SG_MUL_VAL_ 2147484065 NOXC22_AVA NOXC22_SUP 1-1;
+SG_MUL_VAL_ 2147484065 NOXC21_AVA NOXC21_SUP 1-1;
+SG_MUL_VAL_ 2147484065 NOXC12_AVA NOXC12_SUP 1-1;
+SG_MUL_VAL_ 2147484065 NOXC11_AVA NOXC11_SUP 1-1;
+SG_MUL_VAL_ 2147484065 NOXC22 NOXC22_AVA 0-0;
+SG_MUL_VAL_ 2147484065 NOXC21 NOXC21_AVA 0-0;
+SG_MUL_VAL_ 2147484065 NOXC12 NOXC12_AVA 0-0;
+SG_MUL_VAL_ 2147484065 NOXC11 NOXC11_AVA 0-0;
+SG_MUL_VAL_ 2147484063 FUELSYSB_B4 FUELSYSB_B4_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSB_B3 FUELSYSB_B3_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSB_B2 FUELSYSB_B2_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSB_B1 FUELSYSB_B1_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSA_B4 FUELSYSA_B4_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSA_B3 FUELSYSA_B3_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSA_B2 FUELSYSA_B2_SUP 1-1;
+SG_MUL_VAL_ 2147484063 FUELSYSA_B1 FUELSYSA_B1_SUP 1-1;
+SG_MUL_VAL_ 2147484060 LAMBDA24 LAMBDA24_SUP 1-1;
+SG_MUL_VAL_ 2147484060 LAMBDA23 LAMBDA23_SUP 1-1;
+SG_MUL_VAL_ 2147484060 LAMBDA14 LAMBDA14_SUP 1-1;
+SG_MUL_VAL_ 2147484060 LAMBDA13 LAMBDA13_SUP 1-1;
+SG_MUL_VAL_ 2147484060 O2S24_PCT O2S24_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484060 O2S23_PCT O2S23_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484060 O2S14_PCT O2S14_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484060 O2S13_PCT O2S13_PCT_SUP 1-1;
+SG_MUL_VAL_ 411 DEF_Type DEF_Type_SUP 0-0;
+SG_MUL_VAL_ 411 DEF_T DEF_T_SUP 1-1;
+SG_MUL_VAL_ 411 DEF_LVL DEF_LVL_SUP 1-1;
+SG_MUL_VAL_ 411 DEF_CON DEF_CON_SUP 1-1;
+SG_MUL_VAL_ 410 HEV_MODE_STAT HEV_STAT_SUP 1-1;
+SG_MUL_VAL_ 410 HEV_MODE HEV_STAT_SUP 1-1;
+SG_MUL_VAL_ 410 HEV_BATT_V HEV_BATT_V_SUP 1-1;
+SG_MUL_VAL_ 410 HEV_BATT_A HEV_BATT_A_SUP 1-1;
+SG_MUL_VAL_ 2147484057 EGT28 EGT28_SUP 1-1;
+SG_MUL_VAL_ 2147484057 EGT27 EGT27_SUP 1-1;
+SG_MUL_VAL_ 2147484057 EGT26 EGT26_SUP 1-1;
+SG_MUL_VAL_ 2147484057 EGT25 EGT25_SUP 1-1;
+SG_MUL_VAL_ 2147484056 EGT18 EGT18_SUP 1-1;
+SG_MUL_VAL_ 2147484056 EGT17 EGT17_SUP 1-1;
+SG_MUL_VAL_ 2147484056 EGT16 EGT16_SUP 1-1;
+SG_MUL_VAL_ 2147484056 EGT15 EGT15_SUP 1-1;
+SG_MUL_VAL_ 2147484052 NOX_DTC_TIME NOX_DTC_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484052 EGR_TIME EGR_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484052 REAG_QUAL_TIME REAG_QUAL_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484052 REAG_DOSE_TIME REAG_DOSE_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484052 REAG_CON_TIME REAG_CON_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484052 INDUC_L3 NOX_WARN_SUP 1-1;
+SG_MUL_VAL_ 2147484052 INDUC_L2 NOX_WARN_SUP 1-1;
+SG_MUL_VAL_ 2147484052 INDUC_L1 NOX_WARN_SUP 1-1;
+SG_MUL_VAL_ 2147484052 NOX_WARN_ACT NOX_WARN_SUP 1-1;
+SG_MUL_VAL_ 402 IFB2_CL IFB2_CL_SUP 1-1;
+SG_MUL_VAL_ 402 IFB1_CL IFB1_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FIT2_CL FIT2_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FIT1_CL FIT1_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FIQ2_CL FIQ2_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FIQ1_CL FIQ1_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FP2_CL FP2_CL_SUP 1-1;
+SG_MUL_VAL_ 402 FP1_CL FP1_CL_SUP 1-1;
+SG_MUL_VAL_ 399 PM21_REGEN PM21_STAT_SUP 1-1;
+SG_MUL_VAL_ 399 PM21_OUT PM21_SIG_SUP 1-1;
+SG_MUL_VAL_ 399 PM21_ACTIVE PM21_STAT_SUP 1-1;
+SG_MUL_VAL_ 399 PM11_REGEN PM11_STAT_SUP 1-1;
+SG_MUL_VAL_ 399 PM11_OUT PM11_SIG_SUP 1-1;
+SG_MUL_VAL_ 2147484044 LAMBDA22 LAMBDA22_SUP 1-1;
+SG_MUL_VAL_ 2147484044 LAMBDA21 LAMBDA21_SUP 1-1;
+SG_MUL_VAL_ 2147484044 LAMBDA12 LAMBDA12_SUP 1-1;
+SG_MUL_VAL_ 2147484044 LAMBDA11 LAMBDA11_SUP 1-1;
+SG_MUL_VAL_ 2147484044 O2S22_PCT O2S22_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484044 O2S21_PCT O2S21_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484044 O2S12_PCT O2S12_PCT_SUP 1-1;
+SG_MUL_VAL_ 2147484044 O2S11_PCT O2S11_PCT_SUP 1-1;
+SG_MUL_VAL_ 395 NOX_ADS_REGEN NOX_ADS_REGEN_SUP 1-1;
+SG_MUL_VAL_ 395 NOX_ADS_DESULF NOX_ADS_DESULF_SUP 1-1;
+SG_MUL_VAL_ 395 DPF_REGEN_TYPE DPF_REGEN_TYPE_SUP 1-1;
+SG_MUL_VAL_ 395 DPF_REGEN_STAT DPF_REGEN_STAT_SUP 1-1;
+SG_MUL_VAL_ 395 DPF_REGEN_PCT DPF_REGEN_PCT_SUP 1-1;
+SG_MUL_VAL_ 395 DPF_REGEN_AVGT DPF_REGEN_AVGT_SUP 1-1;
+SG_MUL_VAL_ 395 DPF_REGEN_AVGD DPF_REGEN_AVGD_SUP 1-1;
+SG_MUL_VAL_ 391 MAP_B MAP_B_SUP 1-1;
+SG_MUL_VAL_ 391 MAP_A MAP_A_SUP 1-1;
+SG_MUL_VAL_ 390 PM21 PM21_SUP 1-1;
+SG_MUL_VAL_ 390 PM11 PM11_SUP 1-1;
+SG_MUL_VAL_ 2147484037 NWI_TIME NWI_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484037 REAG_RATE REAG_RATE_SUP 1-1;
+SG_MUL_VAL_ 2147484037 REAG_LVL REAG_LVL_SUP 1-1;
+SG_MUL_VAL_ 2147484037 REAG_DEMD REAG_DEMD_SUP 1-1;
+SG_MUL_VAL_ 2147484035 NOX22_AVA NOX22_SUP 1-1;
+SG_MUL_VAL_ 2147484035 NOX21_AVA NOX21_SUP 1-1;
+SG_MUL_VAL_ 2147484035 NOX12_AVA NOX12_SUP 1-1;
+SG_MUL_VAL_ 2147484035 NOX11_AVA NOX11_SUP 1-1;
+SG_MUL_VAL_ 2147484035 NOX22 NOX22_AVA 0-0;
+SG_MUL_VAL_ 2147484035 NOX21 NOX21_AVA 0-0;
+SG_MUL_VAL_ 2147484035 NOX12 NOX12_AVA 0-0;
+SG_MUL_VAL_ 2147484035 NOX11 NOX11_AVA 0-0;
+SG_MUL_VAL_ 2147484042 AECD20_TIME2 AECD20_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD20_TIME1 AECD20_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD19_TIME2 AECD19_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD19_TIME1 AECD19_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD18_TIME2 AECD18_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD18_TIME1 AECD18_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD17_TIME2 AECD17_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD17_TIME1 AECD17_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD16_TIME2 AECD16_SUP 1-1;
+SG_MUL_VAL_ 2147484042 AECD16_TIME1 AECD16_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD15_TIME2 AECD15_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD15_TIME1 AECD15_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD14_TIME2 AECD14_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD14_TIME1 AECD14_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD13_TIME2 AECD13_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD13_TIME1 AECD13_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD12_TIME2 AECD12_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD12_TIME1 AECD12_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD11_TIME2 AECD11_SUP 1-1;
+SG_MUL_VAL_ 2147484041 AECD11_TIME1 AECD11_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD10_TIME2 AECD10_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD10_TIME1 AECD10_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD9_TIME2 AECD9_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD9_TIME1 AECD9_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD8_TIME2 AECD8_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD8_TIME1 AECD8_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD7_TIME2 AECD7_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD7_TIME1 AECD7_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD6_TIME2 AECD6_SUP 1-1;
+SG_MUL_VAL_ 2147484034 AECD6_TIME1 AECD6_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD5_TIME2 AECD5_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD5_TIME1 AECD5_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD4_TIME2 AECD4_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD4_TIME1 AECD4_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD3_TIME2 AECD3_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD3_TIME1 AECD3_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD2_TIME2 AECD2_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD2_TIME1 AECD2_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD1_TIME2 AECD1_SUP 1-1;
+SG_MUL_VAL_ 2147484033 AECD1_TIME1 AECD1_SUP 1-1;
+SG_MUL_VAL_ 2147484031 PTO_TIME PTO_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484031 IDLE_TIME IDLE_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484031 RUN_TIME RUN_TIME_SUP 1-1;
+SG_MUL_VAL_ 2147484028 DPF2_OUTT DPF2_OUTT_SUP 1-1;
+SG_MUL_VAL_ 2147484028 DPF2_INT DPF2_INT_SUP 1-1;
+SG_MUL_VAL_ 2147484028 DPF1_OUTT DPF2_OUTT_SUP 1-1;
+SG_MUL_VAL_ 2147484028 DPF1_INT DPF1_INT_SUP 1-1;
+SG_MUL_VAL_ 379 DPF2_OUTP DPF2_OUTP_SUP 1-1;
+SG_MUL_VAL_ 379 DPF2_INP DPF2_INP_SUP 1-1;
+SG_MUL_VAL_ 379 DPF2_DP DPF2_DP_SUP 1-1;
+SG_MUL_VAL_ 378 DPF1_OUTP DPF1_OUTP_SUP 1-1;
+SG_MUL_VAL_ 378 DPF1_INP DPF1_INP_SUP 1-1;
+SG_MUL_VAL_ 378 DPF1_DP DPF1_DP_SUP 1-1;
+SG_MUL_VAL_ 2147484025 EGT24 EGT24_SUP 1-1;
+SG_MUL_VAL_ 2147484025 EGT23 EGT23_SUP 1-1;
+SG_MUL_VAL_ 2147484025 EGT22 EGT22_SUP 1-1;
+SG_MUL_VAL_ 2147484025 EGT21 EGT21_SUP 1-1;
+SG_MUL_VAL_ 2147484024 EGT14 EGT14_SUP 1-1;
+SG_MUL_VAL_ 2147484024 EGT13 EGT13_SUP 1-1;
+SG_MUL_VAL_ 2147484024 EGT12 EGT12_SUP 1-1;
+SG_MUL_VAL_ 2147484024 EGT11 EGT11_SUP 1-1;
+SG_MUL_VAL_ 375 CACT22 CACT22_SUP 1-1;
+SG_MUL_VAL_ 375 CACT21 CACT21_SUP 1-1;
+SG_MUL_VAL_ 375 CACT12 CACT12_SUP 1-1;
+SG_MUL_VAL_ 375 CACT11 CACT11_SUP 1-1;
+SG_MUL_VAL_ 374 TCB_TOUTT TCB_TOUTT_SUP 1-1;
+SG_MUL_VAL_ 374 TCB_TINT TCB_TINT_SUP 1-1;
+SG_MUL_VAL_ 374 TCB_COUTT TCB_COUTT_SUP 1-1;
+SG_MUL_VAL_ 374 TCB_CINT TCB_CINT_SUP 1-1;
+SG_MUL_VAL_ 373 TCA_TOUTT TCA_TOUTT_SUP 1-1;
+SG_MUL_VAL_ 373 TCA_TINT TCA_TINT_SUP 1-1;
+SG_MUL_VAL_ 373 TCA_COUTT TCA_COUTT_SUP 1-1;
+SG_MUL_VAL_ 373 TCA_CINT TCA_CINT_SUP 1-1;
+SG_MUL_VAL_ 372 TCB_RPM TCB_RPM_SUP 1-1;
+SG_MUL_VAL_ 372 TCA_RPM TCA_RPM_SUP 1-1;
+SG_MUL_VAL_ 371 EP_2 EP2_SUP 1-1;
+SG_MUL_VAL_ 371 EP_1 EP1_SUP 1-1;
+SG_MUL_VAL_ 370 WG_B_CMD WG_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 370 WG_B_ACT WG_B_ACT_SUP 1-1;
+SG_MUL_VAL_ 370 WG_A_CMD WG_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 370 WG_A_ACT WG_A_ACT_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_B_STAT VGT_B_STAT_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_B_CMD VGT_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_B_ACT VGT_B_ACT_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_A_STAT VGT_A_STAT_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_A_CMD VGT_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 369 VGT_A_ACT VGT_A_ACT_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_B_STAT BP_B_STAT_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_A_STAT BP_A_STAT_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_B_CMD BP_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_B_ACT BP_B_ACT_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_A_CMD BP_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484016 BP_A_ACT BP_A_ACT_SUP 1-1;
+SG_MUL_VAL_ 367 TCB_CINP_WR TCB_CINP_WR_SUP 1-1;
+SG_MUL_VAL_ 367 TCB_CINP_WR_SUP TCB_CINP_SUP 0-0;
+SG_MUL_VAL_ 367 TCB_CINP TCB_CINP_SUP 1-1;
+SG_MUL_VAL_ 367 TCA_CINP_WR TCA_CINP_WR_SUP 1-1;
+SG_MUL_VAL_ 367 TCA_CINP_WR_SUP TCA_CINP_SUP 0-0;
+SG_MUL_VAL_ 367 TCA_CINP TCA_CINP_SUP 1-1;
+SG_MUL_VAL_ 2147484014 ICP_B_CMD ICP_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484014 ICP_B ICP_B_SUP 1-1;
+SG_MUL_VAL_ 2147484014 ICP_A_CMD ICP_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484014 ICP_A ICP_A_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRT_B FRT_B_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRT_A FRT_A_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRP_B_CMD FRP_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRP_B FRP_B_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRP_A_CMD FRP_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 2147484013 FRP_A FRP_A_SUP 1-1;
+SG_MUL_VAL_ 364 TAC_B_CMD TAC_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 364 TAC_A_CMD TAC_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 364 TP_B_REL TP_B_REL_SUP 1-1;
+SG_MUL_VAL_ 364 TP_A_REL TP_A_REL_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTD_WR EGRTD_WR_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTC_WR EGRTC_WR_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTB_WR EGRTB_WR_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTA_WR EGRTA_WR_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTD_WR_SUP EGRTD_SUP 0-0;
+SG_MUL_VAL_ 363 EGRTD EGRTD_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTC_WR_SUP EGRTC_SUP 0-0;
+SG_MUL_VAL_ 363 EGRTC EGRTC_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTB_WR_SUP EGRTB_SUP 0-0;
+SG_MUL_VAL_ 363 EGRTB EGRTB_SUP 1-1;
+SG_MUL_VAL_ 363 EGRTA_WR_SUP EGRTA_SUP 0-0;
+SG_MUL_VAL_ 363 EGRTA EGRTA_SUP 1-1;
+SG_MUL_VAL_ 362 IAF_B_REL IAF_B_REL_SUP 1-1;
+SG_MUL_VAL_ 362 IAF_B_CMD IAF_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 362 IAF_A_REL IAF_A_REL_SUP 1-1;
+SG_MUL_VAL_ 362 IAF_A_CMD IAF_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_B_ERR EGR_B_ERR_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_B_CMD EGR_B_CMD_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_B_ACT EGR_B_ACT_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_A_ERR EGR_A_ERR_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_A_CMD EGR_A_CMD_SUP 1-1;
+SG_MUL_VAL_ 361 EGR_A_ACT EGR_A_ACT_SUP 1-1;
+SG_MUL_VAL_ 360 IAT23 IAT23_SUP 1-1;
+SG_MUL_VAL_ 360 IAT22 IAT22_SUP 1-1;
+SG_MUL_VAL_ 360 IAT21 IAT21_SUP 1-1;
+SG_MUL_VAL_ 360 IAT13 IAT13_SUP 1-1;
+SG_MUL_VAL_ 360 IAT12 IAT12_SUP 1-1;
+SG_MUL_VAL_ 360 IAT11 IAT11_SUP 1-1;
+SG_MUL_VAL_ 359 ECT2 ECT2_SUP 1-1;
+SG_MUL_VAL_ 359 ECT1 ECT1_SUP 1-1;
+SG_MUL_VAL_ 358 MAFB MAF_SB_SUP 1-1;
+SG_MUL_VAL_ 358 MAFA MAF_SA_SUP 1-1;
+SG_MUL_VAL_ 357 GEAR_RCMD GEAR_RCMD_SUP 1-1;
+SG_MUL_VAL_ 357 GPL_STAT GPL_STATUS_SUP 1-1;
+SG_MUL_VAL_ 357 NG_STAT NG_STATUS_SUP 1-1;
+SG_MUL_VAL_ 357 ND_STAT ND_STATUS_SUP 1-1;
+SG_MUL_VAL_ 321 PM_ENA CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 PM_CMPL PM_ENA 1-1;
+SG_MUL_VAL_ 321 EGS_ENA CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 EGS_CMPL EGS_ENA 1-1;
+SG_MUL_VAL_ 321 BP_ENA CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 BP_CMPL BP_ENA 1-1;
+SG_MUL_VAL_ 321 NCATCMPL NCAT_ENA 1-1;
+SG_MUL_VAL_ 321 NCAT_ENA CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 HCCATENA CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 HCCATCMP HCCATENA 1-1;
+SG_MUL_VAL_ 321 EGR_ENA_spark CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 EGR_ENA_compression CIGN_SUP 1-1;
+SG_MUL_VAL_ 321 EGR_CMPL_spark EGR_ENA_spark 1-1;
+SG_MUL_VAL_ 321 EGR_CMPL_compression EGR_ENA_compression 1-1;
+SG_MUL_VAL_ 321 HTR_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 HTR_CMPL HTR_ENA 1-1;
+SG_MUL_VAL_ 321 O2S_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 O2S_CMPL O2S_ENA 1-1;
+SG_MUL_VAL_ 321 AIR_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 AIR_CMPL AIR_ENA 1-1;
+SG_MUL_VAL_ 321 EVAPCMPL EVAP_ENA 1-1;
+SG_MUL_VAL_ 321 EVAP_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 HCATCMPL HCAT_ENA 1-1;
+SG_MUL_VAL_ 321 HCAT_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 CAT_ENA CIGN_SUP 0-0;
+SG_MUL_VAL_ 321 CAT_CMPL CAT_ENA 1-1;
+SG_MUL_VAL_ 321 CCM_CMPL CCM_ENA 1-1;
+SG_MUL_VAL_ 321 FUELCMPL FUEL_ENA 1-1;
+SG_MUL_VAL_ 321 MIS_CMPL MIS_ENA 1-1;
+SG_MUL_VAL_ 257 EGR_RDY_compression EGR_SUP_compression 1-1;
+SG_MUL_VAL_ 257 PM_SUP CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 PM_RDY PM_SUP 1-1;
+SG_MUL_VAL_ 257 EGS_RDY EGS_SUP 1-1;
+SG_MUL_VAL_ 257 BP_RDY BP_SUP 1-1;
+SG_MUL_VAL_ 257 NCAT_RDY NCAT_SUP 1-1;
+SG_MUL_VAL_ 257 HCCATRDY HCCATSUP 1-1;
+SG_MUL_VAL_ 257 EGR_SUP_compression CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 EGS_SUP CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 BP_SUP CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 NCAT_SUP CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 HCCATSUP CIGN_SUP 1-1;
+SG_MUL_VAL_ 257 HTR_RDY HTR_SUP 1-1;
+SG_MUL_VAL_ 257 EGR_RDY_spark EGR_SUP_spark 1-1;
+SG_MUL_VAL_ 257 O2S_RDY O2S_SUP 1-1;
+SG_MUL_VAL_ 257 AIR_RDY AIR_SUP 1-1;
+SG_MUL_VAL_ 257 EVAP_RDY EVAP_SUP 1-1;
+SG_MUL_VAL_ 257 HCAT_RDY HCAT_SUP 1-1;
+SG_MUL_VAL_ 257 CAT_RDY CAT_SUP 1-1;
+SG_MUL_VAL_ 257 EGR_SUP_spark CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 HTR_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 O2S_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 AIR_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 EVAP_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 HCAT_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 CAT_SUP CIGN_SUP 0-0;
+SG_MUL_VAL_ 257 CCM_RDY CCM_SUP 1-1;
+SG_MUL_VAL_ 257 FUEL_RDY FUEL_SUP 1-1;
+SG_MUL_VAL_ 257 MIS_RDY MIS_SUP 1-1;
