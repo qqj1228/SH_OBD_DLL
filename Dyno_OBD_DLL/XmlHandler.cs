@@ -31,6 +31,8 @@ namespace Dyno_OBD_DLL {
                 { "GetReadiness", GetReadinessHandler },
                 { "GetIUPR", GetIUPRHandler },
                 { "GetRTData", GetRTDataHandler },
+                { "GetSpeedInfo", GetSpeedInfoHandler },
+                { "GetOilInfo", GetOilInfoHandler }
             };
         }
 
@@ -44,6 +46,7 @@ namespace Dyno_OBD_DLL {
                     strResponse = _handlers[request.Cmd](request);
                 } else {
                     Response response = new Response {
+                        Cmd = request.Cmd,
                         Code = 1,
                         Msg = "不支持的请求命令"
                     };
@@ -51,6 +54,7 @@ namespace Dyno_OBD_DLL {
                 }
             } else {
                 Response response = new Response {
+                    Cmd = request.Cmd,
                     Code = 1,
                     Msg = "请求命令格式错误"
                 };
@@ -62,12 +66,14 @@ namespace Dyno_OBD_DLL {
 
         private string GetOBDStateHandler(Request request) {
             string indentChars = string.Empty;
-            GetOBDStateResponse response = new GetOBDStateResponse();
+            GetOBDStateResponse response = new GetOBDStateResponse {
+                Cmd = request.Cmd
+            };
             try {
                 response.Code = 0;
                 response.Msg = "成功";
                 response.Data = new GetOBDStateResponse.CData {
-                    State = _OBDIf.ConnectedStatus ? "已连接OBD" : "未连接OBD"
+                    State = _OBDIf.ConnectedStatus ? "已连接车辆OBD" : "未连接车辆OBD"
                 };
             } catch (Exception ex) {
                 response.Code = 1;
@@ -80,7 +86,9 @@ namespace Dyno_OBD_DLL {
 
         private string GetVCIInfoHandler(Request request) {
             string indentChars = string.Empty;
-            GetVCIInfoResponse response = new GetVCIInfoResponse();
+            GetVCIInfoResponse response = new GetVCIInfoResponse {
+                Cmd = request.Cmd
+            };
             try {
                 string strVCISWVer = _OBDIf.GetDeviceIDString();
                 response.Code = 0;
@@ -101,7 +109,9 @@ namespace Dyno_OBD_DLL {
         private string StartTestHandler(Request request) {
             string indentChars = string.Empty;
             bool result = true;
-            StartTestResponse response = new StartTestResponse();
+            StartTestResponse response = new StartTestResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 if (!_OBDDll.SetSupportStatus(out string errMsg)) {
                     result = false;
@@ -130,7 +140,9 @@ namespace Dyno_OBD_DLL {
 
         private string GetCarInfoHandler(Request request) {
             string indentChars = string.Empty;
-            GetCarInfoResponse response = new GetCarInfoResponse();
+            GetCarInfoResponse response = new GetCarInfoResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 Dictionary<string, string> dicVIN = _obdTest.GetVIN();
                 Dictionary<string, string> dicOBDType = _obdTest.GetPID1C();
@@ -165,7 +177,9 @@ namespace Dyno_OBD_DLL {
 
         private string GetOBDInfoHandler(Request request) {
             string indentChars = string.Empty;
-            GetOBDInfoResponse response = new GetOBDInfoResponse();
+            GetOBDInfoResponse response = new GetOBDInfoResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 Dictionary<string, string> dicCVN = _obdTest.GetCVN();
                 Dictionary<string, string> dicCALID = _obdTest.GetCALID();
@@ -236,7 +250,9 @@ namespace Dyno_OBD_DLL {
         private string GetDTCHandler(Request request) {
             string indentChars = string.Empty;
             string strRet;
-            GetDTCResponse response = new GetDTCResponse();
+            GetDTCResponse response = new GetDTCResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 Dictionary<string, string> dicDTC03 = _obdTest.GetDTC03();
                 Dictionary<string, string> dicDTC07 = _obdTest.GetDTC07();
@@ -343,7 +359,9 @@ namespace Dyno_OBD_DLL {
 
         private string GetReadinessHandler(Request request) {
             string indentChars = string.Empty;
-            GetReadinessResponse response = new GetReadinessResponse();
+            GetReadinessResponse response = new GetReadinessResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 string strReadiness = string.Empty;
                 Dictionary<string, string> dicReadiness = _obdTest.GetReadiness();
@@ -355,14 +373,7 @@ namespace Dyno_OBD_DLL {
                         FUEL_RDY = dicReadiness["FUEL_RDY"],
                         CCM_RDY = dicReadiness["CCM_RDY"]
                     };
-                    if (dicReadiness.ContainsKey("EGR_RDY_compression")) {
-                        response.Data.HCCATRDY = dicReadiness["HCCATRDY"];
-                        response.Data.NCAT_RDY = dicReadiness["NCAT_RDY"];
-                        response.Data.BP_RDY = dicReadiness["BP_RDY"];
-                        response.Data.EGS_RDY = dicReadiness["EGS_RDY"];
-                        response.Data.PM_RDY = dicReadiness["PM_RDY"];
-                        response.Data.EGR_RDY = dicReadiness["EGR_RDY_compression"];
-                    } else {
+                    if (_OBDIf.STDType == StandardType.SAE_J1939) {
                         response.Data.CAT_RDY = dicReadiness["CAT_RDY"];
                         response.Data.HCAT_RDY = dicReadiness["HCAT_RDY"];
                         response.Data.EVAP_RDY = dicReadiness["EVAP_RDY"];
@@ -370,6 +381,28 @@ namespace Dyno_OBD_DLL {
                         response.Data.O2S_RDY = dicReadiness["O2S_RDY"];
                         response.Data.HTR_RDY = dicReadiness["HTR_RDY"];
                         response.Data.EGR_RDY = dicReadiness["EGR_RDY_spark"];
+                        response.Data.HCCATRDY = dicReadiness["HCCATRDY"];
+                        response.Data.NCAT_RDY = dicReadiness["NCAT_RDY"];
+                        response.Data.DPF_RDY = dicReadiness["DPF_RDY"];
+                        response.Data.BP_RDY = dicReadiness["BP_RDY"];
+                        response.Data.CSAS_RDY = dicReadiness["CSAS_RDY"];
+                    } else {
+                        if (dicReadiness.ContainsKey("EGR_RDY_compression")) {
+                            response.Data.HCCATRDY = dicReadiness["HCCATRDY"];
+                            response.Data.NCAT_RDY = dicReadiness["NCAT_RDY"];
+                            response.Data.BP_RDY = dicReadiness["BP_RDY"];
+                            response.Data.EGS_RDY = dicReadiness["EGS_RDY"];
+                            response.Data.PM_RDY = dicReadiness["PM_RDY"];
+                            response.Data.EGR_RDY = dicReadiness["EGR_RDY_compression"];
+                        } else {
+                            response.Data.CAT_RDY = dicReadiness["CAT_RDY"];
+                            response.Data.HCAT_RDY = dicReadiness["HCAT_RDY"];
+                            response.Data.EVAP_RDY = dicReadiness["EVAP_RDY"];
+                            response.Data.AIR_RDY = dicReadiness["AIR_RDY"];
+                            response.Data.O2S_RDY = dicReadiness["O2S_RDY"];
+                            response.Data.HTR_RDY = dicReadiness["HTR_RDY"];
+                            response.Data.EGR_RDY = dicReadiness["EGR_RDY_spark"];
+                        }
                     }
                 }
             } catch (Exception ex) {
@@ -378,12 +411,15 @@ namespace Dyno_OBD_DLL {
                 response.Msg += ex.Message.Length > 0 ? ", " + ex.Message : string.Empty;
                 _log.TraceError(ex.Message + Environment.NewLine + ex.StackTrace);
             }
-            return Utility.XmlSerialize(response, ref indentChars).Replace("GetReadinessInfoResponse", "Response");
+            return Utility.XmlSerialize(response, ref indentChars).Replace("GetReadinessResponse", "Response");
         }
 
         private string GetIUPRHandler(Request request) {
+            string strRet = string.Empty;
             string indentChars = string.Empty;
-            GetIUPRResponse response = new GetIUPRResponse();
+            GetIUPRResponse response = new GetIUPRResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 bool bDiesel = _obdTest.IsDiesel();
                 Dictionary<string, string> dicIUPR = _obdTest.GetIUPR(bDiesel);
@@ -395,7 +431,20 @@ namespace Dyno_OBD_DLL {
                         OBDCOND = dicIUPR["OBDCOND"],
                         IGNCNTR = dicIUPR["IGNCNTR"],
                     };
-                    if (bDiesel) {
+                    if (_OBDIf.STDType == StandardType.SAE_J1939) {
+                        response.Data.J1939MPR = string.Empty;
+                        strRet = Utility.XmlSerialize(response, ref indentChars).Replace("GetIUPRResponse", "Response");
+                        indentChars += indentChars;
+                        string strMPRData = string.Empty;
+                        for (int i = 1; dicIUPR.Keys.Contains("SPN" + i.ToString()); i++) {
+                            strMPRData += string.Format("{2}<SPN{0}>{1}</SPN{0}>", i, dicIUPR["SPN" + i.ToString()], indentChars) + Environment.NewLine;
+                            strMPRData += string.Format("{2}<COMP{0}>{1}</COMP{0}>", i, dicIUPR["NUM" + i.ToString()], indentChars) + Environment.NewLine;
+                            strMPRData += string.Format("{2}<COND{0}>{1}</COND{0}>", i, dicIUPR["DEN" + i.ToString()], indentChars) + Environment.NewLine;
+                            strMPRData += string.Format("{2}<MPR{0}>{1}</MPR{0}>", i, dicIUPR["MPR" + i.ToString()], indentChars) + Environment.NewLine;
+                        }
+                        strRet = strRet.Replace(indentChars + "<J1939MPR />" + Environment.NewLine, strMPRData);
+                        return strRet;
+                    } else if (bDiesel) {
                         response.Data.HCCATCOMP = dicIUPR["HCCATCOMP"];
                         response.Data.HCCATCOND = dicIUPR["HCCATCOND"];
                         response.Data.HCCATIUPR = dicIUPR["HCCATIUPR"];
@@ -468,14 +517,16 @@ namespace Dyno_OBD_DLL {
                 response.Msg += ex.Message.Length > 0 ? ", " + ex.Message : string.Empty;
                 _log.TraceError(ex.Message + Environment.NewLine + ex.StackTrace);
             }
-            string strRet = Utility.XmlSerialize(response, ref indentChars).Replace("GetIUPRResponse", "Response");
+            strRet = Utility.XmlSerialize(response, ref indentChars).Replace("GetIUPRResponse", "Response");
             strRet = strRet.Replace("_spark", string.Empty).Replace("_compression", string.Empty);
             return strRet;
         }
 
         private string GetRTDataHandler(Request request) {
             string indentChars = string.Empty;
-            GetRTDataResponse response = new GetRTDataResponse();
+            GetRTDataResponse response = new GetRTDataResponse() {
+                Cmd = request.Cmd
+            };
             try {
                 bool bDiesel = _obdTest.IsDiesel();
                 Dictionary<string, double> dicVSS = _obdTest.GetPIDDouble(0x0D, "VSS");
@@ -601,6 +652,62 @@ namespace Dyno_OBD_DLL {
                 _log.TraceError(ex.Message + Environment.NewLine + ex.StackTrace);
             }
             return Utility.XmlSerialize(response, ref indentChars).Replace("GetRTDataResponse", "Response");
+        }
+
+        private string GetSpeedInfoHandler(Request request) {
+            string indentChars = string.Empty;
+            GetSpeedInfoResponse response = new GetSpeedInfoResponse() {
+                Cmd = request.Cmd
+            };
+            try {
+                bool bDiesel = _obdTest.IsDiesel();
+                Dictionary<string, double> dicVSS = _obdTest.GetPIDDouble(0x0D, "VSS");
+                Dictionary<string, double> dicRPM = _obdTest.GetPIDDouble(0x0C, "RPM");
+                string strECU = dicVSS.First().Key;
+                double dVSS = dicVSS.ContainsKey(strECU) ? dicVSS[strECU] : 0;
+                double dRPM = dicRPM.ContainsKey(strECU) ? dicRPM[strECU] : 0;
+
+                response.Code = 0;
+                response.Msg = "成功";
+                response.Data = new GetSpeedInfoResponse.CData {
+                    VSS = dVSS.ToString(),
+                    RPM = dRPM.ToString(),
+                };
+            } catch (Exception ex) {
+                response.Code = 1;
+                response.Msg = "失败";
+                response.Msg += ex.Message.Length > 0 ? ", " + ex.Message : string.Empty;
+                _log.TraceError(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+            return Utility.XmlSerialize(response, ref indentChars).Replace("GetSpeedInfoResponse", "Response");
+        }
+
+        private string GetOilInfoHandler(Request request) {
+            string indentChars = string.Empty;
+            GetOilInfoResponse response = new GetOilInfoResponse() {
+                Cmd = request.Cmd
+            };
+            try {
+                bool bDiesel = _obdTest.IsDiesel();
+                Dictionary<string, double> dicECT = _obdTest.GetPIDDouble(0x05, "ECT");
+                Dictionary<string, double> dicEOT = _obdTest.GetPIDDouble(0x5C, "EOT");
+                string strECU = dicECT.First().Key;
+                double dECT = dicECT.ContainsKey(strECU) ? dicECT[strECU] : 0;
+                double dEOT = dicEOT.ContainsKey(strECU) ? dicEOT[strECU] : 0;
+
+                response.Code = 0;
+                response.Msg = "成功";
+                response.Data = new GetOilInfoResponse.CData {
+                    ECT = dECT.ToString(),
+                    EOT = dEOT.ToString(),
+                };
+            } catch (Exception ex) {
+                response.Code = 1;
+                response.Msg = "失败";
+                response.Msg += ex.Message.Length > 0 ? ", " + ex.Message : string.Empty;
+                _log.TraceError(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+            return Utility.XmlSerialize(response, ref indentChars).Replace("GetOilInfoResponse", "Response");
         }
 
     }

@@ -264,20 +264,24 @@ namespace SH_OBD_DLL {
             if (param.OBDRequest.Length < 2) {
                 return lines;
             }
-            string PGN = param.OBDRequest.Substring(2);
+            string strPGN = param.OBDRequest.Substring(2);
+            string strPF = strPGN.Substring(0, 2);
+            byte PF = Convert.ToByte(strPF, 16);
+            int iLenData = 0;
 
             for (int i = 0; i < tempLines.Count; i++) {
                 if (tempLines[i].Length < headLen) {
-                    try {
-                    } catch (Exception) { }
+                    if (tempLines[i].Length == 3) {
+                        int.TryParse(tempLines[i], out iLenData);
+                    }
                     continue;
                 }
                 string ECU_ID = tempLines[i].Substring(headLen - 2, 2);
                 if (!dicFrameType.Keys.Contains(ECU_ID)) {
                     dicFrameType.Add(ECU_ID, -1);
                 }
-                if (tempLines[i].Contains(PGN) && dicFrameType[ECU_ID] < 0) {
-                    int pos = tempLines[i].IndexOf(PGN);
+                if (tempLines[i].Contains(PF <= 239 ? strPF : strPGN) && dicFrameType[ECU_ID] < 0) {
+                    int pos = tempLines[i].IndexOf(PF <= 239 ? strPF : strPGN);
                     if (pos == 2) {
                         // 单帧
                         dicFrameType[ECU_ID] = 0;
@@ -286,6 +290,7 @@ namespace SH_OBD_DLL {
                 } else if (tempLines[i].Substring(2, 4) == "EBFF" && dicFrameType[ECU_ID] < 0) {
                     int iNum_M;
                     string ECU_ID_M;
+                    int iRestData;
                     for (int j = 0; i + j < tempLines.Count; j++) {
                         try {
                             if (tempLines.Count - 1 >= i + j) {
@@ -297,7 +302,12 @@ namespace SH_OBD_DLL {
                                 if (iNum_M == dicFrameType[ECU_ID] + 1 || (j == 0 && iNum_M == 1)) {
                                     // 多帧
                                     dicFrameType[ECU_ID] = iNum_M;
-                                    lines.Add(tempLines[i + j]);
+                                    iRestData = iLenData - (iNum_M - 1) * 7;
+                                    if ((iRestData + 5) * 2 > tempLines[i + j].Length) {
+                                        lines.Add(tempLines[i + j]);
+                                    } else {
+                                        lines.Add(tempLines[i + j].Substring(0, iRestData * 2 + headLen + 2));
+                                    }
                                 }
                             }
                         } catch (Exception) { }

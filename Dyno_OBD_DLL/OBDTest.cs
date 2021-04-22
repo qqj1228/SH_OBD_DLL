@@ -88,8 +88,11 @@ namespace Dyno_OBD_DLL {
                 param.ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString;
                 param.SignalName = "MIL";
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, string.Empty);
-                return dicRet;
+                param.OBDRequest = "00FED4";
+                param.Service = 0;
+                param.Parameter = 0xFED4;
+                param.ValueTypes = (int)OBDParameter.EnumValueTypes.ShortString;
+                param.SignalName = "MIL";
             }
 
             List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
@@ -97,7 +100,9 @@ namespace Dyno_OBD_DLL {
                 if (value.ErrorDetected) {
                     continue;
                 }
-                if (_OBDDll.Mode01Support.ContainsKey(value.ECUResponseID) && _OBDDll.Mode01Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1]) {
+                if (_OBDIf.STDType == StandardType.SAE_J1939) {
+                    dicRet.Add(value.ECUResponseID, GetParamValue(value, param.ValueTypes));
+                } else if (_OBDDll.Mode01Support.ContainsKey(value.ECUResponseID) && _OBDDll.Mode01Support[value.ECUResponseID][(param.Parameter & 0x00FF) - 1]) {
                     dicRet.Add(value.ECUResponseID, GetParamValue(value, param.ValueTypes));
                 }
             }
@@ -244,6 +249,40 @@ namespace Dyno_OBD_DLL {
             return dicRet;
         }
 
+        private Dictionary<string, string> GetJ1939DTC(string strDM) {
+            Dictionary<string, string> dicRet = new Dictionary<string, string>();
+            OBDParameter param = new OBDParameter();
+            int PGN;
+            if (strDM == "DM1") {
+                PGN = 0xFECA;
+            } else if (strDM == "DM12") {
+                // Emission related Confirmed & Active DTCs
+                PGN = 0xFED4;
+            } else if (strDM == "DM6") {
+                // Emission related Pending DTCs
+                PGN = 0xFECF;
+            } else if (strDM == "DM28") {
+                // Emission related Permanent DTCs
+                PGN = 0xFD80;
+            } else {
+                dicRet.Add(string.Empty, string.Empty);
+                return dicRet;
+            }
+            param.OBDRequest = PGN.ToString("X06");
+            param.Service = 0;
+            param.Parameter = PGN;
+            param.SignalName = "DTC";
+            param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
+            List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
+            foreach (OBDParameterValue value in valueList) {
+                if (value.ErrorDetected) {
+                    continue;
+                }
+                dicRet.Add(value.ECUResponseID, GetParamValue(value, param.ValueTypes));
+            }
+            return dicRet;
+        }
+
         public Dictionary<string, string> GetDTC03() {
             Dictionary<string, string> dicRet = new Dictionary<string, string>();
             OBDParameter param = new OBDParameter();
@@ -252,8 +291,7 @@ namespace Dyno_OBD_DLL {
             } else if (_OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "03";
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, string.Empty);
-                return dicRet;
+                return GetJ1939DTC("DM12");
             }
             param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
 
@@ -276,8 +314,7 @@ namespace Dyno_OBD_DLL {
             } else if (_OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "07";
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, string.Empty);
-                return dicRet;
+                return GetJ1939DTC("DM6");
             }
             param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
 
@@ -300,8 +337,7 @@ namespace Dyno_OBD_DLL {
             } else if (_OBDIf.STDType == StandardType.ISO_15031) {
                 param.OBDRequest = "0A";
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, string.Empty);
-                return dicRet;
+                return GetJ1939DTC("DM28");
             }
             param.ValueTypes = (int)OBDParameter.EnumValueTypes.ListString;
 
@@ -313,6 +349,113 @@ namespace Dyno_OBD_DLL {
                 dicRet.Add(value.ECUResponseID, GetParamValue(value, param.ValueTypes));
             }
 
+            return dicRet;
+        }
+
+        public Dictionary<string, double> GetJ1939Double(byte PID) {
+            Dictionary<string, double> dicRet = new Dictionary<string, double>();
+            OBDParameter param = new OBDParameter {
+                Service = 0,
+                ValueTypes = (int)OBDParameter.EnumValueTypes.Double
+            };
+            switch (PID) {
+            case 0xA6:
+                param.OBDRequest = "00FEE0";
+                param.Parameter = 0xFEE0;
+                param.SignalName = "ODO";
+                break;
+            case 0x0D:
+                param.OBDRequest = "00FEF1";
+                param.Parameter = 0xFEF1;
+                param.SignalName = "VSS";
+                break;
+            case 0x0C:
+                param.OBDRequest = "00F004";
+                param.Parameter = 0xF004;
+                param.SignalName = "RPM";
+                break;
+            case 0x05:
+                param.OBDRequest = "00FEEE";
+                param.Parameter = 0xFEEE;
+                param.SignalName = "ECT";
+                break;
+            case 0x5C:
+                param.OBDRequest = "00FEEE";
+                param.Parameter = 0xFEEE;
+                param.SignalName = "EOT";
+                break;
+            case 0x21:
+                param.OBDRequest = "00C100";
+                param.Parameter = 0xC100;
+                param.SignalName = "MIL_DIST";
+                break;
+            case 0x45:
+                param.OBDRequest = "00FEF2";
+                param.Parameter = 0xFEF2;
+                param.SignalName = "TP_R";
+                break;
+            case 0x10:
+                param.OBDRequest = "00F00A";
+                param.Parameter = 0xF00A;
+                param.SignalName = "MAF";
+                break;
+            case 0x0B:
+                param.OBDRequest = "00FEF6";
+                param.Parameter = 0xFEF6;
+                param.SignalName = "MAP";
+                break;
+            case 0x62:
+                param.OBDRequest = "00F004";
+                param.Parameter = 0xF004;
+                param.SignalName = "TQ_ACT";
+                break;
+            case 0x63:
+                param.OBDRequest = "00FEE3";
+                param.Parameter = 0xFEE3;
+                param.SignalName = "TQ_REF";
+                break;
+            case 0x2C:
+                param.OBDRequest = "00FDD5";
+                param.Parameter = 0xFDD5;
+                param.SignalName = "EGR_PCT";
+                break;
+            case 0x70:
+                param.OBDRequest = "00FEF6";
+                param.Parameter = 0xFEF6;
+                param.SignalName = "BP_A_ACT";
+                break;
+            case 0x5E:
+                param.OBDRequest = "00FEF2";
+                param.Parameter = 0xFEF2;
+                param.SignalName = "FUEL_RATE";
+                break;
+            case 0xA1:
+                param.OBDRequest = "00F00E";
+                param.Parameter = 0xF00E;
+                param.SignalName = "NOXC11";
+                break;
+            case 0x78:
+                param.OBDRequest = "00FEF6";
+                param.Parameter = 0xFEF6;
+                param.SignalName = "EGT11";
+                break;
+            case 0x23:
+                param.OBDRequest = "00FEDB";
+                param.Parameter = 0xFEDB;
+                param.SignalName = "FRP";
+                break;
+            default:
+                dicRet.Add(string.Empty, 0);
+                return dicRet;
+            }
+
+            List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
+            foreach (OBDParameterValue value in valueList) {
+                if (value.ErrorDetected) {
+                    continue;
+                }
+                dicRet.Add(value.ECUResponseID, value.DoubleValue);
+            }
             return dicRet;
         }
 
@@ -328,8 +471,7 @@ namespace Dyno_OBD_DLL {
                 param.Service = 1;
                 param.Parameter = PID;
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, 0);
-                return dicRet;
+                return GetJ1939Double(PID);
             }
             param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             param.SignalName = signalName;
@@ -355,6 +497,48 @@ namespace Dyno_OBD_DLL {
             }
         }
 
+        private Dictionary<string, string> GetJ1939Readiness() {
+            Dictionary<string, string> dicRet = new Dictionary<string, string>();
+            OBDParameter param = new OBDParameter {
+                OBDRequest = "00FECE",
+                Service = 0,
+                Parameter = 0xFECE,
+                SignalName = "SPARK_RDY",
+                ValueTypes = (int)OBDParameter.EnumValueTypes.BitFlags
+            };
+            List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
+            OBDParameterValue value = valueList[0];
+            if (value.ErrorDetected) {
+                dicRet.Add(string.Empty, string.Empty);
+                return dicRet;
+            }
+            dicRet.Add("MIS_RDY", GetSignalDisplayString(value, "MIS_RDY", true));
+            dicRet.Add("FUEL_RDY", GetSignalDisplayString(value, "FUEL_RDY", true));
+            dicRet.Add("CCM_RDY", GetSignalDisplayString(value, "CCM_RDY", true));
+            dicRet.Add("CAT_RDY", GetSignalDisplayString(value, "CAT_RDY", true));
+            dicRet.Add("HCAT_RDY", GetSignalDisplayString(value, "HCAT_RDY", true));
+            dicRet.Add("EVAP_RDY", GetSignalDisplayString(value, "EVAP_RDY", true));
+            dicRet.Add("AIR_RDY", GetSignalDisplayString(value, "AIR_RDY", true));
+            dicRet.Add("O2S_RDY", GetSignalDisplayString(value, "O2S_RDY", true));
+            dicRet.Add("HTR_RDY", GetSignalDisplayString(value, "HTR_RDY", true));
+            dicRet.Add("EGR_RDY_spark", GetSignalDisplayString(value, "EGR_RDY_spark", true));
+
+            param.SignalName = "COMP_RDY";
+            List<OBDParameterValue> valueList2 = _OBDIf.GetValueList(param);
+            OBDParameterValue value2 = valueList2[0];
+            if (value2.ErrorDetected) {
+                dicRet.Add(string.Empty, string.Empty);
+                return dicRet;
+            }
+            dicRet.Add("HCCATRDY", GetSignalDisplayString(value2, "HCCATRDY", true));
+            dicRet.Add("NCAT_RDY", GetSignalDisplayString(value2, "NCAT_RDY", true));
+            dicRet.Add("DPF_RDY", GetSignalDisplayString(value2, "PM_RDY", true));
+            dicRet.Add("BP_RDY", GetSignalDisplayString(value2, "BP_RDY", true));
+            dicRet.Add("CSAS_RDY", GetSignalDisplayString(value2, "EGS_RDY", true));
+
+            return dicRet;
+        }
+
         /// <summary>
         /// 获取车辆的就绪状态，ECM才会返回就绪状态，其他ECU不会返回
         /// 故返回值Dictionary<string, string>为：Dictionary<就绪状态名, 就绪状态值>
@@ -372,8 +556,7 @@ namespace Dyno_OBD_DLL {
                 param.Service = 1;
                 param.Parameter = 0x01;
             } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                dicRet.Add(string.Empty, string.Empty);
-                return dicRet;
+                return GetJ1939Readiness();
             }
             param.ValueTypes = (int)OBDParameter.EnumValueTypes.BitFlags;
 
@@ -430,6 +613,42 @@ namespace Dyno_OBD_DLL {
         }
 
         /// <summary>
+        /// 获取J1939 DM20的MPR值，ECM才会返回IUPR，其他ECU不会返回
+        /// 故返回值Dictionary<string, string>为：Dictionary<MPR名, MPR值>
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<string, string> GetJ1939IUPR() {
+            Dictionary<string, string> dicRet = new Dictionary<string, string>();
+            OBDParameter param = new OBDParameter {
+                OBDRequest = "00C200",
+                Service = 0,
+                Parameter = 0xC200,
+                ValueTypes = (int)OBDParameter.EnumValueTypes.ListString
+            };
+            List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
+            OBDParameterValue value = valueList[0];
+
+            if (value.ErrorDetected) {
+                dicRet.Add(string.Empty, string.Empty);
+                return dicRet;
+            }
+            dicRet.Add("OBDCOND", value.ListStringValue[1]);
+            dicRet.Add("IGNCNTR", value.ListStringValue[0]);
+            for (int i = 2; i < value.ListStringValue.Count; i++) {
+                string[] strMPRDatas = value.ListStringValue[i].Split('/');
+                string strSPN = strMPRDatas[0];
+                string strNumerator = strMPRDatas[1];
+                string strDenominator = strMPRDatas[2];
+                string strMPR = strMPRDatas[3];
+                dicRet.Add("SPN" + (i - 1).ToString(), strSPN);
+                dicRet.Add("NUM" + (i - 1).ToString(), strNumerator);
+                dicRet.Add("DEN" + (i - 1).ToString(), strDenominator);
+                dicRet.Add("MPR" + (i - 1).ToString(), strMPR);
+            }
+            return dicRet;
+        }
+
+        /// <summary>
         /// 获取车辆IUPR，ECM才会返回IUPR，其他ECU不会返回
         /// 故返回值Dictionary<string, string>为：Dictionary<IUPR名, IUPR值>
         /// </summary>
@@ -448,8 +667,7 @@ namespace Dyno_OBD_DLL {
                     param.Service = 9;
                     param.Parameter = 0x0B;
                 } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                    dicRet.Add(string.Empty, string.Empty);
-                    return dicRet;
+                    return GetJ1939IUPR();
                 }
             } else {
                 if (_OBDIf.STDType == StandardType.ISO_27145) {
@@ -461,11 +679,10 @@ namespace Dyno_OBD_DLL {
                     param.Service = 9;
                     param.Parameter = 0x08;
                 } else if (_OBDIf.STDType == StandardType.SAE_J1939) {
-                    dicRet.Add(string.Empty, string.Empty);
-                    return dicRet;
+                    return GetJ1939IUPR();
                 }
             }
-            param.ValueTypes = (int)OBDParameter.EnumValueTypes.BitFlags;
+            param.ValueTypes = (int)OBDParameter.EnumValueTypes.Double;
             List<OBDParameterValue> valueList = _OBDIf.GetValueList(param);
             OBDParameterValue value = valueList[0];
 

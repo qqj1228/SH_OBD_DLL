@@ -182,6 +182,36 @@ namespace SH_OBD_DLL {
             }
         }
 
+        /// <summary>
+        /// 反转字符串，strIn：原字符串，count：以几个字符为单位反转，
+        /// bHead：若strIn不能被count整除，不足部分作为头部还是尾部，true:作为头部，false:作为尾部
+        /// 例如：
+        /// ReverseString("54321", 2, true) -> "21435"
+        /// ReverseString("543210", 2, true) -> "103254"
+        /// </summary>
+        /// <param name="strIn"></param>
+        /// <param name="count"></param>
+        /// <param name="bHead"></param>
+        /// <returns></returns>
+        public static string ReverseString(string strIn, int count, bool bHead) {
+            if (string.IsNullOrEmpty(strIn) || count == 0 || count > strIn.Length) {
+                return strIn;
+            }
+            StringBuilder sb = new StringBuilder(strIn.Length);
+            int rest = strIn.Length % count;
+            int start = strIn.Length - (bHead ? count : rest);
+            if (!bHead) {
+                sb.Append(strIn, start, rest);
+                start -= count;
+            }
+            for (int i = start; i >= 0; i -= count) {
+                sb.Append(strIn, i, count);
+            }
+            if (bHead && rest > 0) {
+                sb.Append(strIn, 0, rest);
+            }
+            return sb.ToString();
+        }
     }
 
     // 获取文件版本类

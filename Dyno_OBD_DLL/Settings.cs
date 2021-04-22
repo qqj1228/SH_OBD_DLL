@@ -17,9 +17,11 @@ namespace Dyno_OBD_DLL {
     }
 
     public class Response {
+        public string Cmd { get; set; }
         public int Code { get; set; }
         public string Msg { get; set; }
         public Response() {
+            Cmd = string.Empty;
             Code = 1;
             Msg = string.Empty;
         }
@@ -107,13 +109,16 @@ namespace Dyno_OBD_DLL {
             public string PM_RDY { get; set; }
             // 该项为火花/压缩点火同名项
             public string EGR_RDY { get; set; }
+            // 以下为J1939特有项
+            public string DPF_RDY { get; set; }
+            public string CSAS_RDY { get; set; }
         }
         public CData Data { get; set; }
     }
 
     public class GetIUPRResponse : Response {
         public class CData {
-            // 以下为火花/压缩点火同名项
+            // 以下为火花点火/压缩点火/J939同名项
             public string OBDCOND { get; set; }
             public string IGNCNTR { get; set; }
             // 以下为火花点火
@@ -181,6 +186,8 @@ namespace Dyno_OBD_DLL {
             public string FUELCOMP { get; set; }
             public string FUELCOND { get; set; }
             public string FUELIUPR { get; set; }
+            // 以下为J1939数据
+            public string J1939MPR { get; set; }
         }
         public CData Data { get; set; }
     }
@@ -211,6 +218,22 @@ namespace Dyno_OBD_DLL {
             public string DPF_DP { get; set; }
             public string REAG_RATE { get; set; }
             public string FRP_G { get; set; }
+        }
+        public CData Data { get; set; }
+    }
+
+    public class GetSpeedInfoResponse : Response {
+        public class CData {
+            public string VSS { get; set; }
+            public string RPM { get; set; }
+        }
+        public CData Data { get; set; }
+    }
+
+    public class GetOilInfoResponse : Response {
+        public class CData {
+            public string ECT { get; set; }
+            public string EOT { get; set; }
         }
         public CData Data { get; set; }
     }

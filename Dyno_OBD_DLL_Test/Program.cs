@@ -26,6 +26,14 @@ namespace Dyno_OBD_DLL_Test {
                     Console.WriteLine();
                     Console.WriteLine(strResponse);
 
+                    strResponse = OBD.RequestByXMLString(strXml.Replace("{CMD}", "GetSpeedInfo"));
+                    Console.WriteLine();
+                    Console.WriteLine(strResponse);
+
+                    strResponse = OBD.RequestByXMLString(strXml.Replace("{CMD}", "GetOilInfo"));
+                    Console.WriteLine();
+                    Console.WriteLine(strResponse);
+
                 } else {
                     Console.WriteLine("ConnectOBD() failed");
                 }

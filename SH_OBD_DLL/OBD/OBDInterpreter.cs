@@ -118,13 +118,100 @@ namespace SH_OBD_DLL {
             return value2;
         }
 
+        /// <summary>
+        /// 返回J1939 DTC，返回的字符串格式："FMI/SPN/OC"
+        /// </summary>
+        /// <param name="strDTCData"></param>
+        /// <param name="bOC"></param>
+        /// <returns></returns>
+        private string GetJ1939DTCValue(string strDTCData, bool bOC) {
+            string strRet = string.Empty;
+            if (bOC) {
+                if (strDTCData.Length < 4) {
+                    return string.Empty;
+                }
+            } else {
+                if (strDTCData.Length < 3) {
+                    return string.Empty;
+                }
+            }
+            string strLByte = strDTCData.Substring(0, 2);
+            string strMByte = strDTCData.Substring(2, 2);
+            string strHByte = strDTCData.Substring(4, 2);
+            int LByte = Convert.ToByte(strLByte, 16);
+            int MByte = Convert.ToByte(strMByte, 16);
+            int HByte = Convert.ToByte(strHByte, 16);
+            int FMI = HByte & 0x1F;
+            int SPN = (HByte >> 5) * 0x10000 + MByte * 0x100 + LByte;
+            if (bOC) {
+                string strOC = strDTCData.Substring(6, 2);
+                int OC = Convert.ToByte(strOC, 16) & 0x7F;
+                strRet = FMI.ToString() + "/" + SPN.ToString() + "/" + OC.ToString();
+            } else {
+                strRet = SPN.ToString();
+            }
+            return strRet;
+        }
+
+        private OBDParameterValue GetDM1_12_6_23Value(OBDParameter param, OBDResponse response) {
+            OBDParameterValue value2 = new OBDParameterValue();
+            if (response.GetDataByteCount() < 6) {
+                value2.ErrorDetected = true;
+                return value2;
+            }
+            int OriginalParam = param.Parameter;
+            int OriginalService = param.Service;
+
+            switch (param.SignalName) {
+            case "":
+            case "MIL":
+                // Malfunction Indicator Lamp Status
+                byte A = Convert.ToByte(response.GetDataByte(0), 16);
+                A = (byte)((A << 1) & 0x80);
+                response.Data = A.ToString("X2") + "000000";
+                value2 = GetPIDValue(0x101, response.Data, param.SignalName);
+                break;
+            case "DTC":
+                List<string> strings = new List<string>();
+                string strDTCData = response.Data.Substring(2 * 2);
+                if (response.GetDataByteCount() > 8) {
+                    int count = strDTCData.Length / (4 * 2);
+                    for (int i = 0; i < count; i++) {
+                        strings.Add(GetJ1939DTCValue(strDTCData.Substring(i * 4 * 2, 4 * 2), true));
+                    }
+                } else {
+                    strings.Add(GetJ1939DTCValue(strDTCData, true));
+                }
+                value2.ListStringValue = strings;
+                break;
+            default:
+                value2.ErrorDetected = true;
+                break;
+            }
+
+            param.Parameter = OriginalParam;
+            param.Service = OriginalService;
+            return value2;
+        }
+
+        private byte ConvertJ1939RDYByte(byte byteIn) {
+            byte byteOut = (byte)((byteIn >> 4) & 0x01);
+            byteOut |= (byte)((byteIn >> 2) & 0x02);
+            byteOut |= (byte)((byteIn << 4) & 0x40);
+            byteOut |= (byte)((byteIn << 2) & 0x08);
+            byteOut |= (byte)((byteIn << 5) & 0x20);
+            return byteOut;
+        }
+
         private OBDParameterValue GetDM5Value(OBDParameter param, OBDResponse response) {
             OBDParameterValue value2 = new OBDParameterValue();
             if (response.GetDataByteCount() < 8) {
                 value2.ErrorDetected = true;
                 return value2;
             }
-
+            int OriginalParam = param.Parameter;
+            int OriginalService = param.Service;
+            byte temp, dataB;
             switch (param.SignalName) {
             case "":
             case "OBDSUP":
@@ -132,30 +219,34 @@ namespace SH_OBD_DLL {
                 response.Data = response.GetDataByte(2);
                 value2 = GetPIDValue(0x11C, response.Data, param.SignalName);
                 break;
-            case "ACT_DTC_CNT":
-                // 激活的故障代码，未实现解析功能
-                response.Data = response.GetDataByte(0);
+            case "SPARK_RDY":
+                param.Service = 1;
+                param.Parameter = 0x01;
+                temp = Convert.ToByte(response.GetDataByte(3), 16);
+                dataB = (byte)(temp & ~0x08);
+                response.Data = "00" + dataB.ToString("X2") + response.GetDataByte(4) + response.GetDataByte(6);
+                value2 = GetMode010209Value(param, response);
                 break;
-            case "PRE_DTC_CNT":
-                // 先前激活的诊断故障代码，未实现解析功能
-                response.Data = response.GetDataByte(1);
-                break;
-            case "CON_MON":
-                // 持续监视系统支持／状态，未实现解析功能
-                response.Data = response.GetDataByte(3);
-                break;
-            case "NON_SUP":
-                // 非持续监视系统支持，未实现解析功能
-                response.Data = response.GetDataByte(4) + response.GetDataByte(5);
-                break;
-            case "NON_STAT":
-                // 非持续监视系统状态，未实现解析功能
-                response.Data = response.GetDataByte(6) + response.GetDataByte(7);
+            case "COMP_RDY":
+                param.Service = 1;
+                param.Parameter = 0x01;
+                temp = Convert.ToByte(response.GetDataByte(3), 16);
+                dataB = (byte)(temp | 0x08);
+                temp = Convert.ToByte(response.GetDataByte(5), 16);
+                byte dataC = ConvertJ1939RDYByte(temp);
+                temp = Convert.ToByte(response.GetDataByte(7), 16);
+                byte dataD = ConvertJ1939RDYByte(temp);
+                response.Data = "00" + dataB.ToString("X2") + dataC.ToString("X2") + dataD.ToString("X2");
+                value2 = GetMode010209Value(param, response);
+                param.Parameter = OriginalParam;
+                param.Service = OriginalService;
                 break;
             default:
                 value2.ErrorDetected = true;
                 break;
             }
+            param.Parameter = OriginalParam;
+            param.Service = OriginalService;
             return value2;
         }
 
@@ -181,7 +272,7 @@ namespace SH_OBD_DLL {
                 value2 = GetMode010209Value(param, response);
                 for (int i = 0; i < value2.ListStringValue.Count; i++) {
                     string strVal = value2.ListStringValue[i];
-                    value2.ListStringValue[i] = strVal.Substring(6, 2) + strVal.Substring(4, 2) + strVal.Substring(2, 2) + strVal.Substring(0, 2);
+                    value2.ListStringValue[i] = Utility.ReverseString(strVal, 2, true);
                 }
                 break;
             case "CAL_ID":
@@ -201,6 +292,252 @@ namespace SH_OBD_DLL {
             return value2;
         }
 
+        private double GetMPRRate(double num, double den) {
+            double dRet;
+            if (den == 0) {
+                dRet = 7.99527;
+            } else {
+                dRet = Math.Round(num / den, 6);
+                if (dRet > 7.99527) {
+                    dRet = 7.99527;
+                }
+            }
+            return dRet;
+        }
+
+        private OBDParameterValue GetDM20Value(OBDParameter param, OBDResponse response) {
+            OBDParameterValue value2 = new OBDParameterValue();
+            if (response.GetDataByteCount() < 4) {
+                value2.ErrorDetected = true;
+                return value2;
+            }
+            List<string> lsMPR = new List<string>();
+            string strMPRData = Utility.ReverseString(response.Data.Substring(0 * 2, 2 * 2), 2, true);
+            string IGNCNTR = Convert.ToInt32(strMPRData, 16).ToString();
+            lsMPR.Add(IGNCNTR);
+            strMPRData = Utility.ReverseString(response.Data.Substring(2 * 2, 2 * 2), 2, true);
+            string OBDCOND = Convert.ToInt32(strMPRData, 16).ToString();
+            lsMPR.Add(OBDCOND);
+            for (int i = 0; (9 + i * 7 + 2) <= response.GetDataByteCount(); i++) {
+                strMPRData = response.Data.Substring((4 + i * 7) * 2, 3 * 2);
+                string strSPN = GetJ1939DTCValue(strMPRData, false);
+                strMPRData = Utility.ReverseString(response.Data.Substring((7 + i * 7) * 2, 2 * 2), 2, true);
+                int iNumerator = Convert.ToInt32(strMPRData, 16);
+                strMPRData = Utility.ReverseString(response.Data.Substring((9 + i * 7) * 2, 2 * 2), 2, true);
+                int iDenominator = Convert.ToInt32(strMPRData, 16);
+                double dMPR = GetMPRRate(iNumerator, iDenominator);
+                strMPRData = strSPN + "/" + iNumerator.ToString() + "/" + iDenominator.ToString() + "/" + dMPR.ToString();
+                lsMPR.Add(strMPRData);
+            }
+            value2.ListStringValue = lsMPR;
+            return value2;
+        }
+
+        private OBDParameterValue GetPGNDoubleValue(OBDParameter param, OBDResponse response) {
+            OBDParameterValue value2 = new OBDParameterValue();
+            if (response.GetDataByteCount() < 8) {
+                value2.ErrorDetected = true;
+                return value2;
+            }
+            int PGN = param.Parameter;
+            int dataA, dataB;
+            int OriginalParam = param.Parameter;
+            int OriginalService = param.Service;
+            param.Service = 1;
+            switch (PGN) {
+            case 0xC100:
+                switch (param.SignalName) {
+                case "MIL_DIST":
+                    param.Parameter = 0x21;
+                    response.Data = Utility.ReverseString(response.Data.Substring(0 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xF004:
+                switch (param.SignalName) {
+                case "RPM":
+                    param.Parameter = 0x0C;
+                    response.Data = Utility.ReverseString(response.Data.Substring(3 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue *= 0.5;
+                    break;
+                case "TQ_ACT":
+                    param.Parameter = 0x62;
+                    response.Data = response.GetDataByte(2);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xF00A:
+                switch (param.SignalName) {
+                case "MAF":
+                    param.Parameter = 0x10;
+                    response.Data = Utility.ReverseString(response.Data.Substring(2 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue *= 25 / 18;
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xF00E:
+                switch (param.SignalName) {
+                case "NOXC11":
+                    param.Parameter = 0xA1;
+                    response.Data = Utility.ReverseString(response.Data.Substring(0 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue = value2.DoubleValue * 0.05 - 200;
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFDD5:
+                switch (param.SignalName) {
+                case "EGR_PCT":
+                    param.Parameter = 0x2C;
+                    dataA = Utility.Hex2Int(response.GetDataByte(4));
+                    dataB = Utility.Hex2Int(response.GetDataByte(5));
+                    value2.DoubleValue = ((dataB * 0x100) + dataA) * 0.0025;
+                    value2.DoubleValue = Math.Round(value2.DoubleValue, 1);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEDB:
+                switch (param.SignalName) {
+                case "FRP":
+                    param.Parameter = 0x23;
+                    response.Data = Utility.ReverseString(response.Data.Substring(0 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue *= 25 / 64;
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEE0:
+                switch (param.SignalName) {
+                case "ODO":
+                    param.Parameter = 0xA6;
+                    response.Data = Utility.ReverseString(response.Data.Substring(4 * 2, 4 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue *= 1.25;
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEE3:
+                if (response.GetDataByteCount() < 39) {
+                    value2.ErrorDetected = true;
+                    return value2;
+                }
+                switch (param.SignalName) {
+                case "TQ_REF":
+                    param.Parameter = 0x63;
+                    response.Data = Utility.ReverseString(response.Data.Substring(19 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEEE:
+                switch (param.SignalName) {
+                case "ECT":
+                    param.Parameter = 0x05;
+                    response.Data = response.GetDataByte(0);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                case "EOT":
+                    dataA = Utility.Hex2Int(response.GetDataByte(2));
+                    dataB = Utility.Hex2Int(response.GetDataByte(3));
+                    value2.DoubleValue = ((dataB * 0x100) + dataA) * 0.03125 - 273;
+                    value2.DoubleValue = Math.Round(value2.DoubleValue, 1);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEF1:
+                switch (param.SignalName) {
+                case "VSS":
+                    dataA = Utility.Hex2Int(response.GetDataByte(1));
+                    dataB = Utility.Hex2Int(response.GetDataByte(2));
+                    value2.DoubleValue = ((dataB * 0x100) + dataA) / 256;
+                    value2.DoubleValue = Math.Round(value2.DoubleValue, 1);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEF2:
+                switch (param.SignalName) {
+                case "TP_R":
+                    param.Parameter = 0x45;
+                    response.Data = response.GetDataByte(6);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                case "FUEL_RATE":
+                    param.Parameter = 0x5E;
+                    response.Data = Utility.ReverseString(response.Data.Substring(0 * 2, 2 * 2), 2, true);
+                    value2 = GetMode010209Value(param, response);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            case 0xFEF6:
+                switch (param.SignalName) {
+                case "MAP":
+                    param.Parameter = 0x0B;
+                    response.Data = response.GetDataByte(3);
+                    value2 = GetMode010209Value(param, response);
+                    value2.DoubleValue *= 2;
+                    break;
+                case "BP_A_ACT":
+                    param.Parameter = 0x70;
+                    value2.DoubleValue = Utility.Hex2Int(response.GetDataByte(1)) * 2;
+                    break;
+                case "EGT11":
+                    param.Parameter = 0x78;
+                    dataA = Utility.Hex2Int(response.GetDataByte(5));
+                    dataB = Utility.Hex2Int(response.GetDataByte(6));
+                    value2.DoubleValue = ((dataB * 0x100) + dataA) * 0.03125 - 273;
+                    value2.DoubleValue = Math.Round(value2.DoubleValue, 1);
+                    break;
+                default:
+                    value2.ErrorDetected = true;
+                    break;
+                }
+                break;
+            default:
+                value2.ErrorDetected = true;
+                break;
+            }
+            param.Parameter = OriginalParam;
+            param.Service = OriginalService;
+            return value2;
+        }
+
         private OBDParameterValue GetJ1939Value(OBDParameter param, OBDResponse response) {
             OBDParameterValue value2 = new OBDParameterValue();
             if (response.Header.Substring(2, 2) == "E8") {
@@ -209,15 +546,41 @@ namespace SH_OBD_DLL {
                 return value2;
             }
             switch (param.Parameter) {
+            case 0xFECA:
+            case 0xFED4:
+            case 0xFECF:
+            case 0xFDB5:
+            case 0xFD82:
+            case 0xFD80:
+            case 0xFD5F:
+            case 0xFD5E:
+            case 0xFD5D:
+            case 0xFD5C:
+            case 0xFD5B:
+            case 0xFD5A:
+            case 0xFD59:
+            case 0xFD58:
+            case 0xFD57:
+            case 0xFD56:
+            case 0xFD55:
+            case 0xFD54:
+                value2 = GetDM1_12_6_23Value(param, response);
+                break;
             case 0xFECE:
                 value2 = GetDM5Value(param, response);
                 break;
             case 0xD300:
                 value2 = GetDM19Value(param, response);
                 break;
+            case 0xC200:
+                value2 = GetDM20Value(param, response);
+                break;
             case 0xFEEC:
                 // VIN
                 value2.ListStringValue = SetMode09ASCII(17 * 2, response);
+                break;
+            default:
+                value2 = GetPGNDoubleValue(param, response);
                 break;
             }
             return value2;
